@@ -1,5 +1,2 @@
 node_modules/
-src/
-code.txt
 package-lock.json
-tsconfig.json
