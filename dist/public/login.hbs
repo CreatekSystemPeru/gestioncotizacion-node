@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <!-- Meta, title, CSS, favicons, etc. -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Gestión de Cotizaciones</title>
+
+    <!-- Bootstrap -->
+    <link href="./assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="./assets/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="./assets/nprogress/nprogress.css" rel="stylesheet">
+    <!-- Animate.css -->
+    <link href="./assets/animate.css/animate.min.css" rel="stylesheet">
+    <!-- Toastr -->
+    <link href="./../assets/toastr/toastr.css" rel="stylesheet">
+    
+    <!-- Custom Theme Style -->
+    <link href="./assets/build/css/custom.min.css" rel="stylesheet">
+  </head>
+
+  <body class="login">
+    <div>
+      <a class="hiddenanchor" id="signup"></a>
+      <a class="hiddenanchor" id="signin"></a>
+
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form id="frmlogin">
+              <h1>Autenticación</h1>
+              <div>
+                <select id="empresaCombo" class="form-control" name="idempresa">
+                    <option value="">Cargando...</option>
+                    <!--{{#each Empresa}}
+                    <option value="{{ IdEmpresa }}">{{ EmpresaAbrev }}</option>
+                    {{/each}}-->
+                </select>
+              </div>
+              <div>
+                <input type="text" class="form-control" name="usuario" placeholder="Nombre de Usuario"/>
+              </div>
+              <div>
+                <input type="password" class="form-control" name="clave" placeholder="Contraseña" />
+              </div>
+              <div>
+                <label>{{ message }}</label>
+              </div>
+              <div>
+                <a id="aceptar" class="btn btn-default submit" >Iniciar Sesión</a>
+                {{!-- class="reset_pass" onclick="document.getElementById('frmlogin').submit()"--}}
+                <a href="#">¿Has olvidado los datos de la cuenta?</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">Nuevo en el sitio?
+                  <a href="#signup" class="to_register"> Crear Cuenta </a>
+                </p>
+                <div class="clearfix"></div>
+                <br />
+                <div>
+                  <h1><i class="fa fa-dollar"></i> Gestión de Cotizaciones </h1>
+                  <p>©{{getAnio}} Todos los derechos reservados</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <div id="register" class="animate form registration_form">
+          <section class="login_content">
+            <form>
+              <h1>Crear Cuenta</h1>
+              <div>
+                <input type="text" class="form-control" placeholder="Username" required="" />
+              </div>
+              <div>
+                <input type="email" class="form-control" placeholder="Email" required="" />
+              </div>
+              <div>
+                <input type="password" class="form-control" placeholder="Password" required="" />
+              </div>
+              <div>
+                <a class="btn btn-default submit" href="/">Crear</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">Ya eres usuario?
+                  <a href="#signin" class="to_register"> Iniciar Sesión </a>
+                </p>
+
+                <div class="clearfix"></div>
+                <br />
+
+                <div>
+                  <h1><i class="fa fa-dollar"></i> Gestión de Cotizaciones</h1>
+                  <p>©{{getAnio}} Todos los derechos reservados</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="./../assets/jquery/dist/jquery.min.js"></script>
+    <!-- Toastr -->
+    <script src="./../assets/toastr/toastr.js"></script>
+    <!-- Custom -->
+    <script>
+      $('#aceptar').click(function(){
+        var data = $('#frmlogin').serializeArray();
+        $.post('/autentication', data, function(result) {
+          if (result.includes("#")) {
+            toastr.error(result);
+          } else if (result.includes("'")) {
+            toastr.info(result, '', {timeOut: 3000});
+          } else {
+            toastr.success(result, '', {timeOut: 2000});
+            setTimeout(function(){ window.location.href = '/index' }, 2000);
+          }
+        });
+      });
+
+      $(document).ready(function() {
+        $.ajax({
+            url:'/empresacombo',
+            type: 'GET',
+            beforeSend: function(objeto){
+            },
+            success: function(data){
+              var combo = $("#empresaCombo"); //document.getElementById('empresaCombo');
+              $("#empresaCombo option").remove();
+              $.each(data.empresaCombo, function(i, item) {
+                combo.append(new Option(item.EmpresaAbrev, item.IdEmpresa));
+              });
+            }
+        });
+      });
+    </script>
+  </body>
+</html>
