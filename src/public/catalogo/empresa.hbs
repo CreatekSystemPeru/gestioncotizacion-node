@@ -1,0 +1,112 @@
+{{> head1}}
+  {{> css}}
+  <!-- Datatables -->
+  <link href="./../assets/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+  <link href="./../assets/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+{{> head2}}
+        <!-- page content -->
+        <div class="right_col" role="main">
+          <div class="">
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Listado de Empresa</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <table id="tblList" class="table table-striped table-bordered dt-responsive nowrap" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>RUC</th>
+                                <th>Empresa</th>
+                                <th>Abreviado</th>
+                                <th>Dirección</th>
+                                <th>Teléfono</th>
+                                <th>Móvil</th>
+                                <th>Email</th>
+                                <th>URL</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                          <!--{{#each empresaList}}
+                            <tr>
+                                <td><a id="edit" class="btn btn-default submit" title="Editar" href="/empresa_get/{{IdEmpresa}}"><i class="glyphicon glyphicon-pencil"></i></a></td>
+                                <td>{{RUC}}</td>
+                                <td>{{Empresa}}</td>
+                                <td>{{EmpresaAbrev}}</td>
+                                <td>{{Direccion}}</td>
+                                <td>{{Telefono}}</td>
+                                <td>{{Movil}}</td>
+                                <td>{{Email}}</td>
+                                <td>{{URL}}</td>
+                            </tr>
+                          {{/each}}-->
+                        </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- /page contenct -->
+
+{{> footer1}}
+  {{> script}}
+  <!-- Datatables -->
+    <script src="./../assets/datatables.net/js/jquery.dataTables.js"></script>
+    <script src="./../assets/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+    <script src="./../assets/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+    <script src="./../assets/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>  
+  <!-- Datatable Init -->
+    <script>        
+        /*function list(){
+          $.ajax({
+            url:'/empresalist',
+            type: 'GET',
+            beforeSend: function(objeto){
+            },
+            success: function(data){
+              
+              //$("body #list").html(data).fadeIn('slow');
+              //$("#loader").html("");
+            }
+          })
+        }*/
+
+        $(document).ready(function() {
+          var table = $('#tblList').DataTable({
+                        ajax: {
+                          url: '/empresalist',
+                          type: 'GET'
+                        },
+                        columns: [
+                                    { data: "IdEmpresa", visible: false },
+                                    { data: 'RUC' },
+                                    { data: 'Empresa' },
+                                    { data: 'EmpresaAbrev' },
+                                    { data: 'Direccion' },
+                                    { data: 'Telefono' },
+                                    { data: 'Movil' },
+                                    { data: 'Email' },
+                                    { data: 'URL' },
+                                    {
+                                      data: null,
+                                      bSortable: false,
+                                      render: function (o) { return '<a id="edit" class="btn btn-default submit" title="Editar" href="/empresa_get/' + o.IdEmpresa + '"><i class="glyphicon glyphicon-pencil"></i></a>'; }
+                                    }
+                                  ]
+                      });
+
+        /*$('#tblList tbody').on( 'click', 'a', function () {
+          var data = table.row($(this).parents('tr')).data();
+          console.log(data[0]);
+        });*/
+      }); 
+    </script>
+    
+{{> footer2}}

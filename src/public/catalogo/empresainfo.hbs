@@ -1,0 +1,169 @@
+{{> head1}}
+  {{> css}}
+  <!-- Toastr -->
+  <link href="./../assets/toastr/toastr.css" rel="stylesheet">
+{{> head2}}
+    <!-- page content -->
+    <div class="right_col" role="main">
+        <div class="">
+            <div class="clearfix"></div>
+            <form id="formInfo">
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>Información de Empresa</h2>                            
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+                                <!-- start form for validation -->
+                                <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
+                                    <input type="hidden" name="idempresa" value="{{empresaGet.IdEmpresa}}"/>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ruc">RUC <span class="required">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="ruc" class="form-control col-md-7 col-xs-12" name="ruc" value="{{empresaGet.RUC}}" required="required"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="empresa">Empresa <span class="required">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="empresa" class="form-control col-md-7 col-xs-12" name="empresa" value="{{empresaGet.Empresa}}" required="required"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="empresaAbrev">Abreviatura <span class="required">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="empresaAbrev" class="form-control col-md-7 col-xs-12" name="empresaAbrev" value="{{empresaGet.EmpresaAbrev}}" required="required"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccion">Dirección <span class="required">*</span></label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="direccion" class="form-control col-md-7 col-xs-12" name="direccion" value="{{empresaGet.Direccion}}" required="required"/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telefono1">Teléfono #1 </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="telefono1" class="form-control col-md-7 col-xs-12" name="telefono1" value="{{empresaGet.Telefono1}}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telefono2">Teléfono #2 </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="telefono2" class="form-control col-md-7 col-xs-12" name="telefono2" value="{{empresaGet.Telefono2}}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="movil1">Móvil #1 </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="movil1" class="form-control col-md-7 col-xs-12" name="movil1" value="{{empresaGet.Movil1}}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="movil2">Móvil #2 </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="movil2" class="form-control col-md-7 col-xs-12" name="movil2" value="{{empresaGet.Movil2}}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="email">Correo </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="email" class="form-control col-md-7 col-xs-12" name="email" value="{{empresaGet.Email}}" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3 col-sm-3 col-xs-12" for="url">URL </label>
+                                        <div class="col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" id="url" class="form-control col-md-7 col-xs-12" name="url" value="{{empresaGet.URL}}"/>
+                                        </div>
+                                    </div>
+                                    <div class="ln_solid"></div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                            <a id="action" class="btn btn-default submit" >{{empresaGet.Action}}</a>
+                                            <a id="cancel" class="btn btn-default submit" >Cancelar</a>
+                                        </div>
+                                    </div>                                
+                                </div>
+                                <!-- end form for validations -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- /page contenct -->
+{{> footer1}}
+  {{> script}}
+    <!-- Parsley -->
+    <script src="./../assets/parsleyjs/dist/parsley.js"></script>
+    <!-- Toastr -->
+    <script src="./../assets/toastr/toastr.js"></script>
+    <!-- Parsley Ini -->
+    <script>
+        function init_parsley() {
+            if( typeof (parsley) === 'undefined'){ return; }
+            console.log('init_parsley');
+            
+            $/*.listen*/('parsley:field:validate', function() {
+                validateFront();
+            });
+            
+            $('#Info .btn').on('click', function() {
+                $('#Info').parsley().validate();
+                validateFront();
+            });
+
+            var validateFront = function() {
+            if (true === $('#Info').parsley().isValid()) {
+                $('.bs-callout-info').removeClass('hidden');
+                $('.bs-callout-warning').addClass('hidden');
+            } else {
+                $('.bs-callout-info').addClass('hidden');
+                $('.bs-callout-warning').removeClass('hidden');
+            }
+            };
+            
+            try {
+                hljs.initHighlightingOnLoad();
+            } catch (err) {}
+            
+        };
+        
+        $(document).ready(function() {
+            init_parsley();
+        });
+    </script>
+    <!-- Custom -->
+    <script>
+        function validarCampos() {
+        if ($('#ruc').val() == '' || $('#empresa').val() == '' || $('#empresaAbrev').val() == '' || $('#direccion').val() == '') {
+            return true;
+        } else {
+            return false;
+        }
+        }
+
+        $('#action').click(function(){
+            if (validarCampos()) return;
+            var data = $('#formInfo').serializeArray();
+            $.post('/empresa_reg', data, function(result) {
+                $.each(result.errorMessage, function(i, item){
+                if (item.ErrorMessage.includes("#")) {
+                    toastr.error(item.ErrorMessage);
+                } else {
+                    toastr.success(item.ErrorMessage, '', {timeOut: 2000});
+                    setTimeout(function(){ window.location.href = '/empresa' }, 2000);
+                }
+                });
+            });
+        })
+
+        $('#cancel').click(function(){
+            window.location.href = '/empresa';
+        });
+    </script>
+{{> footer2}}
