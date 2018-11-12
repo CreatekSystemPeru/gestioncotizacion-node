@@ -17,8 +17,8 @@ usuario.post('/login', (req, res) => {
                 data: null
             });
         }
-        let errorMessaje = usuarioLogin[0][0].ErrorMessage;
-        if (errorMessaje.equals('')) {
+        let errorMessage = usuarioLogin[0][0].ErrorMessage;
+        if (errorMessage == '') {
             res.json({
                 ok: true,
                 message: '',
@@ -28,7 +28,7 @@ usuario.post('/login', (req, res) => {
         else {
             res.json({
                 ok: false,
-                message: errorMessaje,
+                message: errorMessage,
                 data: null
             });
         }
