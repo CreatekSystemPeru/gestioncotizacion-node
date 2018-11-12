@@ -9,10 +9,10 @@ export default class MySQL {
     constructor() {
         console.log('Clase inicializada');
         this.cnx = mysql.createConnection({
-            host: 'localhost',
-            user: 'sa',
-            password: '12345678',
-            database: 'bdcotizacion'
+            host: 'mi3-wts6.a2hosting.com',
+            user: 'amini_sa',
+            password: 'Createk.2018',
+            database: 'aminias1_bdcotizacion'
         });
 
         this.conectarDB();

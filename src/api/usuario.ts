@@ -51,8 +51,8 @@ usuario.get('/usuario/list', (req: Request, res: Response) => {
     });
 });
 
-usuario.post('/usuario/get/', (req: Request, res: Response) => {
-    let {idEmpresa,idUsuario} = req.body;
+usuario.get('/usuario/get/:Id', (req: Request, res: Response) => {
+    //req.params.Id
     const query = `CALL `;
     MySQL.ejecutarQuery(query, (err: any, empresaGet: any) => {
         if (err) {
