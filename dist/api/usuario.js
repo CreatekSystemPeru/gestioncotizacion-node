@@ -57,8 +57,8 @@ usuario.get('/usuario/list/:idestado/:offset/:count', [permisos_1.default.verifi
         });
     });
 });
-usuario.get('/usuario/get/:Id', [permisos_1.default.verificaSesion], (req, res) => {
-    let { s_idEmpresa } = req.session.usuarioSesion;
+usuario.get('/usuario/get/:Id/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+    let { s_idEmpresa } = req.session.userSesion;
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
         if (err) {
@@ -76,7 +76,7 @@ usuario.get('/usuario/get/:Id', [permisos_1.default.verificaSesion], (req, res) 
     });
 });
 /*Falta agregar los permisos*/
-usuario.post('/usuario/reg', [permisos_1.default.verificaSesion], (req, res) => {
+usuario.post('/usuario/reg/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     let { idUsuario, apellidoPaterno, apellidoMaterno, nombres, usuario, idPerfil, idEstado } = req.body;
     const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',

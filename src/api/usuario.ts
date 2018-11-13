@@ -59,8 +59,8 @@ usuario.get('/usuario/list/:idestado/:offset/:count', [ permisos.verificaSesion 
     });
 });
 
-usuario.get('/usuario/get/:Id', [ permisos.verificaSesion ], (req: Request, res: Response) => {
-    let {s_idEmpresa} = req.session!.usuarioSesion;
+usuario.get('/usuario/get/:Id/:idMenu/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+    let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
     MySQL.ejecutarQuery(query, (err: any, empresaGet: any) => {
@@ -81,7 +81,7 @@ usuario.get('/usuario/get/:Id', [ permisos.verificaSesion ], (req: Request, res:
 });
 
 /*Falta agregar los permisos*/
-usuario.post('/usuario/reg', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+usuario.post('/usuario/reg/:idMenu/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     let {idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil, idEstado} = req.body;

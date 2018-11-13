@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
+const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const empresa = express_1.Router();
 empresa.get('/empresa/combo', (req, res) => {
     const query = `CALL Empresa_Combo()`;
@@ -23,7 +24,7 @@ empresa.get('/empresa/combo', (req, res) => {
         });
     });
 });
-empresa.get('/empresa/list', (req, res) => {
+empresa.get('/empresa/list', [permisos_1.default.verificaSesion], (req, res) => {
     const query = `CALL Empresa_List()`;
     mysql_1.default.ejecutarQuery(query, (err, empresa) => {
         if (err) {
@@ -40,7 +41,7 @@ empresa.get('/empresa/list', (req, res) => {
         });
     });
 });
-empresa.get('/empresa/get/:Id', (req, res) => {
+empresa.get('/empresa/get/:Id/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     const query = `CALL Empresa_Get(${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
         if (err) {
@@ -57,10 +58,11 @@ empresa.get('/empresa/get/:Id', (req, res) => {
         });
     });
 });
-empresa.post('/empresa/reg', (req, res) => {
-    let { idEmpresa, ruc, empresa, empresaAbrev, direccion, telefono1, telefono2, movil1, movil2, email, url } = req.body;
+empresa.post('/empresa/reg/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+    let { s_idUsuario } = req.session.userSesion;
+    let { idEmpresa, ruc, empresa, empresaAbrev, direccion, telefono1, telefono2, movil1, movil2, email, url, idEstado } = req.body;
     const query = `CALL Empresa_InsertUpdate(${idEmpresa},'${ruc}','${empresa}','${empresaAbrev}','${direccion}','${telefono1}',
-                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}', 1, 1, 'Host')`;
+                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}',${idEstado},${s_idUsuario}, 'HOSTWEB')`;
     mysql_1.default.ejecutarQuery(query, (err, reg) => {
         if (err) {
             res.json({
