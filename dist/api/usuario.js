@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
+const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const usuario = express_1.Router();
 usuario.post('/login', (req, res) => {
     let { idEmpresa, usuario, clave } = req.body;
@@ -38,14 +39,7 @@ usuario.post('/login', (req, res) => {
         }
     });
 });
-usuario.get('/usuario/list/:idestado/:offset/:count', (req, res) => {
-    if (!req.session.userSesion) {
-        return res.json({
-            ok: false,
-            message: `#Sesión Finalizada`,
-            data: null
-        });
-    }
+usuario.get('/usuario/list/:idestado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idestado},${req.params.offset},${req.params.count})`;
     mysql_1.default.ejecutarQuery(query, (err, usuario) => {
@@ -63,14 +57,7 @@ usuario.get('/usuario/list/:idestado/:offset/:count', (req, res) => {
         });
     });
 });
-usuario.get('/usuario/get/:Id', (req, res) => {
-    if (!req.session.userSesion) {
-        return res.json({
-            ok: false,
-            message: `#Sesión Finalizada`,
-            data: null
-        });
-    }
+usuario.get('/usuario/get/:Id', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa } = req.session.usuarioSesion;
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
@@ -89,14 +76,7 @@ usuario.get('/usuario/get/:Id', (req, res) => {
     });
 });
 /*Falta agregar los permisos*/
-usuario.post('/usuario/reg', (req, res) => {
-    if (!req.session.userSesion) {
-        return res.json({
-            ok: false,
-            message: `#Sesión Finalizada`,
-            data: null
-        });
-    }
+usuario.post('/usuario/reg', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     let { idUsuario, apellidoPaterno, apellidoMaterno, nombres, usuario, idPerfil, idEstado } = req.body;
     const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
@@ -126,14 +106,7 @@ usuario.post('/usuario/reg', (req, res) => {
         }
     });
 });
-usuario.get('/usuario/menu/', (req, res) => {
-    if (!req.session.userSesion) {
-        return res.json({
-            ok: false,
-            message: `#Sesión Finalizada`,
-            data: null
-        });
-    }
+usuario.get('/usuario/menu/', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     const query = `CALL Usuario_Menu_List(${s_idEmpresa}, ${s_idUsuario})`;
     mysql_1.default.ejecutarQuery(query, (err, usuarioMenu) => {

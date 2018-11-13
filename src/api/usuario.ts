@@ -1,5 +1,6 @@
 import {Router, Request, Response} from 'express';
 import MySQL from '../mysql/mysql';
+import permisos from '../middlewares/permisos';
 
 const usuario = Router();
 usuario.post('/login', (req: Request, res: Response) => {
@@ -37,15 +38,7 @@ usuario.post('/login', (req: Request, res: Response) => {
     });
 });
 
-usuario.get('/usuario/list/:idestado/:offset/:count', (req: Request, res: Response) => {
-    if (!req.session!.userSesion) {
-        return res.json({
-            ok: false,
-            message: `#Sesión Finalizada`,
-            data: null
-        });
-    }
-
+usuario.get('/usuario/list/:idestado/:offset/:count', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idestado},${req.params.offset},${req.params.count})`;
@@ -66,15 +59,7 @@ usuario.get('/usuario/list/:idestado/:offset/:count', (req: Request, res: Respon
     });
 });
 
-usuario.get('/usuario/get/:Id', (req: Request, res: Response) => {
-    if (!req.session!.userSesion) {
-        return res.json({
-            ok: false,
-            message: `#Sesión Finalizada`,
-            data: null
-        });
-    }
-
+usuario.get('/usuario/get/:Id', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.usuarioSesion;
 
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
@@ -96,14 +81,7 @@ usuario.get('/usuario/get/:Id', (req: Request, res: Response) => {
 });
 
 /*Falta agregar los permisos*/
-usuario.post('/usuario/reg', (req: Request, res: Response) => {
-    if (!req.session!.userSesion) {
-        return res.json({
-            ok: false,
-            message: `#Sesión Finalizada`,
-            data: null
-        });
-    }
+usuario.post('/usuario/reg', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     let {idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil, idEstado} = req.body;
@@ -135,15 +113,7 @@ usuario.post('/usuario/reg', (req: Request, res: Response) => {
     });
 });
 
-usuario.get('/usuario/menu/', (req: Request, res: Response) => {
-    if (!req.session!.userSesion) {
-        return res.json({
-            ok: false,
-            message: `#Sesión Finalizada`,
-            data: null
-        });
-    }
-
+usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Usuario_Menu_List(${s_idEmpresa}, ${s_idUsuario})`;
