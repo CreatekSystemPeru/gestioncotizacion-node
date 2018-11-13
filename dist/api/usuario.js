@@ -39,9 +39,10 @@ usuario.post('/login', (req, res) => {
         }
     });
 });
-usuario.get('/usuario/list/:idestado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
+usuario.get('/usuario/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
-    const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idestado},${req.params.offset},${req.params.count})`;
+    req.session.idMenu = req.params.idMenu;
+    const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${req.params.offset},${req.params.count})`;
     mysql_1.default.ejecutarQuery(query, (err, usuario) => {
         if (err) {
             return res.json({
@@ -57,7 +58,7 @@ usuario.get('/usuario/list/:idestado/:offset/:count', [permisos_1.default.verifi
         });
     });
 });
-usuario.get('/usuario/get/:Id/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+usuario.get('/usuario/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
@@ -76,11 +77,11 @@ usuario.get('/usuario/get/:Id/:idMenu/:idAccion', [permisos_1.default.verificaSe
     });
 });
 /*Falta agregar los permisos*/
-usuario.post('/usuario/reg/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+usuario.post('/usuario/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
-    let { idUsuario, apellidoPaterno, apellidoMaterno, nombres, usuario, idPerfil, idEstado } = req.body;
+    let { idUsuario, apellidoPaterno, apellidoMaterno, nombres, usuario, idPerfil } = req.body;
     const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
-                                            ${idPerfil},${idEstado},${s_idUsuario},'HOSTWEB')`;
+                                            ${idPerfil},1,${s_idUsuario},'HOSTWEB')`;
     mysql_1.default.ejecutarQuery(query, (err, reg) => {
         if (err) {
             return res.json({

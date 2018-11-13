@@ -24,7 +24,8 @@ empresa.get('/empresa/combo', (req, res) => {
         });
     });
 });
-empresa.get('/empresa/list', [permisos_1.default.verificaSesion], (req, res) => {
+empresa.get('/empresa/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
+    req.session.idMenu = req.params.idMenu;
     const query = `CALL Empresa_List()`;
     mysql_1.default.ejecutarQuery(query, (err, empresa) => {
         if (err) {
@@ -41,7 +42,7 @@ empresa.get('/empresa/list', [permisos_1.default.verificaSesion], (req, res) => 
         });
     });
 });
-empresa.get('/empresa/get/:Id/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+empresa.get('/empresa/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     const query = `CALL Empresa_Get(${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
         if (err) {
@@ -60,9 +61,9 @@ empresa.get('/empresa/get/:Id/:idMenu/:idAccion', [permisos_1.default.verificaSe
 });
 empresa.post('/empresa/reg/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idUsuario } = req.session.userSesion;
-    let { idEmpresa, ruc, empresa, empresaAbrev, direccion, telefono1, telefono2, movil1, movil2, email, url, idEstado } = req.body;
+    let { idEmpresa, ruc, empresa, empresaAbrev, direccion, telefono1, telefono2, movil1, movil2, email, url } = req.body;
     const query = `CALL Empresa_InsertUpdate(${idEmpresa},'${ruc}','${empresa}','${empresaAbrev}','${direccion}','${telefono1}',
-                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}',${idEstado},${s_idUsuario}, 'HOSTWEB')`;
+                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}',1,${s_idUsuario}, 'HOSTWEB')`;
     mysql_1.default.ejecutarQuery(query, (err, reg) => {
         if (err) {
             res.json({

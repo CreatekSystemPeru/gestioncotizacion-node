@@ -23,7 +23,7 @@ let verificaPermiso = (req: Request, res: Response, next: any) => {
     }
 
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
-    let idMenu = req.params.idMenu;
+    let idMenu = req.session!.idMenu;
     let idAccion = req.params.idAccion;
 
     const query = `CALL Usuario_Menu_Permission(${s_idEmpresa},${s_idUsuario},${idMenu},${idAccion})`;

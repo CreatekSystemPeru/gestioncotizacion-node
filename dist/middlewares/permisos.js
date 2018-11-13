@@ -23,7 +23,7 @@ let verificaPermiso = (req, res, next) => {
         });
     }
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
-    let idMenu = req.params.idMenu;
+    let idMenu = req.session.idMenu;
     let idAccion = req.params.idAccion;
     const query = `CALL Usuario_Menu_Permission(${s_idEmpresa},${s_idUsuario},${idMenu},${idAccion})`;
     mysql_1.default.ejecutarQuery(query, (err, permiso) => {
