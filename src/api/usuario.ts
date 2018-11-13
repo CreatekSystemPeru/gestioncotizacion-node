@@ -1,5 +1,6 @@
 import {Router, Request, Response} from 'express';
 import MySQL from '../mysql/mysql';
+import permisos from '../middlewares/permisos';
 
 const usuario = Router();
 usuario.post('/login', (req: Request, res: Response) => {
@@ -8,7 +9,7 @@ usuario.post('/login', (req: Request, res: Response) => {
     const query = `CALL Usuario_Autentication(${ idEmpresa}, '${ usuario }', '${ clave }')`;
     MySQL.ejecutarQuery(query, (err: any, usuarioLogin: any) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
@@ -17,6 +18,11 @@ usuario.post('/login', (req: Request, res: Response) => {
 
         let errorMessage = usuarioLogin[0][0].ErrorMessage;
         if (errorMessage == '') {
+            req.session!.userSesion = {
+                s_idEmpresa: idEmpresa,
+                s_idUsuario: usuarioLogin[0][0].IdUsuario
+            }
+
             res.json({
                 ok: true,
                 message: '',
@@ -32,11 +38,14 @@ usuario.post('/login', (req: Request, res: Response) => {
     });
 });
 
-usuario.get('/usuario/list', (req: Request, res: Response) => {
-    const query = `CALL `;
+usuario.get('/usuario/list/:idMenu/:idEstado/:offset/:count', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+    let {s_idEmpresa} = req.session!.userSesion;
+    req.session!.idMenu = req.params.idMenu;
+    
+    const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${req.params.offset},${req.params.count})`;
     MySQL.ejecutarQuery(query, (err: any, usuario: any) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
@@ -51,12 +60,13 @@ usuario.get('/usuario/list', (req: Request, res: Response) => {
     });
 });
 
-usuario.get('/usuario/get/:Id', (req: Request, res: Response) => {
-    //req.params.Id
-    const query = `CALL `;
+usuario.get('/usuario/get/:Id/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+    let {s_idEmpresa} = req.session!.userSesion;
+
+    const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
     MySQL.ejecutarQuery(query, (err: any, empresaGet: any) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
@@ -71,14 +81,16 @@ usuario.get('/usuario/get/:Id', (req: Request, res: Response) => {
     });
 });
 
-usuario.post('/usuario/reg', (req: Request, res: Response) => {
-    let { idUsuario, apellidoPaterno, apellidoMaterno,
-        nombres, usuario, clave, idPerfil, permisos} = req.body;
-    const query = `CALL Usuario_InsertUpdate(${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
-                                            '${clave}','${idPerfil}',1,1,'Host')`;
+/*Falta agregar los permisos*/
+usuario.post('/usuario/reg/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+    let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
+    let {idUsuario, apellidoPaterno, apellidoMaterno,
+        nombres, usuario, idPerfil} = req.body;
+    const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
+                                            ${idPerfil},1,${s_idUsuario},'HOSTWEB')`;
     MySQL.ejecutarQuery(query, (err: any, reg: any) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
@@ -99,6 +111,41 @@ usuario.post('/usuario/reg', (req: Request, res: Response) => {
                 data: null
             });
         }
+    });
+});
+
+usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+    let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
+
+    const query = `CALL Usuario_Menu_List(${s_idEmpresa}, ${s_idUsuario})`;
+    MySQL.ejecutarQuery(query, (err: any, usuarioMenu: any) => {
+        if (err) {
+            return res.json({
+                ok: false,
+                message: `#${err.message}`,
+                data: null
+            });
+        }
+
+        let newUsuarioMenu: any = [];                            
+        usuarioMenu[0].forEach((item: any) => {
+            if (item.CodMenu.length == 2) {
+                newUsuarioMenu.push({
+                    CodPadre: item.CodMenu,
+                    IdTipo: item.IdTipo,
+                    MenuPadre: item.Menu,
+                    Css: item.Css,
+                    //Action: item.Action,
+                    Hijo: usuarioMenu[0].filter((x: any) => (x.IdTipo == 2 && x.CodMenu.slice(0, -2) == item.CodMenu))
+                });
+            }
+        });
+
+        res.json({
+            ok: true,
+            message: '',
+            data: newUsuarioMenu
+        });
     });
 });
 
