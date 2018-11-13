@@ -24,7 +24,7 @@ export default class Server {
             resave: false,
             saveUninitialized: true,
             cookie: { maxAge: 1800000 }
-        }));        
+        }));
     }
 
     static init (port: number) {
@@ -36,11 +36,11 @@ export default class Server {
         this.app.use(express.static(publicPath));
         this.app.set('views', publicPath);
         hbs.registerPartials(path.join(publicPath, '/partials'));
-        this.app.set('view engine', 'hbs');        
+        this.app.set('view engine', 'hbs'); 
     }
 
-    start(callback: Function) {        
-        this.app.listen(this.port, callback);        
-        this.publicFolder();        
+    start(callback: Function) {
+        this.publicFolder();
+        this.app.listen(this.port, callback);
     }
 }

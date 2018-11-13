@@ -34,8 +34,8 @@ class Server {
         this.app.set('view engine', 'hbs');
     }
     start(callback) {
-        this.app.listen(this.port, callback);
         this.publicFolder();
+        this.app.listen(this.port, callback);
     }
 }
 exports.default = Server;
