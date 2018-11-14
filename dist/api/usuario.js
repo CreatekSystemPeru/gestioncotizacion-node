@@ -7,7 +7,7 @@ const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
 const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const usuario = express_1.Router();
-usuario.post('/login', (req, res) => {
+usuario.post('/api/login', (req, res) => {
     let { idEmpresa, usuario, clave } = req.body;
     const query = `CALL Usuario_Autentication(${idEmpresa}, '${usuario}', '${clave}')`;
     mysql_1.default.ejecutarQuery(query, (err, usuarioLogin) => {
@@ -39,7 +39,7 @@ usuario.post('/login', (req, res) => {
         }
     });
 });
-usuario.get('/usuario/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
+usuario.get('/api/usuario/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     req.session.idMenu = req.params.idMenu;
     const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${req.params.offset},${req.params.count})`;
@@ -58,7 +58,7 @@ usuario.get('/usuario/list/:idMenu/:idEstado/:offset/:count', [permisos_1.defaul
         });
     });
 });
-usuario.get('/usuario/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+usuario.get('/api/usuario/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
@@ -77,7 +77,7 @@ usuario.get('/usuario/get/:Id/:idAccion', [permisos_1.default.verificaSesion, pe
     });
 });
 /*Falta agregar los permisos*/
-usuario.post('/usuario/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+usuario.post('/api/usuario/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     let { idUsuario, apellidoPaterno, apellidoMaterno, nombres, usuario, idPerfil } = req.body;
     const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
@@ -105,7 +105,7 @@ usuario.post('/usuario/reg/:idAccion', [permisos_1.default.verificaSesion, permi
         });
     });
 });
-usuario.get('/usuario/menu/', [permisos_1.default.verificaSesion], (req, res) => {
+usuario.get('/api/usuario/menu/', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     const query = `CALL Usuario_Menu_List(${s_idEmpresa}, ${s_idUsuario})`;
     mysql_1.default.ejecutarQuery(query, (err, usuarioMenu) => {

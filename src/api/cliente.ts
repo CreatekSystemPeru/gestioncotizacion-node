@@ -3,7 +3,7 @@ import MySQL from '../mysql/mysql';
 import permisos from '../middlewares/permisos';
 
 const cliente = Router();
-cliente.get('/cliente/list/:idMenu/:idEstado/:offset/:count', [permisos.verificaSesion], (req: Request, res: Response) => {
+cliente.get('/api/cliente/list/:idMenu/:idEstado/:offset/:count', [permisos.verificaSesion], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
     req.session!.idMenu = req.params.idMenu;
 
@@ -25,7 +25,7 @@ cliente.get('/cliente/list/:idMenu/:idEstado/:offset/:count', [permisos.verifica
     });
 });
 
-cliente.get('/cliente/get/:Id/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+cliente.get('/api/cliente/get/:Id/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Cliente_Get(${s_idEmpresa}, ${req.params.Id})`;
@@ -46,7 +46,7 @@ cliente.get('/cliente/get/:Id/:idAccion', [ permisos.verificaSesion, permisos.ve
     });
 });
 
-cliente.post('/cliente/reg/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+cliente.post('/api/cliente/reg/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     let {idCliente, RUC, razonSocial, idGiro} = req.body;
     const query = `CALL Cliente_InsertUpdate(${s_idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro},

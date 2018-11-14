@@ -7,7 +7,7 @@ const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
 const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const cliente = express_1.Router();
-cliente.get('/cliente/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
+cliente.get('/api/cliente/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     req.session.idMenu = req.params.idMenu;
     const query = `CALL Cliente_List(${s_idEmpresa},${req.params.idEstado},${req.params.offset},${req.params.count})`;
@@ -26,7 +26,7 @@ cliente.get('/cliente/list/:idMenu/:idEstado/:offset/:count', [permisos_1.defaul
         });
     });
 });
-cliente.get('/cliente/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.get('/api/cliente/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     const query = `CALL Cliente_Get(${s_idEmpresa}, ${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, clienteGet) => {
@@ -44,7 +44,7 @@ cliente.get('/cliente/get/:Id/:idAccion', [permisos_1.default.verificaSesion, pe
         });
     });
 });
-cliente.post('/cliente/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.post('/api/cliente/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     let { idCliente, RUC, razonSocial, idGiro } = req.body;
     const query = `CALL Cliente_InsertUpdate(${s_idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro},

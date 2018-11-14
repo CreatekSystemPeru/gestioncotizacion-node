@@ -3,7 +3,7 @@ import MySQL from '../mysql/mysql';
 import permisos from '../middlewares/permisos';
 
 const usuario = Router();
-usuario.post('/login', (req: Request, res: Response) => {
+usuario.post('/api/login', (req: Request, res: Response) => {
     let { idEmpresa, usuario, clave } = req.body;
 
     const query = `CALL Usuario_Autentication(${ idEmpresa}, '${ usuario }', '${ clave }')`;
@@ -38,7 +38,7 @@ usuario.post('/login', (req: Request, res: Response) => {
     });
 });
 
-usuario.get('/usuario/list/:idMenu/:idEstado/:offset/:count', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+usuario.get('/api/usuario/list/:idMenu/:idEstado/:offset/:count', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
     req.session!.idMenu = req.params.idMenu;
     
@@ -60,7 +60,7 @@ usuario.get('/usuario/list/:idMenu/:idEstado/:offset/:count', [ permisos.verific
     });
 });
 
-usuario.get('/usuario/get/:Id/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+usuario.get('/api/usuario/get/:Id/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
@@ -82,7 +82,7 @@ usuario.get('/usuario/get/:Id/:idAccion', [ permisos.verificaSesion, permisos.ve
 });
 
 /*Falta agregar los permisos*/
-usuario.post('/usuario/reg/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+usuario.post('/api/usuario/reg/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     let {idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil} = req.body;
@@ -114,7 +114,7 @@ usuario.post('/usuario/reg/:idAccion', [ permisos.verificaSesion, permisos.verif
     });
 });
 
-usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+usuario.get('/api/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Usuario_Menu_List(${s_idEmpresa}, ${s_idUsuario})`;

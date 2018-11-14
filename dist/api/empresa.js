@@ -7,7 +7,7 @@ const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
 const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const empresa = express_1.Router();
-empresa.get('/empresa/combo', (req, res) => {
+empresa.get('/api/empresa/combo', (req, res) => {
     const query = `CALL Empresa_Combo()`;
     mysql_1.default.ejecutarQuery(query, (err, empresaCombo) => {
         if (err) {
@@ -24,7 +24,7 @@ empresa.get('/empresa/combo', (req, res) => {
         });
     });
 });
-empresa.get('/empresa/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
+empresa.get('/api/empresa/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
     req.session.idMenu = req.params.idMenu;
     const query = `CALL Empresa_List(${req.params.idEstado},${req.params.offset},${req.params.count})`;
     mysql_1.default.ejecutarQuery(query, (err, empresa) => {
@@ -42,7 +42,7 @@ empresa.get('/empresa/list/:idMenu/:idEstado/:offset/:count', [permisos_1.defaul
         });
     });
 });
-empresa.get('/empresa/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+empresa.get('/api/empresa/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     const query = `CALL Empresa_Get(${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
         if (err) {
@@ -59,7 +59,7 @@ empresa.get('/empresa/get/:Id/:idAccion', [permisos_1.default.verificaSesion, pe
         });
     });
 });
-empresa.post('/empresa/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+empresa.post('/api/empresa/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idUsuario } = req.session.userSesion;
     let { idEmpresa, ruc, empresa, empresaAbrev, direccion, telefono1, telefono2, movil1, movil2, email, url } = req.body;
     const query = `CALL Empresa_InsertUpdate(${idEmpresa},'${ruc}','${empresa}','${empresaAbrev}','${direccion}','${telefono1}',
