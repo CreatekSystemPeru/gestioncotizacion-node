@@ -26,10 +26,10 @@ empresa.get('/empresa/combo', (req: Request, res: Response) => {
 empresa.get('/empresa/list/:idMenu/:idEstado/:offset/:count', [permisos.verificaSesion], (req: Request, res: Response) => {
     req.session!.idMenu = req.params.idMenu;
 
-    const query = `CALL Empresa_List()`;
+    const query = `CALL Empresa_List(${req.params.idEstado},${req.params.offset},${req.params.count})`;
     MySQL.ejecutarQuery(query, (err: any, empresa: any) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
@@ -48,7 +48,7 @@ empresa.get('/empresa/get/:Id/:idAccion', [permisos.verificaSesion, permisos.ver
     const query = `CALL Empresa_Get(${req.params.Id})`;
     MySQL.ejecutarQuery(query, (err: any, empresaGet: any) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
@@ -71,27 +71,27 @@ empresa.post('/empresa/reg/:idAccion', [permisos.verificaSesion, permisos.verifi
                                             '${telefono2}','${movil1}','${movil2}','${email}','${url}',1,${s_idUsuario}, 'HOSTWEB')`;
     MySQL.ejecutarQuery(query, (err: any, reg: any) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
             });
         }
 
-        let errorMessaje = reg[0][0].ErrorMessage;
-        if (!errorMessaje.includes('#')) {
-            res.json({
+        let errorMessage = reg[0][0].ErrorMessage;
+        if (!errorMessage.includes('#')) {
+            return res.json({
                 ok: true,
-                message: errorMessaje,
+                message: errorMessage,
                 data: null
             });    
-        } else {
-            res.json({
-                ok: false,
-                message: errorMessaje,
-                data: null
-            });
-        }        
+        }
+
+        res.json({
+            ok: false,
+            message: errorMessage,
+            data: null
+        });
     });
 });
 

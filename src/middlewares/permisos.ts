@@ -1,4 +1,4 @@
-import {Router, Request, Response} from 'express';
+import {Request, Response} from 'express';
 import MySQL from '../mysql/mysql';
 
 let verificaSesion = (req: Request, res: Response, next: any) => {

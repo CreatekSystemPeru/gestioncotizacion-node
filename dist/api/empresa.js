@@ -26,10 +26,10 @@ empresa.get('/empresa/combo', (req, res) => {
 });
 empresa.get('/empresa/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
     req.session.idMenu = req.params.idMenu;
-    const query = `CALL Empresa_List()`;
+    const query = `CALL Empresa_List(${req.params.idEstado},${req.params.offset},${req.params.count})`;
     mysql_1.default.ejecutarQuery(query, (err, empresa) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
@@ -46,7 +46,7 @@ empresa.get('/empresa/get/:Id/:idAccion', [permisos_1.default.verificaSesion, pe
     const query = `CALL Empresa_Get(${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
@@ -59,34 +59,32 @@ empresa.get('/empresa/get/:Id/:idAccion', [permisos_1.default.verificaSesion, pe
         });
     });
 });
-empresa.post('/empresa/reg/:idMenu/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+empresa.post('/empresa/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idUsuario } = req.session.userSesion;
     let { idEmpresa, ruc, empresa, empresaAbrev, direccion, telefono1, telefono2, movil1, movil2, email, url } = req.body;
     const query = `CALL Empresa_InsertUpdate(${idEmpresa},'${ruc}','${empresa}','${empresaAbrev}','${direccion}','${telefono1}',
                                             '${telefono2}','${movil1}','${movil2}','${email}','${url}',1,${s_idUsuario}, 'HOSTWEB')`;
     mysql_1.default.ejecutarQuery(query, (err, reg) => {
         if (err) {
-            res.json({
+            return res.json({
                 ok: false,
                 message: `#${err.message}`,
                 data: null
             });
         }
-        let errorMessaje = reg[0][0].ErrorMessage;
-        if (!errorMessaje.includes('#')) {
-            res.json({
+        let errorMessage = reg[0][0].ErrorMessage;
+        if (!errorMessage.includes('#')) {
+            return res.json({
                 ok: true,
-                message: errorMessaje,
+                message: errorMessage,
                 data: null
             });
         }
-        else {
-            res.json({
-                ok: false,
-                message: errorMessaje,
-                data: null
-            });
-        }
+        res.json({
+            ok: false,
+            message: errorMessage,
+            data: null
+        });
     });
 });
 exports.default = empresa;

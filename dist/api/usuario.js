@@ -90,21 +90,19 @@ usuario.post('/usuario/reg/:idAccion', [permisos_1.default.verificaSesion, permi
                 data: null
             });
         }
-        let errorMessaje = reg[0][0].ErrorMessage;
-        if (!errorMessaje.includes('#')) {
-            res.json({
+        let errorMessage = reg[0][0].ErrorMessage;
+        if (!errorMessage.includes('#')) {
+            return res.json({
                 ok: true,
-                message: errorMessaje,
+                message: errorMessage,
                 data: null
             });
         }
-        else {
-            res.json({
-                ok: false,
-                message: errorMessaje,
-                data: null
-            });
-        }
+        res.json({
+            ok: false,
+            message: errorMessage,
+            data: null
+        });
     });
 });
 usuario.get('/usuario/menu/', [permisos_1.default.verificaSesion], (req, res) => {

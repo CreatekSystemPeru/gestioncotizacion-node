@@ -97,20 +97,20 @@ usuario.post('/usuario/reg/:idAccion', [ permisos.verificaSesion, permisos.verif
             });
         }
 
-        let errorMessaje = reg[0][0].ErrorMessage;
-        if (!errorMessaje.includes('#')) {
-            res.json({
+        let errorMessage = reg[0][0].ErrorMessage;
+        if (!errorMessage.includes('#')) {
+            return res.json({
                 ok: true,
-                message: errorMessaje,
+                message: errorMessage,
                 data: null
             });    
-        } else {
-            res.json({
-                ok: false,
-                message: errorMessaje,
-                data: null
-            });
         }
+        
+        res.json({
+            ok: false,
+            message: errorMessage,
+            data: null
+        });
     });
 });
 
