@@ -39,9 +39,9 @@ usuario.post('/api/login', (req: Request, res: Response) => {
 });
 
 usuario.get('/api/usuario/list/:idEstado/:offset/:count', [ permisos.verificaSesion ], (req: Request, res: Response) => {
-    let {s_idEmpresa} = req.session!.userSesion;
+    let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     
-    const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${req.params.offset},${req.params.count})`;
+    const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${s_idUsuario},${req.params.offset},${req.params.count})`;
     MySQL.ejecutarQuery(query, (err: any, usuario: any) => {
         if (err) {
             return res.json({
