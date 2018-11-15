@@ -23,7 +23,7 @@ rutas.get("/error", (req: Request, res: Response) => {
 rutas.use(function userAccessLog(req: Request, res: Response, next: any){
     console.log("--------------------------------------------------");
     console.log("Cuando: ", new Date().toISOString().replace(/T/, ' '));
-    console.log("Recurso: ", req.method, req.url, req.baseUrl);
+    console.log("Recurso: ", req.method, req.url, req.originalUrl);
     next();
 });
 

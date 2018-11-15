@@ -4,20 +4,11 @@ import validar from "./validar";
 const inicio = Router();
 
 inicio.get(["/", "/inicio"], [validar.tieneSesion], (req: Request, res: Response) => {
-    res.locals = {
-        titulo: "Inicio"
-    };
-
     console.log("render inicio");
-    res.render("inicio", { });
-    /*if (!req.session!.userLogin) {
-        
-        return res.redirect("/sesion/iniciar");
-    }
-
-    let userLogin = req.session!.userLogin;
-
-    res.render("index", {
+    res.render("inicio", { 
+        titulo: "Inicio"
+    });
+    /*res.render("index", {
         usuarioMenu: userLogin.MenuList,
         userName: userLogin.UsuarioPersona
     });*/

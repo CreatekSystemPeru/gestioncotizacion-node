@@ -32,7 +32,7 @@ sesion.post("/iniciar", (req: Request, res: Response) => {
 });
 
 sesion.get("/salir", (req: Request, res: Response) => {
-    res.redirect(req.baseUrl || "/");
+    res.redirect(req.originalUrl || "/");
 });
 
 export default sesion;

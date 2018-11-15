@@ -105,13 +105,13 @@
     <script>
       $("#aceptar").on("click", function() {
         var credenciales = $("#frmlogin").serializeArray();
-        var iniciarServicio = $.ajax({ type: "POST", url: "/login", data: credenciales });
+        var iniciarServicio = $.ajax({ type: "POST", url: "/api/login", data: credenciales });
         iniciarServicio.done(function(data, textStatus, jqXHR){
           if (data.ok) {
             var activacion = data.data[0];
             var iniciarWeb = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
-            iniciarWeb.done(function(data1, textStatus, jqXHR){
-              if (data1.ok){
+            iniciarWeb.done(function(data1, textStatus, jqXHR) {
+              if (data1.ok) {                
                 toastr.success(data1.message, "", {timeOut: 2000});
                 setTimeout(function(){ window.location.href = "/inicio" }, 2000);
               }
@@ -147,7 +147,7 @@
       });
 
       $(document).on("ready", function() {
-        var leerEmpresas = $.ajax({type: "GET", url: "/empresa/combo"});
+        var leerEmpresas = $.ajax({type: "GET", url: "/api/empresa/combo"});
         leerEmpresas.done(function (data, textStatus, jqXHR) {
           $("#idEmpresa option").remove();
           $.each(data.data, function(i, item) {
