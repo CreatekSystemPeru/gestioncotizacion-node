@@ -7,10 +7,9 @@ const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
 const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const cliente = express_1.Router();
-cliente.get('/api/cliente/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
-    let { s_idEmpresa } = req.session.userSesion;
-    req.session.idMenu = req.params.idMenu;
-    const query = `CALL Cliente_List(${s_idEmpresa},${req.params.idEstado},${req.params.offset},${req.params.count})`;
+cliente.get('/api/cliente/list/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
+    let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
+    const query = `CALL Cliente_List(${s_idEmpresa},${req.params.idEstado},${s_idUsuario},${req.params.offset},${req.params.count})`;
     mysql_1.default.ejecutarQuery(query, (err, cliente) => {
         if (err) {
             return res.json({
@@ -22,11 +21,12 @@ cliente.get('/api/cliente/list/:idMenu/:idEstado/:offset/:count', [permisos_1.de
         res.json({
             ok: true,
             message: '',
-            data: cliente[0]
+            data: cliente[0],
+            permiso: cliente[1]
         });
     });
 });
-cliente.get('/api/cliente/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.get('/api/cliente/get/:Id', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     const query = `CALL Cliente_Get(${s_idEmpresa}, ${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, clienteGet) => {
@@ -44,11 +44,11 @@ cliente.get('/api/cliente/get/:Id/:idAccion', [permisos_1.default.verificaSesion
         });
     });
 });
-cliente.post('/api/cliente/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.post('/api/cliente/reg', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     let { idCliente, RUC, razonSocial, idGiro } = req.body;
     const query = `CALL Cliente_InsertUpdate(${s_idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro},
-                                            1,${s_idUsuario},'HOSTWEB')`;
+                                            1,${s_idUsuario})`;
     mysql_1.default.ejecutarQuery(query, (err, reg) => {
         if (err) {
             return res.json({
@@ -72,9 +72,9 @@ cliente.post('/api/cliente/reg/:idAccion', [permisos_1.default.verificaSesion, p
         });
     });
 });
-cliente.get('/cliente/delete/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.get('/api/cliente/delete/:Id', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
-    const query = `CALL Cliente_ActiveDeactive(${s_idEmpresa}, ${req.params.Id}, ${s_idUsuario}, 'HOSTWEB')`;
+    const query = `CALL Cliente_ActiveDeactive(${s_idEmpresa}, ${req.params.Id}, ${s_idUsuario})`;
     mysql_1.default.ejecutarQuery(query, (err, clienteGet) => {
         if (err) {
             return res.json({

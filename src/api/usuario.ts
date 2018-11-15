@@ -38,9 +38,8 @@ usuario.post('/api/login', (req: Request, res: Response) => {
     });
 });
 
-usuario.get('/api/usuario/list/:idMenu/:idEstado/:offset/:count', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+usuario.get('/api/usuario/list/:idEstado/:offset/:count', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
-    req.session!.idMenu = req.params.idMenu;
     
     const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${req.params.offset},${req.params.count})`;
     MySQL.ejecutarQuery(query, (err: any, usuario: any) => {
@@ -55,12 +54,13 @@ usuario.get('/api/usuario/list/:idMenu/:idEstado/:offset/:count', [ permisos.ver
         res.json({
             ok: true,
             message: '',
-            data: usuario[0]
+            data: usuario[0],
+            permiso: usuario[1]
         });
     });
 });
 
-usuario.get('/api/usuario/get/:Id/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+usuario.get('/api/usuario/get/:Id', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
@@ -82,12 +82,12 @@ usuario.get('/api/usuario/get/:Id/:idAccion', [ permisos.verificaSesion, permiso
 });
 
 /*Falta agregar los permisos*/
-usuario.post('/api/usuario/reg/:idAccion', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+usuario.post('/api/usuario/reg', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     let {idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil} = req.body;
     const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
-                                            ${idPerfil},1,${s_idUsuario},'HOSTWEB')`;
+                                            ${idPerfil},1,${s_idUsuario})`;
     MySQL.ejecutarQuery(query, (err: any, reg: any) => {
         if (err) {
             return res.json({

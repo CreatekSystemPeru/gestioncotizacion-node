@@ -39,9 +39,8 @@ usuario.post('/api/login', (req, res) => {
         }
     });
 });
-usuario.get('/api/usuario/list/:idMenu/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
+usuario.get('/api/usuario/list/:idEstado/:offset/:count', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
-    req.session.idMenu = req.params.idMenu;
     const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${req.params.offset},${req.params.count})`;
     mysql_1.default.ejecutarQuery(query, (err, usuario) => {
         if (err) {
@@ -54,11 +53,12 @@ usuario.get('/api/usuario/list/:idMenu/:idEstado/:offset/:count', [permisos_1.de
         res.json({
             ok: true,
             message: '',
-            data: usuario[0]
+            data: usuario[0],
+            permiso: usuario[1]
         });
     });
 });
-usuario.get('/api/usuario/get/:Id/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+usuario.get('/api/usuario/get/:Id', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
     mysql_1.default.ejecutarQuery(query, (err, empresaGet) => {
@@ -77,11 +77,11 @@ usuario.get('/api/usuario/get/:Id/:idAccion', [permisos_1.default.verificaSesion
     });
 });
 /*Falta agregar los permisos*/
-usuario.post('/api/usuario/reg/:idAccion', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+usuario.post('/api/usuario/reg', [permisos_1.default.verificaSesion], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     let { idUsuario, apellidoPaterno, apellidoMaterno, nombres, usuario, idPerfil } = req.body;
     const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
-                                            ${idPerfil},1,${s_idUsuario},'HOSTWEB')`;
+                                            ${idPerfil},1,${s_idUsuario})`;
     mysql_1.default.ejecutarQuery(query, (err, reg) => {
         if (err) {
             return res.json({
