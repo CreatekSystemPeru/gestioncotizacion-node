@@ -16,6 +16,7 @@ sesion.get("/iniciar", (req: Request, res: Response) => {
 sesion.post("/iniciar", (req: Request, res: Response) => {
     if (req.session!.userSesion!.s_idEmpresa > 0 && req.session!.userSesion!.s_idUsuario > 0) {        
         req.session!.sesionActiva = req.body;
+
         res.json({
             ok: true,
             message: "Inicio de sesión satisfactorio",
@@ -32,7 +33,10 @@ sesion.post("/iniciar", (req: Request, res: Response) => {
 });
 
 sesion.get("/salir", (req: Request, res: Response) => {
-    res.redirect(req.originalUrl || "/");
+    req.session!.sesionActiva = null;
+    req.session!.userSesion = null;
+
+    res.redirect("/iniciar");
 });
 
 export default sesion;
