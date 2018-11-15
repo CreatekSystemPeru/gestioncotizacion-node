@@ -55,6 +55,10 @@ export default class Server {
             blocks[name] = [];
             return val;
         });
+
+        hbs.registerHelper('raw-helper', function(options: any) {
+            return options.fn();
+        });
     }
 
     start(callback: Function) {

@@ -37,16 +37,7 @@
                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                   <div class="menu_section">
                      <h3>General</h3>
-                     <ul class="nav side-menu">
-                        {{#usuarioMenu}}
-                        <li value="{{CodPadre}}"><a><i class="{{Css}}"></i>{{MenuPadre}}<span class="fa fa-chevron-down"></span></a>
-                           <ul class="nav child_menu">
-                              {{#Hijo}}
-                              <li><a href="{{Action}}">{{Menu}}</a></li>
-                              {{/Hijo}}
-                           </ul>
-                        </li>
-                        {{/usuarioMenu}}
+                     <ul class="nav side-menu" id="user-menu-list">
                      </ul>
                   </div>
                </div>
@@ -85,8 +76,38 @@
    <script src="/assets/fastclick/lib/fastclick.js"></script>
    <script src="/assets/nprogress/nprogress.js"></script>
    <script src="/assets/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
+   <script src="/assets/handlebars.min.js"></script>
    <!--  <script src="./../assets/build/js/custom.min.js"></script> -->
+   {{{{raw-helper}}}}
+   <script id="userMenuTemplate" type="text/x-handlebars-template">
+      {{#data}}
+      <li value="{{CodPadre}}"><a><i class="{{Css}}"></i>{{MenuPadre}}<span class="fa fa-chevron-down"></span></a>
+         <ul class="nav child_menu">
+            {{#Hijo}}
+            <li><a href="{{Action}}">{{Menu}}</a></li>
+            {{/Hijo}}
+         </ul>
+      </li>
+      {{/data}}
+   </script>
+   {{{{/raw-helper}}}}
    {{{block "js"}}}
+   <script>    
+      $(document).on("ready", function() {
+          var cargarMenu = $.ajax({type: "GET", url: "/api/usuario/menu"});
+          cargarMenu.done(function (data, textStatus, jqXHR) {
+            if (data.ok){
+               var template = $("#userMenuTemplate").html();
+               var usuarioMenu = data;
+               var htmlMenu = Handlebars.compile(template)(usuarioMenu);
+               $("#user-menu-list").html(htmlMenu);
+            }
+          });
+          cargarMenu.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error("Error al obtener el menú de acciones.");
+          });
+        });
+  </script>
    <script>
       (function ($, sr) {
          // debouncing function from John Hann
