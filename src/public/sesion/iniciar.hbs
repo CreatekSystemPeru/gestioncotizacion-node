@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{titulo}} - Gestión de Cotizaciones</title>
+    <link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/assets/nprogress/nprogress.css" rel="stylesheet" />
+    <link href="/assets/animate.css/animate.min.css" rel="stylesheet" />
+    <link href="/assets/toastr/toastr.css" rel="stylesheet" />
+    <link href="/assets/build/css/custom.min.css" rel="stylesheet" />
+  </head>
+  <body class="login">
+    <div>
+      <a class="hiddenanchor" id="signup"></a>
+      <a class="hiddenanchor" id="signin"></a>
+      <div class="login_wrapper">
+        <div class="animate form login_form">
+          <section class="login_content">
+            <form id="frmlogin">
+              <h1>Autenticación</h1>
+              <div>
+                <select id="idEmpresa" name="idEmpresa" class="form-control">
+                    <option value="">Cargando...</option>
+                    <!--{{#each Empresa}}
+                    <option value="{{ IdEmpresa }}">{{ EmpresaAbrev }}</option>
+                    {{/each}}-->
+                </select>
+              </div>
+              <div>
+                <input type="text" class="form-control" name="usuario" placeholder="Nombre de Usuario"/>
+              </div>
+              <div>
+                <input type="password" class="form-control" name="clave" placeholder="Contraseña" />
+              </div>
+              <div>
+                <label>{{ message }}</label>
+              </div>
+              <div>
+                <a id="aceptar" class="btn btn-default submit" >Iniciar Sesión</a>
+                {{!-- class="reset_pass" onclick="document.getElementById('frmlogin').submit()"--}}
+                <a href="#">¿Has olvidado los datos de la cuenta?</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">Nuevo en el sitio?
+                  <a href="#signup" class="to_register"> Crear Cuenta </a>
+                </p>
+                <div class="clearfix"></div>
+                <br />
+                <div>
+                  <h1><i class="fa fa-dollar"></i> Gestión de Cotizaciones </h1>
+                  <p>©{{getAnio}} Todos los derechos reservados</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+
+        <div id="register" class="animate form registration_form">
+          <section class="login_content">
+            <form>
+              <h1>Crear Cuenta</h1>
+              <div>
+                <input type="text" class="form-control" placeholder="Username" required="" />
+              </div>
+              <div>
+                <input type="email" class="form-control" placeholder="Email" required="" />
+              </div>
+              <div>
+                <input type="password" class="form-control" placeholder="Password" required="" />
+              </div>
+              <div>
+                <a class="btn btn-default submit" href="/">Crear</a>
+              </div>
+
+              <div class="clearfix"></div>
+
+              <div class="separator">
+                <p class="change_link">Ya eres usuario?
+                  <a href="#signin" class="to_register"> Iniciar Sesión </a>
+                </p>
+
+                <div class="clearfix"></div>
+                <br />
+
+                <div>
+                  <h1><i class="fa fa-dollar"></i> Gestión de Cotizaciones</h1>
+                  <p>©{{getAnio}} Todos los derechos reservados</p>
+                </div>
+              </div>
+            </form>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <script src="/assets/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/toastr/toastr.js"></script>
+    <script>
+      $("#aceptar").on("click", function() {
+        var credenciales = $("#frmlogin").serializeArray();
+        var iniciarServicio = $.ajax({ type: "POST", url: "/login", data: credenciales });
+        iniciarServicio.done(function(data, textStatus, jqXHR){
+          if (data.ok) {
+            var activacion = data.data[0];
+            var iniciarWeb = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
+            iniciarWeb.done(function(data1, textStatus, jqXHR){
+              if (data1.ok){
+                toastr.success(data1.message, "", {timeOut: 2000});
+                setTimeout(function(){ window.location.href = "/inicio" }, 2000);
+              }
+            });
+            iniciarWeb.fail(function(jqXHR, textStatus, errorThrown) {
+              toastr.error(textStatus);
+            });
+            return;
+          }
+          toastr.error(data.message);
+        });
+        iniciarServicio.fail(function(jqXHR, textStatus, errorThrown) {
+          toastr.error(textStatus);
+        });
+        /*$.post("/login", data, function(result) {
+            //alert(JSON.stringify(result.data[0]));
+            var activacion = result.data[0];
+
+
+            window.location.href = "/inicio";
+          
+            alert(result.ok);
+            alert(result.message);
+            if (result.includes("#")) {
+            toastr.error(result);
+          } else if (result.includes("'")) {
+            toastr.info(result, '', {timeOut: 3000});
+          } else {
+            toastr.success(result, '', {timeOut: 2000});
+            setTimeout(function(){ window.location.href = '/index' }, 2000);
+          }
+        });*/
+      });
+
+      $(document).on("ready", function() {
+        var leerEmpresas = $.ajax({type: "GET", url: "/empresa/combo"});
+        leerEmpresas.done(function (data, textStatus, jqXHR) {
+          $("#idEmpresa option").remove();
+          $.each(data.data, function(i, item) {
+              $("#idEmpresa").append(new Option(item.EmpresaAbrev, item.IdEmpresa));
+          });
+        });
+        leerEmpresas.fail(function (jqXHR, textStatus, errorThrown) {
+          toastr.error("Error al obtener el listado de empresas.");
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -5,6 +5,8 @@ const hbs = require('hbs');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 
+var blocks : any = {};
+
 export default class Server {
     public app: express.Application;
     public port: number;
@@ -37,6 +39,22 @@ export default class Server {
         this.app.set('views', publicPath);
         hbs.registerPartials(path.join(publicPath, '/partials'));
         this.app.set('view engine', 'hbs'); 
+
+        hbs.registerHelper('extend', function(name: any, context: any) {
+            var block = blocks[name];
+            if (!block) {
+                block = blocks[name] = [];
+            }
+            block.push(context.fn());
+            //block.push(context.fn(this));
+        });
+        
+        hbs.registerHelper('block', function(name: any) {
+            var val = (blocks[name] || []).join('\n');        
+            // clear the block
+            blocks[name] = [];
+            return val;
+        });
     }
 
     start(callback: Function) {

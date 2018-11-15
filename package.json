@@ -10,8 +10,9 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "hbspartials": "copyfiles --up 1 src/public/partials/*.hbs dist",
     "hbscatalogo": "copyfiles --up 1 src/public/catalogo/*.hbs dist",
+    "hbssesion": "copyfiles --up 1 src/public/sesion/*.hbs dist",
     "hbscatalogoempresa": "copyfiles --up 1 src/public/catalogo/empresa/*.hbs dist",
-    "build": "tsc && npm run hbs && npm run hbspartials && npm run hbscatalogo && npm run hbscatalogoempresa"
+    "build": "tsc && npm run hbs && npm run hbspartials && npm run hbssesion && npm run hbscatalogo && npm run hbscatalogoempresa"
   },
   "author": "",
   "license": "ISC",
