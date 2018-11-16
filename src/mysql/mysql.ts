@@ -14,7 +14,6 @@ export default class MySQL {
             password: 'Createk.2018',
             database: 'aminias1_bdcotizacion'
         });
-
         this.conectarDB();
         this.errorConexionDB();
     }
@@ -38,6 +37,16 @@ export default class MySQL {
         });
     }
 
+    private inicializar() {
+        console.log('Clase inicializada');
+        this.cnx = mysql.createConnection({
+            host: 'mi3-wts6.a2hosting.com',
+            user: 'amini_sa',
+            password: 'Createk.2018',
+            database: 'aminias1_bdcotizacion'
+        });
+    }
+
     private conectarDB() {
         this.cnx.connect((err: mysql.MysqlError) => {
             if (err) {
@@ -54,7 +63,9 @@ export default class MySQL {
         this.cnx.on('error', (err) => {            
             if (err.code == 'PROTOCOL_CONNECTION_LOST') {
                 console.log('Conexión finalizada. Reiniciando...');
-                
+                this.inicializar();
+                this.conectarDB();
+                this.errorConexionDB();
                 return;
             }
 
