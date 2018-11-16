@@ -31,10 +31,10 @@
                 </select>
               </div>
               <div>
-                <input type="text" class="form-control" name="usuario" placeholder="Nombre de Usuario"/>
+                <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nombre de Usuario"/>
               </div>
               <div>
-                <input type="password" class="form-control" name="clave" placeholder="Contraseña" />
+                <input type="password" class="form-control" id="clave" name="clave" placeholder="Contraseña" />
               </div>
               <div>
                 <label>{{ message }}</label>
@@ -103,7 +103,14 @@
     <script src="/assets/jquery/dist/jquery.min.js"></script>
     <script src="/assets/toastr/toastr.js"></script>
     <script>
-      $("#aceptar").on("click", function() {
+      $(document).on("ready", function() {
+        $("#aceptar").on("click", aceptar_click);
+        $("#usuario").on("keyup", txt_keyup);
+        $("#clave").on("keyup", txt_keyup);
+        leerEmpresas();
+      });
+
+      function aceptar_click(){
         var credenciales = $("#frmlogin").serializeArray();
         var iniciarServicio = $.ajax({ type: "POST", url: "/api/login", data: credenciales });
         iniciarServicio.done(function(data, textStatus, jqXHR){
@@ -112,8 +119,8 @@
             var iniciarWeb = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
             iniciarWeb.done(function(data1, textStatus, jqXHR) {
               if (data1.ok) {                
-                toastr.success(data1.message, "", {timeOut: 2000});
-                setTimeout(function(){ window.location.href = "/inicio" }, 2000);
+                toastr.success(data1.message, "", {timeOut: 1000});
+                setTimeout(function(){ window.location.href = "/inicio" }, 1000);
               }
             });
             iniciarWeb.fail(function(jqXHR, textStatus, errorThrown) {
@@ -125,39 +132,28 @@
         });
         iniciarServicio.fail(function(jqXHR, textStatus, errorThrown) {
           toastr.error(textStatus);
-        });
-        /*$.post("/login", data, function(result) {
-            //alert(JSON.stringify(result.data[0]));
-            var activacion = result.data[0];
+        });        
+      }
 
+      function txt_keyup(event){
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          $("#aceptar").trigger("click");
+        }
+      }
 
-            window.location.href = "/inicio";
-          
-            alert(result.ok);
-            alert(result.message);
-            if (result.includes("#")) {
-            toastr.error(result);
-          } else if (result.includes("'")) {
-            toastr.info(result, '', {timeOut: 3000});
-          } else {
-            toastr.success(result, '', {timeOut: 2000});
-            setTimeout(function(){ window.location.href = '/index' }, 2000);
-          }
-        });*/
-      });
-
-      $(document).on("ready", function() {
-        var leerEmpresas = $.ajax({type: "GET", url: "/api/empresa/combo"});
-        leerEmpresas.done(function (data, textStatus, jqXHR) {
+      function leerEmpresas(){
+        var svcEmpresaCombo = $.ajax({type: "GET", url: "/api/empresa/combo"});
+        svcEmpresaCombo.done(function (data, textStatus, jqXHR) {
           $("#idEmpresa option").remove();
           $.each(data.data, function(i, item) {
               $("#idEmpresa").append(new Option(item.EmpresaAbrev, item.IdEmpresa));
           });
         });
-        leerEmpresas.fail(function (jqXHR, textStatus, errorThrown) {
+        svcEmpresaCombo.fail(function (jqXHR, textStatus, errorThrown) {
           toastr.error("Error al obtener el listado de empresas.");
         });
-      });
+      }
     </script>
   </body>
 </html>
