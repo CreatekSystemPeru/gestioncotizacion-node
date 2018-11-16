@@ -5,8 +5,8 @@ import cliente from "./cliente";
 
 const index = Router();
 
-index.use(empresa);
-index.use(usuario);
-index.use(cliente);
+index.use('/api', empresa);
+index.use('/api', usuario);
+index.use('/api', cliente);
 
 export default index;

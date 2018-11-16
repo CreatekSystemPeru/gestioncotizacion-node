@@ -16,6 +16,7 @@ export default class MySQL {
         });
 
         this.conectarDB();
+        this.errorConexionDB();
     }
 
     public static get instance() {
@@ -25,8 +26,7 @@ export default class MySQL {
     static ejecutarQuery(query: string, callback: Function) {
         this.instance.cnx.query(query, (err, results: Object[], fields) => {
             if (err) {
-                console.log('Error en query');
-                console.log(err);
+                console.log('Error en query: ', err);
                 return callback(err);
             }
 
@@ -41,12 +41,24 @@ export default class MySQL {
     private conectarDB() {
         this.cnx.connect((err: mysql.MysqlError) => {
             if (err) {
-                console.log(err.message);
+                console.log('Error in conectarDB(): ', err.message);                
                 return;
             }
 
             this.conectado = true;
             console.log('Base de datos online');
+        });
+    }
+
+    private errorConexionDB() {
+        this.cnx.on('error', (err) => {            
+            if (err.code == 'PROTOCOL_CONNECTION_LOST') {
+                console.log('Conexión finalizada. Reiniciando...');
+                
+                return;
+            }
+
+            console.log('Error en errorConexionDB(): ', err);
         });
     }
 }

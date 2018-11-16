@@ -3,7 +3,7 @@ import MySQL from '../mysql/mysql';
 import permisos from '../middlewares/permisos';
 
 const cliente = Router();
-cliente.get('/api/cliente/list/:idEstado/:offset/:count', [permisos.verificaSesion], (req: Request, res: Response) => {
+cliente.get('/cliente/list/:idEstado/:offset/:count', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Cliente_List(${s_idEmpresa},${req.params.idEstado},${s_idUsuario},${req.params.offset},${req.params.count})`;
@@ -25,7 +25,7 @@ cliente.get('/api/cliente/list/:idEstado/:offset/:count', [permisos.verificaSesi
     });
 });
 
-cliente.get('/api/cliente/get/:Id', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+cliente.get('/cliente/get/:Id', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Cliente_Get(${s_idEmpresa}, ${req.params.Id})`;
@@ -46,7 +46,7 @@ cliente.get('/api/cliente/get/:Id', [ permisos.verificaSesion ], (req: Request, 
     });
 });
 
-cliente.post('/api/cliente/reg', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+cliente.post('/cliente/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     let {idCliente, RUC, razonSocial, idGiro} = req.body;
     const query = `CALL Cliente_InsertUpdate(${s_idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro},
@@ -77,11 +77,11 @@ cliente.post('/api/cliente/reg', [ permisos.verificaSesion ], (req: Request, res
     });
 });
 
-cliente.get('/api/cliente/delete/:Id', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+cliente.get('/cliente/delete/:Id', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Cliente_ActiveDeactive(${s_idEmpresa}, ${req.params.Id}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, (err: any, clienteGet: any) => {
+    MySQL.ejecutarQuery(query, (err: any, clienteDelete: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -92,7 +92,7 @@ cliente.get('/api/cliente/delete/:Id', [ permisos.verificaSesion ], (req: Reques
 
         res.json({
             ok: true,
-            message: clienteGet[0][0].ErrorMessage,
+            message: clienteDelete[0][0].ErrorMessage,
             data: null
         });
     });

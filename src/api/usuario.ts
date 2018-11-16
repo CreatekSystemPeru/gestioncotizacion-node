@@ -3,7 +3,7 @@ import MySQL from '../mysql/mysql';
 import permisos from '../middlewares/permisos';
 
 const usuario = Router();
-usuario.post('/api/login', (req: Request, res: Response) => {
+usuario.post('/login', (req: Request, res: Response) => {
     let { idEmpresa, usuario, clave } = req.body;
 
     const query = `CALL Usuario_Autentication(${ idEmpresa}, '${ usuario }', '${ clave }')`;
@@ -38,7 +38,7 @@ usuario.post('/api/login', (req: Request, res: Response) => {
     });
 });
 
-usuario.get('/api/usuario/list/:idEstado/:offset/:count', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+usuario.get('/usuario/list/:idEstado/:offset/:count', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     
     const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${s_idUsuario},${req.params.offset},${req.params.count})`;
@@ -60,7 +60,7 @@ usuario.get('/api/usuario/list/:idEstado/:offset/:count', [ permisos.verificaSes
     });
 });
 
-usuario.get('/api/usuario/get/:Id', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+usuario.get('/usuario/get/:Id', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
@@ -82,7 +82,7 @@ usuario.get('/api/usuario/get/:Id', [ permisos.verificaSesion ], (req: Request, 
 });
 
 /*Falta agregar los permisos*/
-usuario.post('/api/usuario/reg', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+usuario.post('/usuario/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     let {idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil} = req.body;
@@ -114,7 +114,7 @@ usuario.post('/api/usuario/reg', [ permisos.verificaSesion ], (req: Request, res
     });
 });
 
-usuario.get('/api/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: Response) => {
+usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Usuario_Menu_List(${s_idEmpresa}, ${s_idUsuario})`;
@@ -145,6 +145,37 @@ usuario.get('/api/usuario/menu/', [ permisos.verificaSesion ], (req: Request, re
             ok: true,
             message: '',
             data: newUsuarioMenu
+        });
+    });
+});
+
+usuario.get('/usuario/delete/:Id', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+    let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
+
+    const query = `CALL Usuario_ActiveDeactive(${s_idEmpresa}, ${req.params.Id}, ${s_idUsuario})`;
+    MySQL.ejecutarQuery(query, (err: any, usuarioDelete: any) => {
+        if (err) {
+            return res.json({
+                ok: false,
+                message: `#${err.message}`,
+                data: null
+            });
+        }
+
+        res.json({
+            ok: true,
+            message: usuarioDelete[0][0].ErrorMessage,
+            data: null
+        });
+    });
+});
+
+usuario.get('/salir', (req: Request, res: Response) => {
+    req.session!.destroy((err) =>{
+        res.json({
+            ok: (err) ? false : true,
+            message: (err) ? `#${err.message}` : 'Se ha cerrado la sesión',
+            data: null
         });
     });
 });
