@@ -63,6 +63,11 @@ export default class Server {
 
     start(callback: Function) {
         this.publicFolder();
+
+        this.app.use(function(req, res, next){
+            res.status(404).send('404_error_template');
+        });
+
         this.app.listen(this.port, callback);
     }
 }

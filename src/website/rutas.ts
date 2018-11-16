@@ -1,16 +1,9 @@
 import { Router, Request, Response } from "express";
-
 import inicio from "./inicio";
 import sesion from "./sesion";
+import empresas from "./empresas";
 
 const rutas = Router();
-/*rutas.get("/", (req: Request, res: Response) => {
-    if (req.session!.userLogin) {        return res.redirect('/index');    }    
-    let message = req.query.message;
-    const query = `CALL Empresa_Combo()`;
-    MySQL.ejecutarQuery(query, (err: any, Empresa: object[]) => {
-        if (err) {            return res.redirect('/error?message=' + err.message);
-        } else {            res.render('login', { Empresa: Empresa[0], message });        }    });})*/
 
 rutas.get("/error", (req: Request, res: Response) => {
     let message = req.query.message;
@@ -32,5 +25,6 @@ rutas.use(function userAccessLog(req: Request, res: Response, next: any){
 
 rutas.use("/", inicio);
 rutas.use("/sesion", sesion);
+rutas.use("/empresas", empresas);
 
 export default rutas;
