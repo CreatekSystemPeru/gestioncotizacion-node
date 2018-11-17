@@ -9,12 +9,13 @@ sesion.get("/iniciar", (req: Request, res: Response) => {
 
     res.render("sesion/iniciar", {
         layout: false,
-        titulo: "Iniciar sesión" /*usuarioMenu: userLogin.MenuList*/
+        titulo: "Iniciar sesión"
     });
 });
 
 sesion.post("/iniciar", (req: Request, res: Response) => {
-    if (req.session!.userSesion!.s_idEmpresa > 0 && req.session!.userSesion!.s_idUsuario > 0) {        
+    var svcSesion = req.session!.userSesion;
+    if (svcSesion!.s_idEmpresa > 0 && svcSesion!.s_idUsuario > 0) {        
         req.session!.sesionActiva = req.body;
 
         res.json({
@@ -36,7 +37,7 @@ sesion.get("/salir", (req: Request, res: Response) => {
     req.session!.sesionActiva = null;
     req.session!.userSesion = null;
 
-    res.redirect("/iniciar");
+    res.redirect("/sesion/iniciar");
 });
 
 export default sesion;

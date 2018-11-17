@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
    <meta charset="utf-8" />
@@ -33,7 +32,7 @@
                   </div>
                </div>
                <br />
-               <!-- sidebar menu -->
+               
                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                   <div class="menu_section">
                      <h3>General</h3>
@@ -77,7 +76,8 @@
    <script src="/assets/nprogress/nprogress.js"></script>
    <script src="/assets/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
    <script src="/assets/handlebars.min.js"></script>
-   <!--  <script src="./../assets/build/js/custom.min.js"></script> -->
+   
+   
    {{{{raw-helper}}}}
    <script id="userMenuTemplate" type="text/x-handlebars-template">
       {{#data}}
@@ -100,7 +100,8 @@
                var template = $("#userMenuTemplate").html();
                var usuarioMenu = data;
                var htmlMenu = Handlebars.compile(template)(usuarioMenu);
-               $("#user-menu-list").html(htmlMenu);
+               $("body #user-menu-list").html(htmlMenu);
+               init_sidebar();
             }
           });
           cargarMenu.fail(function (jqXHR, textStatus, errorThrown) {
@@ -236,11 +237,6 @@
             });
          }
       };
-
-      $(document).ready(function () {
-         init_sidebar();
-      });
    </script>
 </body>
-
 </html>

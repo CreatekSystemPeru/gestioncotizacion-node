@@ -14,7 +14,7 @@ rutas.get("/error", (req: Request, res: Response) => {
 });
 
 rutas.use(function userAccessLog(req: Request, res: Response, next: any){
-    if (! req.url.startsWith("/assets")) {        
+    if (! req.url.startsWith("/lib")) {        
         console.log("--------------------------------------------------");
         console.log("Cuando: ", new Date().toISOString().replace(/T/, ' '));
         console.log("Recurso: ", req.method, req.url, "(" + (req.baseUrl || "/") + ")" );

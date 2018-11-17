@@ -193,18 +193,23 @@
             return;
 
         var data = $("#formInfo").serializeArray();
-alert(JSON.stringify(data));
+        //alert(JSON.stringify(data));
 
         $.post("/api/empresa/reg", data, function (result) {
-            $.each(result.errorMessage, function (i, item) {
+            if (result.ok){
+                toastr.success(result.message, '', { timeOut: 1200 });
+                setTimeout(function () { window.location.href = "/empresas/listar" }, 1200);
+            }
+            else{
+                toastr.error(result.message);
+            }
+            /*$.each(result.errorMessage, function (i, item) {
                 if (item.ErrorMessage.includes("#")) {
-                    toastr.error(item.ErrorMessage);
+                    
                 }
                 else {
-                    toastr.success(item.ErrorMessage, '', { timeOut: 1200 });
-                    setTimeout(function () { window.location.href = "/empresas/listar" }, 1200);
                 }
-            });
+            });*/
         });
     })
 
