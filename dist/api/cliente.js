@@ -7,9 +7,9 @@ const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
 const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const cliente = express_1.Router();
-cliente.get('/cliente/list/:idEstado/:offset/:count', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.get('/cliente/list/', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
-    const query = `CALL Cliente_List(${s_idEmpresa},${req.params.idEstado},${s_idUsuario},${req.params.offset},${req.params.count})`;
+    const query = `CALL Cliente_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
     mysql_1.default.ejecutarQuery(query, (err, cliente) => {
         if (err) {
             return res.json({
@@ -26,9 +26,9 @@ cliente.get('/cliente/list/:idEstado/:offset/:count', [permisos_1.default.verifi
         });
     });
 });
-cliente.get('/cliente/get/:Id', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.get('/cliente/get/', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
-    const query = `CALL Cliente_Get(${s_idEmpresa}, ${req.params.Id})`;
+    const query = `CALL Cliente_Get(${s_idEmpresa}, ${req.query.Id || 0})`;
     mysql_1.default.ejecutarQuery(query, (err, clienteGet) => {
         if (err) {
             return res.json({
@@ -72,9 +72,9 @@ cliente.post('/cliente/reg', [permisos_1.default.verificaSesion, permisos_1.defa
         });
     });
 });
-cliente.get('/cliente/delete/:Id', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.get('/cliente/delete', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
-    const query = `CALL Cliente_ActiveDeactive(${s_idEmpresa}, ${req.params.Id}, ${s_idUsuario})`;
+    const query = `CALL Cliente_ActiveDeactive(${s_idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
     mysql_1.default.ejecutarQuery(query, (err, clienteDelete) => {
         if (err) {
             return res.json({

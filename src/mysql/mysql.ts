@@ -25,15 +25,22 @@ export default class MySQL {
     static ejecutarQuery(query: string, callback: Function) {
         this.instance.cnx.query(query, (err, results: Object[], fields) => {
             if (err) {
-                console.log('Error en query: ', err);
+                console.log('Error en ejecutarQuery(): ', err);
                 return callback(err);
             }
 
-            if (results.length === 0) {
-                callback('El registro solicitado no existe');
-            } else {
-                callback(null, results);
+            callback(null, results);
+        });
+    }
+
+    static ejecutarQueryAndValues(query: string, values: any, callback: Function) {
+        this.instance.cnx.query(query, values, (err, results: Object[], fields) => {
+            if (err) {
+                console.log('Error en ejecutarQueryAndValues(): ', err);
+                return callback(err);
             }
+
+            callback(null, results);
         });
     }
 

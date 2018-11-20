@@ -3,10 +3,10 @@ import MySQL from '../mysql/mysql';
 import permisos from '../middlewares/permisos';
 
 const producto = Router();
-producto.get('/producto/list/:idEstado/:offset/:count', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
+producto.get('/producto/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
-    const query = `CALL Producto_List(${s_idEmpresa},${req.params.idEstado},${s_idUsuario},${req.params.offset},${req.params.count})`;
+    const query = `CALL Producto_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
     MySQL.ejecutarQuery(query, (err: any, producto: any) => {
         if (err) {
             return res.json({
@@ -25,10 +25,10 @@ producto.get('/producto/list/:idEstado/:offset/:count', [permisos.verificaSesion
     });
 });
 
-producto.get('/producto/get/:Id', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+producto.get('/producto/get', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
 
-    const query = `CALL Producto_Get(${s_idEmpresa}, ${req.params.Id})`;
+    const query = `CALL Producto_Get(${s_idEmpresa}, ${req.query.Id || 0})`;
     MySQL.ejecutarQuery(query, (err: any, productoGet: any) => {
         if (err) {
             return res.json({
@@ -76,10 +76,10 @@ producto.post('/producto/reg', [ permisos.verificaSesion, permisos.verificaPermi
     });
 });
 
-producto.get('/producto/delete/:Id', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+producto.get('/producto/delete', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
-    const query = `CALL Producto_ActiveDeactive(${s_idEmpresa}, ${req.params.Id}, ${s_idUsuario})`;
+    const query = `CALL Producto_ActiveDeactive(${s_idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
     MySQL.ejecutarQuery(query, (err: any, productoDelete: any) => {
         if (err) {
             return res.json({
