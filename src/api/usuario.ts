@@ -3,7 +3,7 @@ import MySQL from '../mysql/mysql';
 import permisos from '../middlewares/permisos';
 
 const usuario = Router();
-usuario.post('/login', (req: Request, res: Response) => {
+usuario.post('/usuario/login', (req: Request, res: Response) => {
     let { idEmpresa, usuario, clave } = req.body;
 
     const query = `CALL Usuario_Autentication(${ idEmpresa}, '${ usuario }', '${ clave }')`;
@@ -170,7 +170,7 @@ usuario.get('/usuario/delete/:Id', [ permisos.verificaSesion, permisos.verificaP
     });
 });
 
-usuario.get('/salir', (req: Request, res: Response) => {
+usuario.get('/usuario/salir', (req: Request, res: Response) => {
     req.session!.destroy((err) =>{
         res.json({
             ok: (err) ? false : true,
