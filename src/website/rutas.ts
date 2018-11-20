@@ -2,6 +2,7 @@ import { Router, Request, Response } from "express";
 import inicio from "./inicio";
 import sesion from "./sesion";
 import empresas from "./empresas";
+import clientes from "./clientes";
 
 const rutas = Router();
 
@@ -26,5 +27,6 @@ rutas.use(function userAccessLog(req: Request, res: Response, next: any){
 rutas.use("/", inicio);
 rutas.use("/sesion", sesion);
 rutas.use("/empresas", empresas);
+rutas.use("/clientes", clientes);
 
 export default rutas;

@@ -10,7 +10,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Listado de Empresas</h2>
+            <h2>Listado de Clientes</h2>
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
@@ -19,13 +19,8 @@
                     <tr>
                         <th></th>
                         <th>RUC</th>
-                        <th>Empresa</th>
-                        <th>Abreviado</th>
-                        <th>Dirección</th>
-                        <th>Teléfono</th>
-                        <th>Móvil</th>
-                        <th>Email</th>
-                        <th>URL</th>
+                        <th>Razon Social</th>
+                        <th>Giro</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -50,7 +45,7 @@
     var table = $('#tblList').DataTable({
       dom: 'Blfrtip',
       ajax: {
-        url: "/api/empresa/list?count=100",
+        url: "/api/cliente/list?count=100",
         type: 'GET'
       },
       buttons: [
@@ -59,33 +54,24 @@
           className: "btn btn-default",
           action: function (e, dt, node, config) {
               //alert( 'Button activated' );
-              window.location = "/empresas/ver/0";
+              window.location = "/clientes/ver/0";
           }
         }
       ],
       columns: [
-        { data: "IdEmpresa", visible: false },
+        { data: 'IdCliente', visible: false },
         { data: 'RUC' },
-        { data: 'Empresa' },
-        { data: 'EmpresaAbrev' },
-        { data: 'Direccion' },
-        { data: 'Telefono' },
-        { data: 'Movil' },
-        { data: 'Email' },
-        { data: 'URL' },
+        { data: 'RazonSocial' },
+        { data: 'Giro' },
         {
           data: null,
           bSortable: false,
           render: function (o) { 
-            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/empresas/ver/' + o.IdEmpresa + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
+            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/clientes/ver/' + o.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
           }
         }
       ]
     });
-  }); 
-  /*$('#tblList tbody').on( 'click', 'a', function () {
-    var data = table.row($(this).parents('tr')).data();
-    console.log(data[0]);
-  });*/
+  });
 </script>
 {{/extend}}
