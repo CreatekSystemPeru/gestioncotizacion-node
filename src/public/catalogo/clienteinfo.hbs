@@ -14,7 +14,7 @@
                     </div>
                     <div class="x_content">
                         <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
-                            <input type="hidden" id="IdCliente" name="IdCliente" value="{{obj.IdCliente}}" />
+                            <input type="hidden" id="idCliente" name="idCliente" value="{{obj.IdCliente}}" />
                             <input type="hidden" id="IdEmpresa" name="IdEmpresa" value="{{obj.IdEmpresa}}" />
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="RUC">RUC <span class="required">*</span></label>
@@ -23,15 +23,15 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="RazonSocial">Razon Social <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="razonSocial">Razon Social <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="RazonSocial" class="form-control col-md-7 col-xs-12" name="RazonSocial" value="{{obj.RazonSocial}}" required="required" />
+                                    <input type="text" id="razonSocial" class="form-control col-md-7 col-xs-12" name="razonSocial" value="{{obj.RazonSocial}}" required="required" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="IdGiro">Giro <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idGiro">Giro <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select id="IdGiro" name="IdGiro" class="form-control">
+                                    <select id="idGiro" name="idGiro" class="form-control">
                                         <option value="0">Work hard</option>
                                         <option value="1">Sex hard</option>
                                     </select>
@@ -52,8 +52,8 @@
     </form>
 </div>
 <script>
-    var clienteId="{{clienteId}}";
-    var empresaId="{{sesionActiva.IdEmpresa}}";
+    var clienteId = "{{clienteId}}";
+    var empresaId = "{{sesionActiva.IdEmpresa}}";
 </script>
 {{#extend "js"}}
 <script src="/assets/parsleyjs/dist/parsley.js"></script>
@@ -61,9 +61,10 @@
 <script>
     $(document).on("ready", function () {
         init_parsley();
-        // cargar la info del cliente
-        $("#IdCliente").val(clienteId);
-        if (clienteId > 0){
+
+        $("#idCliente").val(clienteId);
+        $("#IdEmpresa").val(empresaId);
+        if (clienteId > 0) {
             leerCliente();
         }
     });
@@ -73,10 +74,10 @@
         svcGetCliente.done(function (data, textStatus, jqXHR) {
             if (data.ok) {
                 var obj = data.data[0];
-                $("#IdCliente").val(obj.IdCliente);
+                $("#idCliente").val(obj.IdCliente);
                 $("#RUC").val(obj.RUC);
-                $("#RazonSocial").val(obj.RazonSocial);
-                $("#IdGiro").val(obj.IdGiro);
+                $("#razonSocial").val(obj.RazonSocial);
+                $("#idGiro").val(obj.IdGiro);
             }
         });
         svcGetCliente.fail(function (jqXHR, textStatus, errorThrown) {
