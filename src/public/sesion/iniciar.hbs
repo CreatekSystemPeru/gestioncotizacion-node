@@ -112,7 +112,7 @@
 
       function aceptar_click(){
         var credenciales = $("#frmlogin").serializeArray();
-        var iniciarServicio = $.ajax({ type: "POST", url: "/api/login", data: credenciales });
+        var iniciarServicio = $.ajax({ type: "POST", url: "/api/usuario/login", data: credenciales });
         iniciarServicio.done(function(data, textStatus, jqXHR){
           if (data.ok) {
             var activacion = data.data[0];

@@ -14,10 +14,10 @@ rutas.get("/error", (req: Request, res: Response) => {
 });
 
 rutas.use(function userAccessLog(req: Request, res: Response, next: any){
-    if (! req.url.startsWith("/lib")) {        
+    if (! req.url.startsWith("/lib") && ! req.url.startsWith("/assets")) {        
         console.log("--------------------------------------------------");
         console.log("Cuando: ", new Date().toISOString().replace(/T/, ' '));
-        console.log("Recurso: ", req.method, req.url, "(" + (req.baseUrl || "/") + ")" );
+        console.log("Recurso: ", req.method, req.url, req.headers.host, "(" + (req.baseUrl || "/") + ")" );
     }
 
     next();

@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "cookie-parser": "^1.4.3",
     "copy-dir": "^0.4.0",
@@ -26,7 +27,8 @@
     "gentelella": "^1.4.0",
     "hbs": "^4.0.1",
     "mysql": "github:mysqljs/mysql",
-    "parsley": "^0.1.0"
+    "parsley": "^0.1.0",
+    "request": "^2.88.0"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",

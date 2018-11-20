@@ -10,7 +10,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Listado de Empresa</h2>
+            <h2>Listado de Empresas</h2>
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
@@ -40,7 +40,8 @@
 </div>
 
 {{#extend "js"}}
-<script src="/assets/datatables.net/js/jquery.dataTables.js"></script>
+<script src="/assets/jquery.dataTables.min.js"></script>
+<script src="/assets/dataTables.buttons.min.js"></script>
 <script src="/assets/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="/assets/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="/assets/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>  
@@ -48,9 +49,17 @@
   $(document).ready(function() {
     var table = $('#tblList').DataTable({
       ajax: {
-        url: "/api/empresa/list/0/0/100",
+        url: "/api/empresa/list?count=100",
         type: 'GET'
       },
+      buttons: [
+        {
+          text: "Nuevo",
+          action: function (e, dt, node, config) {
+              alert( 'Button activated' );
+          }
+        }
+      ],
       columns: [
         { data: "IdEmpresa", visible: false },
         { data: 'RUC' },
