@@ -38,10 +38,10 @@ usuario.post('/usuario/login', (req: Request, res: Response) => {
     });
 });
 
-usuario.get('/usuario/list/:idEstado/:offset/:count', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+usuario.get('/usuario/list', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     
-    const query = `CALL Usuario_List(${s_idEmpresa},${req.params.idEstado},${s_idUsuario},${req.params.offset},${req.params.count})`;
+    const query = `CALL Usuario_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
     MySQL.ejecutarQuery(query, (err: any, usuario: any) => {
         if (err) {
             return res.json({
@@ -60,10 +60,10 @@ usuario.get('/usuario/list/:idEstado/:offset/:count', [ permisos.verificaSesion,
     });
 });
 
-usuario.get('/usuario/get/:Id', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+usuario.get('/usuario/get', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa} = req.session!.userSesion;
 
-    const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.params.Id})`;
+    const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.query.Id || 0})`;
     MySQL.ejecutarQuery(query, (err: any, empresaGet: any) => {
         if (err) {
             return res.json({
@@ -149,10 +149,10 @@ usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: R
     });
 });
 
-usuario.get('/usuario/delete/:Id', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+usuario.get('/usuario/delete', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
-    const query = `CALL Usuario_ActiveDeactive(${s_idEmpresa}, ${req.params.Id}, ${s_idUsuario})`;
+    const query = `CALL Usuario_ActiveDeactive(${s_idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
     MySQL.ejecutarQuery(query, (err: any, usuarioDelete: any) => {
         if (err) {
             return res.json({
