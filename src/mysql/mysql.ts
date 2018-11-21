@@ -19,7 +19,8 @@ export default class MySQL {
     }
 
     public static get instance() {
-        return this._instance || (this._instance = new this());
+        //return this._instance || (this._instance = new this());
+        return this._instance = new this();
     }
 
     static ejecutarQuery(query: string, callback: Function) {
@@ -30,6 +31,8 @@ export default class MySQL {
             }
 
             callback(null, results);
+            
+            this.instance.cnx.end();
         });
     }
 
@@ -41,18 +44,19 @@ export default class MySQL {
             }
 
             callback(null, results);
+            
+            this.instance.cnx.end();
         });
     }
 
-    private inicializar() {
-        console.log('Clase inicializada');
-        this.cnx = mysql.createConnection({
-            host: 'mi3-wts6.a2hosting.com',
-            user: 'amini_sa',
-            password: 'Createk.2018',
-            database: 'aminias1_bdcotizacion'
-        });
-    }
+    // private inicializar() {
+    //     this.cnx = mysql.createConnection({
+    //         host: 'mi3-wts6.a2hosting.com',
+    //         user: 'amini_sa',
+    //         password: 'Createk.2018',
+    //         database: 'aminias1_bdcotizacion'
+    //     });
+    // }
 
     private conectarDB() {
         this.cnx.connect((err: mysql.MysqlError) => {
@@ -62,17 +66,18 @@ export default class MySQL {
             }
 
             this.conectado = true;
-            console.log('Base de datos online');
+            //console.log('Base de datos online');
         });
     }
 
     private errorConexionDB() {
         this.cnx.on('error', (err) => {            
             if (err.code == 'PROTOCOL_CONNECTION_LOST') {
-                console.log('Conexión finalizada. Reiniciando...');
-                this.inicializar();
-                this.conectarDB();
-                this.errorConexionDB();
+                //console.log('Conexión finalizada. Reiniciando...');
+                console.log('Conexión Finalizada');
+                //this.inicializar();
+                // this.conectarDB();
+                // this.errorConexionDB();
                 return;
             }
 
