@@ -64,9 +64,9 @@ export default class MySQL {
 
             console.log('> Instrucción ejecutada');
             callback(null, results);
-
-            this.desconectarDB();
         });
+
+        this.desconectarDB();
     }
 
     static inicializarDB() {
@@ -95,10 +95,9 @@ export default class MySQL {
         this.cnx.end((err: mysql.MysqlError) => {
             if (err) {
                 console.log('> Error in end(): ', err.message);
-                return;
-            }
-
+            }            
             console.log('> Desconectado de Base de datos');
+            this.inicializarDB();
         });
     }
 }
