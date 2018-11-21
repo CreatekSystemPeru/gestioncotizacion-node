@@ -1,0 +1,78 @@
+{{#extend "css"}}
+<link href="/assets/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/assets/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+{{/extend}}
+
+<div class="right_col" role="main">
+  <div class="">
+    <div class="clearfix"></div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Listado de Clientes</h2>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table id="tblList" class="table table-striped table-bordered dt-responsive nowrap display" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>RUC</th>
+                        <th>Razon Social</th>
+                        <th>Giro</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{#extend "js"}}
+<script src="/assets/jquery.dataTables.min.js"></script>
+<script src="/assets/dataTables.buttons.min.js"></script>
+<script src="/assets/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/assets/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/assets/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+    var table = $('#tblList').DataTable({
+      dom: 'Blfrtip',
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: "/clientes/listar?count=100",
+        type: 'GET'
+      },
+      buttons: [
+        {
+          text: "Nuevo",
+          className: "btn btn-default",
+          action: function (e, dt, node, config) {
+              window.location.href = "/clientes/ver/0";
+          }
+        }
+      ],
+      columns: [
+        { data: 'IdCliente', visible: false },
+        { data: 'RUC' },
+        { data: 'RazonSocial' },
+        { data: 'Giro' },
+        {
+          data: null,
+          bSortable: false,
+          render: function (o) { 
+            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/clientes/ver/' + o.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
+          }
+        }
+      ]
+    });
+  });
+</script>
+{{/extend}}

@@ -5,7 +5,7 @@ const empresas = Router();
 
 empresas.get(["/", "/listar"], [validar.tieneSesion], (req: Request, res: Response) => {
     console.log("P empresa list: render");
-    res.render("catalogo/empresa", {
+    res.render("catalogo/empresalista", {
         titulo: "Listado de empresas"
     });
 });

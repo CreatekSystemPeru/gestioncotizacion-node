@@ -65,7 +65,9 @@ export default class Server {
         this.publicFolder();
 
         this.app.use(function(req, res, next){
-            res.status(404).send('404_error_template');
+            res.status(404).render("error", {
+                layout: false
+            });
         });
 
         this.app.listen(this.port, callback);
