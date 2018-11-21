@@ -99,7 +99,6 @@ export default class MySQL {
             }
 
             console.log('> Desconectado de Base de datos');
-            this.cnx.destroy();
         });
     }
 }
