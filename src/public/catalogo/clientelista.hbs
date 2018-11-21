@@ -36,6 +36,7 @@
 </div>
 
 {{#extend "js"}}
+<script src="/assets/jszip.min.js"></script>
 <script src="/assets/jquery.dataTables.min.js"></script>
 <script src="/assets/dataTables.buttons.min.js"></script>
 <script src="/assets/buttons.print.min.js"></script>
@@ -55,7 +56,12 @@
         {
           extend: 'excel',
           text: 'Excel',
-          className: "btn btn-default"
+          className: "btn btn-default",
+			exportOptions: {
+				modifier: {
+					page: 'current'
+				}
+			}
         },
         {
           extend: 'print',
