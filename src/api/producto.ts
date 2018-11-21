@@ -7,7 +7,7 @@ producto.get('/producto/list', [permisos.verificaSesion, permisos.verificaPermis
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Producto_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
-    MySQL.ejecutarQuery(query, (err: any, producto: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, producto: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -29,7 +29,7 @@ producto.get('/producto/get', [ permisos.verificaSesion, permisos.verificaPermis
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Producto_Get(${s_idEmpresa}, ${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, (err: any, productoGet: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, productoGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -50,7 +50,7 @@ producto.post('/producto/reg', [ permisos.verificaSesion, permisos.verificaPermi
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     let {idProducto, producto} = req.body;
     const query = `CALL Producto_InsertUpdate(${s_idEmpresa},${idProducto},'','${producto}',1,${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, (err: any, reg: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -80,7 +80,7 @@ producto.get('/producto/delete', [ permisos.verificaSesion, permisos.verificaPer
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Producto_ActiveDeactive(${s_idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, (err: any, productoDelete: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, productoDelete: any) => {
         if (err) {
             return res.json({
                 ok: false,

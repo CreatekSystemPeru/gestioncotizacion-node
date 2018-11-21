@@ -8,7 +8,7 @@ tablaMaestra.get('/tablamaestra/combo', [ permisos.verificaSesion ], (req: Reque
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL TablaMaestra_Combo(${s_idEmpresa},${req.query.idTabla})`;
-    MySQL.ejecutarQuery(query, (err: any, tablaGet: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, tablaGet: any) => {
         if (err) {
             return res.json({
                 ok: false,

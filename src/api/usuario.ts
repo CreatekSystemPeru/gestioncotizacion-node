@@ -7,7 +7,7 @@ usuario.post('/usuario/login', (req: Request, res: Response) => {
     let { idEmpresa, usuario, clave } = req.body;
 
     const query = `CALL Usuario_Autentication(${ idEmpresa}, '${ usuario }', '${ clave }')`;
-    MySQL.ejecutarQuery(query, (err: any, usuarioLogin: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, usuarioLogin: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -42,7 +42,7 @@ usuario.get('/usuario/list', [ permisos.verificaSesion, permisos.verificaPermiso
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     
     const query = `CALL Usuario_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
-    MySQL.ejecutarQuery(query, (err: any, usuario: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, usuario: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -64,7 +64,7 @@ usuario.get('/usuario/get', [ permisos.verificaSesion, permisos.verificaPermiso 
     let {s_idEmpresa} = req.session!.userSesion;
 
     const query = `CALL Usuario_Get(${s_idEmpresa}, ${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, (err: any, empresaGet: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, empresaGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -88,7 +88,7 @@ usuario.post('/usuario/reg', [ permisos.verificaSesion, permisos.verificaPermiso
         nombres, usuario, idPerfil} = req.body;
     const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
                                             ${idPerfil},1,${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, (err: any, reg: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -118,7 +118,7 @@ usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: R
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Usuario_Menu_List(${s_idEmpresa}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, (err: any, usuarioMenu: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, usuarioMenu: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -153,7 +153,7 @@ usuario.get('/usuario/delete', [ permisos.verificaSesion, permisos.verificaPermi
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Usuario_ActiveDeactive(${s_idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, (err: any, usuarioDelete: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, usuarioDelete: any) => {
         if (err) {
             return res.json({
                 ok: false,

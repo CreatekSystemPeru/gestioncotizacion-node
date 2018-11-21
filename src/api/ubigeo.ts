@@ -6,7 +6,7 @@ const ubigeo = Router();
 
 ubigeo.get('/ubigeo/departamento', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     const query = `CALL Ubigeo_Departamento()`;
-    MySQL.ejecutarQuery(query, (err: any, ubigeoDep: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, ubigeoDep: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -26,7 +26,7 @@ ubigeo.get('/ubigeo/departamento', [ permisos.verificaSesion ], (req: Request, r
 ubigeo.get('/ubigeo/provincia', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     
     const query = `CALL Ubigeo_Provincia('${req.query.idUbigeo || ''}')`;
-    MySQL.ejecutarQuery(query, (err: any, productoGet: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, productoGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -46,7 +46,7 @@ ubigeo.get('/ubigeo/provincia', [ permisos.verificaSesion ], (req: Request, res:
 ubigeo.get('/ubigeo/distrito', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     
     const query = `CALL Ubigeo_Distrito('${req.query.idUbigeo || ''}')`;
-    MySQL.ejecutarQuery(query, (err: any, productoGet: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, productoGet: any) => {
         if (err) {
             return res.json({
                 ok: false,

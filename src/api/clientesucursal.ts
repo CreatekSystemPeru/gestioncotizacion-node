@@ -13,7 +13,7 @@ clienteSucursal.post('/clientesucursal/reg', [ permisos.verificaSesion, permisos
         sucursalArray.push([]);
     });
 
-    MySQL.ejecutarQueryAndValues(query, sucursalArray, (err: any, reg: any) => {
+    MySQL.ejecutarQuery(query, sucursalArray, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,

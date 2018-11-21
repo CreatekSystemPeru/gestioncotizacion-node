@@ -6,7 +6,7 @@ const empresa = Router();
 
 empresa.get('/empresa/combo', (req: Request, res: Response) => {
     const query = `CALL Empresa_Combo()`;
-    MySQL.ejecutarQuery(query, (err: any, empresaCombo: object[]) => {
+    MySQL.ejecutarQuery(query, null, (err: any, empresaCombo: object[]) => {
         if (err) {
             res.json({
                 ok: false,
@@ -27,7 +27,7 @@ empresa.get('/empresa/list', [permisos.verificaSesion, permisos.verificaPermiso]
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Empresa_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
-    MySQL.ejecutarQuery(query, (err: any, empresa: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, empresa: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -47,7 +47,7 @@ empresa.get('/empresa/list', [permisos.verificaSesion, permisos.verificaPermiso]
 
 empresa.get('/empresa/get', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     const query = `CALL Empresa_Get(${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, (err: any, empresaGet: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, empresaGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -70,7 +70,7 @@ empresa.post('/empresa/reg/', [permisos.verificaSesion, permisos.verificaPermiso
         direccion, telefono1, telefono2, movil1, movil2, email, url } = req.body;
     const query = `CALL Empresa_InsertUpdate(${idEmpresa},'${ruc}','${empresa}','${empresaAbrev}','${direccion}','${telefono1}',
                                             '${telefono2}','${movil1}','${movil2}','${email}','${url}',1,${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, (err: any, reg: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -100,7 +100,7 @@ empresa.get('/empresa/delete', [ permisos.verificaSesion, permisos.verificaPermi
     let {s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Empresa_ActiveDeactive(${req.query.Id || 0}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, (err: any, empresaDelete: any) => {
+    MySQL.ejecutarQuery(query, null, (err: any, empresaDelete: any) => {
         if (err) {
             return res.json({
                 ok: false,

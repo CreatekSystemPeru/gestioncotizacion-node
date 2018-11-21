@@ -10,7 +10,7 @@ const cliente = express_1.Router();
 cliente.get('/cliente/list/', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     const query = `CALL Cliente_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
-    mysql_1.default.ejecutarQuery(query, (err, cliente) => {
+    mysql_1.default.ejecutarQuery(query, null, (err, cliente) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -29,7 +29,7 @@ cliente.get('/cliente/list/', [permisos_1.default.verificaSesion, permisos_1.def
 cliente.get('/cliente/get/', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa } = req.session.userSesion;
     const query = `CALL Cliente_Get(${s_idEmpresa}, ${req.query.Id || 0})`;
-    mysql_1.default.ejecutarQuery(query, (err, clienteGet) => {
+    mysql_1.default.ejecutarQuery(query, null, (err, clienteGet) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -49,7 +49,7 @@ cliente.post('/cliente/reg', [permisos_1.default.verificaSesion, permisos_1.defa
     let { idCliente, RUC, razonSocial, idGiro } = req.body;
     const query = `CALL Cliente_InsertUpdate(${s_idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro},
                                             1,${s_idUsuario})`;
-    mysql_1.default.ejecutarQuery(query, (err, reg) => {
+    mysql_1.default.ejecutarQuery(query, null, (err, reg) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -75,7 +75,7 @@ cliente.post('/cliente/reg', [permisos_1.default.verificaSesion, permisos_1.defa
 cliente.get('/cliente/delete', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     const query = `CALL Cliente_ActiveDeactive(${s_idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
-    mysql_1.default.ejecutarQuery(query, (err, clienteDelete) => {
+    mysql_1.default.ejecutarQuery(query, null, (err, clienteDelete) => {
         if (err) {
             return res.json({
                 ok: false,
