@@ -16,6 +16,20 @@ sesion.get("/iniciar", (req: Request, res: Response) => {
 });
 
 sesion.post("/iniciar", (req: Request, res: Response) => {
+    /*axios.post(process.env.SERVICE_URL + "/usuario/login", {
+        idEmpresa: 1,
+        usuario: "dev0",
+        clave: "1"
+    })
+    .then(function (response: any) {
+        console.log("S server svc api: servicio ok", response.data);
+    })
+    .catch(function (error: any) {
+        console.log("S server svc api: servicio error", error);
+    })
+    .then(function () {
+    });*/
+
     var svcSesion = req.session!.userSesion;
     console.log("P sesion: conectado");
     if (svcSesion!.s_idEmpresa > 0 && svcSesion!.s_idUsuario > 0) {        
@@ -39,13 +53,13 @@ sesion.post("/iniciar", (req: Request, res: Response) => {
 sesion.get("/salir", (req: Request, res: Response) => {
     console.log("P sesion: desconectado");
     
-    axios.get(req.headers.host + "/api/usuario/salir")
+    axios.get(process.env.SERVICE_URL + "/usuario/salir")
     .then(function (response: any) {
-        console.log("sesion: servicio terminado", response);
+        console.log("P sesion: servicio terminado");
         req.session!.sesionActiva = null;
     })
     .catch(function (error: any) {
-        console.log("sesion: servicio terminado", error);
+        console.log("P sesion: servicio terminado error");
     })
     .then(function () {
         res.redirect("/sesion/iniciar");

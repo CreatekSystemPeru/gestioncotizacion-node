@@ -108,6 +108,8 @@
         $("#usuario").on("keyup", txt_keyup);
         $("#clave").on("keyup", txt_keyup);
         leerEmpresas();
+
+        $("#usuario").trigger("focus");
       });
 
       function aceptar_click(){
@@ -116,6 +118,7 @@
         iniciarServicio.done(function(data, textStatus, jqXHR){
           if (data.ok) {
             var activacion = data.data[0];
+            //alert(JSON.stringify(activacion));
             var iniciarWeb = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
             iniciarWeb.done(function(data1, textStatus, jqXHR) {
               if (data1.ok) {                
