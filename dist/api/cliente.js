@@ -47,8 +47,7 @@ cliente.get('/cliente/get/', [permisos_1.default.verificaSesion, permisos_1.defa
 cliente.post('/cliente/reg', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
     let { idCliente, RUC, razonSocial, idGiro } = req.body;
-    const query = `CALL Cliente_InsertUpdate(${s_idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro},
-                                            1,${s_idUsuario})`;
+    const query = `CALL Cliente_InsertUpdate(${s_idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro},1)`;
     mysql_1.default.ejecutarQuery(query, null, (err, reg) => {
         if (err) {
             return res.json({
@@ -74,7 +73,7 @@ cliente.post('/cliente/reg', [permisos_1.default.verificaSesion, permisos_1.defa
 });
 cliente.get('/cliente/delete', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
-    const query = `CALL Cliente_ActiveDeactive(${s_idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
+    const query = `CALL Cliente_ActiveDeactive(${s_idEmpresa}, ${req.query.Id || 0})`;
     mysql_1.default.ejecutarQuery(query, null, (err, clienteDelete) => {
         if (err) {
             return res.json({
