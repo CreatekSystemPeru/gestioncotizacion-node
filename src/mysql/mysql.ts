@@ -20,7 +20,7 @@ export default class MySQL {
     }
 
     static conexionDB(query: string, values: any, callback: Function) {
-        console.log('**************** Iniciando conexión ****************');        
+        console.log('**************** Iniciando conexión ****************');
         let conn = this.instance;
         conn.cnx.connect((err: mysql.MysqlError) => {
             if (err) {
