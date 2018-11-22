@@ -3,7 +3,7 @@ import validar from "./validar";
 
 const empresas = Router();
 
-empresas.get(["/", "/listar"], (req: Request, res: Response) => {
+empresas.get(["/", "/listar"], [validar.tieneSesion], (req: Request, res: Response) => {
     console.log("P empresa list: render");
     res.render("catalogo/empresalista", {
         titulo: "Listado de empresas"
@@ -15,26 +15,6 @@ empresas.get("/ver/:id(\\d+)", [validar.tieneSesion], (req: Request, res: Respon
     res.render("catalogo/empresainfo", {
         titulo: "Empresas",
         empresaId: req.params.id
-    });
-});
-
-empresas.get("/test", (req: Request, res: Response) => {
-    console.log("P empresa test: render");
-    res.json({
-        ok: true,
-        message: null,
-        data:[{
-            IdEmpresa: 1,
-            RUC: "Empresas",
-            Empresa: "x",
-            EmpresaAbrev:"x",
-            Direccion:"x",
-            Telefono:"x",
-            Movil:"x",
-            Email:"x",
-            URL:"x"
-        }
-        ],
     });
 });
 

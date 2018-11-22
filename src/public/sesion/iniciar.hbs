@@ -25,9 +25,6 @@
               <div>
                 <select id="idEmpresa" name="idEmpresa" class="form-control">
                     <option value="">Cargando...</option>
-                    <!--{{#each Empresa}}
-                    <option value="{{ IdEmpresa }}">{{ EmpresaAbrev }}</option>
-                    {{/each}}-->
                 </select>
               </div>
               <div>
@@ -40,7 +37,7 @@
                 <label>{{ message }}</label>
               </div>
               <div>
-                <a id="aceptar" class="btn btn-default submit" >Iniciar Sesión</a>
+                <a id="aceptar" class="btn btn-default" >Iniciar Sesión</a>
                 {{!-- class="reset_pass" onclick="document.getElementById('frmlogin').submit()"--}}
                 <a href="#">¿Has olvidado los datos de la cuenta?</a>
               </div>
@@ -76,7 +73,7 @@
                 <input type="password" class="form-control" placeholder="Password" required="" />
               </div>
               <div>
-                <a class="btn btn-default submit" href="/">Crear</a>
+                <a class="btn btn-default" href="/">Crear</a>
               </div>
 
               <div class="clearfix"></div>
@@ -107,13 +104,20 @@
         $("#aceptar").on("click", aceptar_click);
         $("#usuario").on("keyup", txt_keyup);
         $("#clave").on("keyup", txt_keyup);
+        $("#aceptar").attr("disabled", "disabled");
         leerEmpresas();
 
         $("#usuario").trigger("focus");
       });
 
       function aceptar_click(){
+        if ($("#usuario").val().trim().length == 0 || $("#clave").val().trim().length == 0) {
+          toastr.error("El usuario o clave son incorrectos. Intente nuevamente", "", {timeOut: 700});
+          return;
+        }
+
         var credenciales = $("#frmlogin").serializeArray();
+
         var iniciarServicio = $.ajax({ type: "POST", url: "/api/usuario/login", data: credenciales });
         iniciarServicio.done(function(data, textStatus, jqXHR){
           if (data.ok) {
@@ -152,6 +156,7 @@
           $.each(data.data, function(i, item) {
               $("#idEmpresa").append(new Option(item.EmpresaAbrev, item.IdEmpresa));
           });
+          $("#aceptar").removeAttr("disabled");
         });
         svcEmpresaCombo.fail(function (jqXHR, textStatus, errorThrown) {
           toastr.error("Error al obtener el listado de empresas.");
