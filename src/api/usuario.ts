@@ -4,9 +4,9 @@ import permisos from '../middlewares/permisos';
 
 const usuario = Router();
 usuario.post('/usuario/login', (req: Request, res: Response) => {
-    let { idEmpresa, usuario, clave } = req.body;
+    let { usuario, clave } = req.body;
 
-    const query = `CALL Usuario_Autentication(${ idEmpresa}, '${ usuario }', '${ clave }')`;
+    const query = `CALL Usuario_Autentication('${ usuario }', '${ clave }')`;
     MySQL.ejecutarQuery(query, null, (err: any, usuarioLogin: any) => {
         if (err) {
             return res.json({
@@ -19,7 +19,7 @@ usuario.post('/usuario/login', (req: Request, res: Response) => {
         let errorMessage = usuarioLogin[0][0].ErrorMessage;
         if (errorMessage == '') {
             req.session!.userSesion = {
-                s_idEmpresa: idEmpresa,
+                s_idEmpresa: usuarioLogin[0][0].IdEmpresa,
                 s_idUsuario: usuarioLogin[0][0].IdUsuario
             }
 
