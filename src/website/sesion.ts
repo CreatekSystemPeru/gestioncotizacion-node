@@ -16,7 +16,7 @@ sesion.get("/iniciar", (req: Request, res: Response) => {
 });
 
 sesion.post("/iniciar", (req: Request, res: Response) => {
-    /*axios.post(process.env.SERVICE_URL + "/usuario/login", {
+    axios.post(process.env.SERVICE_URL + "/usuario/login", {
         idEmpresa: 1,
         usuario: "dev0",
         clave: "1"
@@ -28,7 +28,7 @@ sesion.post("/iniciar", (req: Request, res: Response) => {
         console.log("S server svc api: servicio error", error);
     })
     .then(function () {
-    });*/
+    });
 
     var svcSesion = req.session!.userSesion;
     console.log("P sesion: conectado");
