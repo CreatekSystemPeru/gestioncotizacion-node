@@ -9,7 +9,7 @@ const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const cliente = express_1.Router();
 cliente.get('/cliente/list/', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idEmpresa, s_idUsuario } = req.session.userSesion;
-    const query = `CALL Cliente_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
+    const query = `CALL Cliente_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${req.query.search.value || ''}')`;
     mysql_1.default.ejecutarQuery(query, null, (err, cliente) => {
         if (err) {
             return res.json({
@@ -21,6 +21,9 @@ cliente.get('/cliente/list/', [permisos_1.default.verificaSesion, permisos_1.def
         res.json({
             ok: true,
             message: '',
+            draw: req.query.draw,
+            recordsTotal: cliente[1][0].TotalFilas,
+            recordsFiltered: cliente[1][0].TotalFiltrado,
             data: cliente[0],
             permiso: cliente[1]
         });
