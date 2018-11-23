@@ -32,9 +32,9 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idGiro">Giro <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select id="idGiro" name="idGiro" class="form-control">
-                                        <option value="0">Work hard</option>
+                                        <!--<option value="0">Work hard</option>
                                         <option value="1">Party hard</option>
-                                        <option value="2">$&#128;&gt;&lt; hard</option>
+                                        <option value="2">$&#128;&gt;&lt; hard</option>-->
                                     </select>
                                 </div>
                             </div>
@@ -66,10 +66,28 @@
         $("#idCliente").val(clienteId);
         $("#IdEmpresa").val(empresaId);
 
+        leerGiros();
         if (clienteId > 0) {
             leerCliente();
         }
     });
+
+    function leerGiros() {
+        var svcGetGiros = $.ajax({ type: "GET", url: "/api/tablamaestra/combo?idTabla=" + "2" });
+        svcGetGiros.done(function (data, textStatus, jqXHR) {
+            if (data.ok) {
+                var obj = data.data[0];
+                //alert(JSON.stringify(data.data));
+                $("#idGiro option").remove();
+                $.each(data.data, function(i, item) {
+                    $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
+                });
+            }
+        });
+        svcGetGiros.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error("Error al obtener los datos del cliente.");
+        });
+    }
 
     function leerCliente() {
         var svcGetCliente = $.ajax({ type: "GET", url: "/api/cliente/get?Id=" + clienteId });

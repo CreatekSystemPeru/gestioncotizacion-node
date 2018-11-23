@@ -22,11 +22,11 @@
           <section class="login_content">
             <form id="frmlogin">
               <h1>Autenticación</h1>
-              <div>
+              <!--<div>
                 <select id="idEmpresa" name="idEmpresa" class="form-control">
                     <option value="">Cargando...</option>
                 </select>
-              </div>
+              </div>-->
               <div>
                 <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nombre de Usuario"/>
               </div>
@@ -104,10 +104,13 @@
         $("#aceptar").on("click", aceptar_click);
         $("#usuario").on("keyup", txt_keyup);
         $("#clave").on("keyup", txt_keyup);
-        $("#aceptar").attr("disabled", "disabled");
-        leerEmpresas();
+        //$("#aceptar").attr("disabled", "disabled");
+        //leerEmpresas();
 
         $("#usuario").trigger("focus");
+        
+        $("#usuario").val("admin");
+        $("#clave").val("12345");
       });
 
       function aceptar_click(){
@@ -125,7 +128,7 @@
             //alert(JSON.stringify(activacion));
             var iniciarWeb = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
             iniciarWeb.done(function(data1, textStatus, jqXHR) {
-              if (data1.ok) {                
+              if (data1.ok) {
                 toastr.success(data1.message, "", {timeOut: 700});
                 setTimeout(function(){ window.location.href = "/inicio" }, 700);
               }
@@ -139,7 +142,7 @@
         });
         iniciarServicio.fail(function(jqXHR, textStatus, errorThrown) {
           toastr.error(textStatus);
-        });        
+        });
       }
 
       function txt_keyup(event){
