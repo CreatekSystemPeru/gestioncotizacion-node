@@ -43,7 +43,7 @@ usuario.post('/usuario/login', (req: Request, res: Response) => {
 usuario.get('/usuario/list', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     
-    const query = `CALL Usuario_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
+    const query = `CALL Usuario_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${req.query.search.value || ''}')`;
     MySQL.ejecutarQuery(query, null, (err: any, usuario: any) => {
         if (err) {
             return res.json({
@@ -56,8 +56,10 @@ usuario.get('/usuario/list', [ permisos.verificaSesion, permisos.verificaPermiso
         res.json({
             ok: true,
             message: '',
+            recordsTotal: usuario[1][0].TotalFilas,
+            recordsFiltered: usuario[1][0].TotalFiltrado,
             data: usuario[0],
-            permiso: usuario[1]
+            permiso: usuario[2]
         });
     });
 });

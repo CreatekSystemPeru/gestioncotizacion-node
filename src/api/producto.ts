@@ -6,7 +6,7 @@ const producto = Router();
 producto.get('/producto/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
-    const query = `CALL Producto_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.offset || 0},${req.query.count || 0})`;
+    const query = `CALL Producto_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${req.query.search.value || ''}')`;
     MySQL.ejecutarQuery(query, null, (err: any, producto: any) => {
         if (err) {
             return res.json({
@@ -19,8 +19,10 @@ producto.get('/producto/list', [permisos.verificaSesion, permisos.verificaPermis
         res.json({
             ok: true,
             message: '',
+            recordsTotal: producto[1][0].TotalFilas,
+            recordsFiltered: producto[1][0].TotalFiltrado,
             data: producto[0],
-            permiso: producto[1]
+            permiso: producto[2]
         });
     });
 });

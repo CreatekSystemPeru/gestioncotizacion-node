@@ -25,7 +25,7 @@ cliente.get('/cliente/list/', [permisos_1.default.verificaSesion, permisos_1.def
             recordsTotal: cliente[1][0].TotalFilas,
             recordsFiltered: cliente[1][0].TotalFiltrado,
             data: cliente[0],
-            permiso: cliente[1]
+            permiso: cliente[2]
         });
     });
 });

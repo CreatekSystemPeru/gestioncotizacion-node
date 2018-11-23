@@ -23,7 +23,7 @@ cliente.get('/cliente/list/', [permisos.verificaSesion, permisos.verificaPermiso
             recordsTotal: cliente[1][0].TotalFilas,
             recordsFiltered: cliente[1][0].TotalFiltrado,
             data: cliente[0],
-            permiso: cliente[1]
+            permiso: cliente[2]
         });
     });
 });
