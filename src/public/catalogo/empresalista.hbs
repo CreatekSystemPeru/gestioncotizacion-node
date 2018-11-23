@@ -1,6 +1,7 @@
 {{#extend "css"}}
 <link href="/assets/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <link href="/assets/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+<link href="/assets/buttons.dataTables.min.css" rel="stylesheet">
 {{/extend}}
 
 <div class="right_col" role="main">
@@ -40,8 +41,11 @@
 </div>
 
 {{#extend "js"}}
+<script src="/assets/jszip.min.js"></script>
 <script src="/assets/jquery.dataTables.min.js"></script>
 <script src="/assets/dataTables.buttons.min.js"></script>
+<script src="/assets/buttons.print.min.js"></script>
+<script src="/assets/buttons.html5.min.js"></script>
 <script src="/assets/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="/assets/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="/assets/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
@@ -51,11 +55,28 @@
       dom: 'Blfrtip',
       ajax: {
         url: "/api/empresa/list?count=100",
-        type: 'GET'
+        type: 'GET',
+        error: function (xhr, error, thrown) {
+          toastr.success("El servidor está fuera de servicio, intente más tarde", "", {timeOut: 700});
+        }
       },
       buttons: [
-        'excel', 
-        'pdf',
+        {
+          extend: 'excel',
+          text: 'Excel',
+          className: "btn btn-default",
+          exportOptions: {
+            modifier: {
+              page: 'current'
+            }
+          }
+        },
+        {
+          extend: 'print',
+          text: 'Imprimir',
+          className: "btn btn-default",
+          autoPrint: true
+        },
         {
           text: "Nuevo",
           className: "btn btn-default",
@@ -85,9 +106,5 @@
       ]
     });
   }); 
-  /*$('#tblList tbody').on( 'click', 'a', function () {
-    var data = table.row($(this).parents('tr')).data();
-    console.log(data[0]);
-  });*/
 </script>
 {{/extend}}

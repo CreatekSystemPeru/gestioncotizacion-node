@@ -16,10 +16,9 @@ sesion.get("/iniciar", (req: Request, res: Response) => {
 });
 
 sesion.post("/iniciar", (req: Request, res: Response) => {
-    axios.post(process.env.SERVICE_URL + "/usuario/login", {
-        idEmpresa: 1,
-        usuario: "dev0",
-        clave: "1"
+    /*axios.post(process.env.SERVICE_URL + "/usuario/login", {
+        usuario: "admin",
+        clave: "12345"
     })
     .then(function (response: any) {
         console.log("S server svc api: servicio ok", response.data);
@@ -28,11 +27,11 @@ sesion.post("/iniciar", (req: Request, res: Response) => {
         console.log("S server svc api: servicio error", error);
     })
     .then(function () {
-    });
+    });*/
 
     var svcSesion = req.session!.userSesion;
     console.log("P sesion: conectado");
-    if (svcSesion!.s_idEmpresa > 0 && svcSesion!.s_idUsuario > 0) {        
+    if (svcSesion!.s_idUsuario > 0) {        
         req.session!.sesionActiva = req.body;
 
         res.json({
