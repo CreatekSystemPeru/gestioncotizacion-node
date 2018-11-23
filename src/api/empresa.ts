@@ -26,7 +26,7 @@ empresa.get('/empresa/combo', (req: Request, res: Response) => {
 empresa.get('/empresa/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
-    const query = `CALL Empresa_List(${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${req.query.search || ''}')`;
+    const query = `CALL Empresa_List(${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${req.query.search.value || ''}')`;
     MySQL.ejecutarQuery(query, null, (err: any, empresa: any) => {
         if (err) {
             return res.json({
