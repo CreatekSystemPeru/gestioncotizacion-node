@@ -23,9 +23,9 @@ let verificaPermiso = (req: Request, res: Response, next: any) => {
     }
 
     let reqArray = req.path.split('/');
-    let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
+    let {s_idUsuario} = req.session!.userSesion;
 
-    const query = `CALL Usuario_Permission(${s_idEmpresa},${s_idUsuario},'${reqArray[1]}','${reqArray[2]}')`;
+    const query = `CALL Usuario_Permission(${s_idUsuario},'${reqArray[1]}','${reqArray[2]}')`;
     MySQL.ejecutarQuery(query, null, (err: any, permiso: any) => {
         if (err) {
             return res.json({
