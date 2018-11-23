@@ -53,8 +53,10 @@
   $(document).ready(function() {
     var table = $('#tblList').DataTable({
       dom: 'Blfrtip',
+      processing: true,
+      serverSide: true,
       ajax: {
-        url: "/api/empresa/list?count=100",
+        url: "/api/empresa/list",
         type: 'GET',
         error: function (xhr, error, thrown) {
           toastr.success("El servidor está fuera de servicio, intente más tarde", "", {timeOut: 700});
@@ -103,7 +105,21 @@
             return '<a id="edit" class="btn btn-default submit" title="Editar" href="/empresas/ver/' + o.IdEmpresa + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
           }
         }
-      ]
+      ],
+      pagingType: "full_numbers",
+      language: {
+            lengthMenu: "Mostrar _MENU_ empresas por página",
+            zeroRecords: "La búsqueda no contiene registros.",
+            info: "Página _PAGE_ de _PAGES_",
+            infoEmpty: "Tabla en blanco",
+            infoFiltered: "(filtrado de un total de _MAX_)",
+            paginate:{
+              first: "Primero",
+              last: "Ultimo",
+              previous: "Anterior",
+              next: "Siguiente"
+            }
+        }
     });
   }); 
 </script>

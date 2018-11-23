@@ -689,7 +689,7 @@ a:focus {
 }
 .top_nav .navbar-right li {
     display: inline-block;
-    float: right;
+    /*float: right;*/
     position: static
 }
 @media (min-width: 480px) {
@@ -1066,7 +1066,7 @@ h2 {
     border: 1px solid #E6E9ED;
     -webkit-column-break-inside: avoid;
     -moz-column-break-inside: avoid;
-    column-break-inside: avoid;
+    /*column-break-inside: avoid;*/
     opacity: 1;
     transition: all .2s ease
 }
@@ -4186,13 +4186,9 @@ ul.notifications {
     }
 }
 
-
 @media (max-width: 767px) {
    .dataTables_length { float:none; }
 }
-
-
-
 
 /* CSS3 Checkbox */
 /*
@@ -4246,12 +4242,10 @@ table thead .checkbox.radio { margin-top:-7px;margin-top:-21px; }
 .daterangepicker.xdisplay { width:228px; }
 
 .dataTables_wrapper > .row{
-  overflow:auto !important; /*prevent datatables overflowing its container*/
+  overflow:auto !important;
 }
 
-/** bootstrap-datetimepicker **/
 .input-group.date .input-group-addon{
     border-radius: 0px !important;
     background-color: #ffff !important;
 }
-/** /bootstrap-datetimepicker **/
