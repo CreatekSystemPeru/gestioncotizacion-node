@@ -1,8 +1,6 @@
 import mysql = require('mysql');
 
 export default class MySQL {
-    private static _instance: MySQL;
-
     cnx: mysql.Connection;
 
     constructor() {
@@ -15,13 +13,9 @@ export default class MySQL {
         });
     }
 
-    public static get instance() {
-        return (this._instance = new this());
-    }
-
     static conexionDB(query: string, values: any, callback: Function) {
         console.log('**************** Iniciando conexión ****************');
-        let conn = this.instance;
+        const conn = new this();
         conn.cnx.connect((err: mysql.MysqlError) => {
             if (err) {
                 console.log('> Error en connect(): ', err.message);
@@ -36,16 +30,23 @@ export default class MySQL {
                 }
                 
                 console.log('> Instrucción ejecutada: ', (query.includes('Autentication') ? 'CALL Usuario_Autenticaction(*,*,*)' : query));
-                conn.cnx.end((err: mysql.MysqlError) => {
-                    if (err) {
-                        console.log('> Error in end(): ', err.message);
-                        return callback(err);
-                    }
+                
+                console.log('> Desconectado de Base de datos');
+                console.log('**************** Fin de la conexión ****************');
+                conn.cnx.destroy();
 
-                    console.log('> Desconectado de Base de datos');
-                    console.log('**************** Fin de la conexión ****************');
-                    return callback(null, results);
-                });
+                return callback(null, results);
+
+                // conn.cnx.end((err: mysql.MysqlError) => {
+                //     if (err) {
+                //         console.log('> Error in end(): ', err.message);
+                //         return callback(err);
+                //     }
+
+                //     console.log('> Desconectado de Base de datos');
+                //     console.log('**************** Fin de la conexión ****************');
+                //     return callback(null, results);
+                // });
             });
         });
     }

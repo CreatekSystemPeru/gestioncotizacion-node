@@ -86,20 +86,21 @@ usuario.get('/usuario/get', [ permisos.verificaSesion, permisos.verificaPermiso 
 /*Falta agregar los permisos*/
 usuario.post('/usuario/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario, s_FlagAdmin, s_FlagGlobal} = req.session!.userSesion;
-    let {idUsuario, apellidoPaterno, apellidoMaterno,
+    let {idEmpresa, idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil} = req.body;
     
     let flagAdmin: Number = 0;
     let flagGlobal: Number = 0;
     if (s_FlagGlobal == 0 && s_FlagAdmin == 1) {
+        idEmpresa = s_idEmpresa;
         flagAdmin = 0;
         flagGlobal = 0;
     } else if (s_FlagGlobal == 1 && s_FlagAdmin == 0) {
-        flagAdmin = 0;
+        flagAdmin = 1;
         flagGlobal = 0;
     }
 
-    const query = `CALL Usuario_InsertUpdate(${s_idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
+    const query = `CALL Usuario_InsertUpdate(${idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
                                             ${idPerfil},1,${flagAdmin},${flagGlobal})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
