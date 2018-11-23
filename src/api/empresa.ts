@@ -88,10 +88,10 @@ empresa.post('/empresa/reg/', [permisos.verificaSesion, permisos.verificaPermiso
                 ok: true,
                 message: errorMessage,
                 data: null
-            });    
+            });
         }
 
-        res.json({
+        return res.json({
             ok: false,
             message: errorMessage,
             data: null
