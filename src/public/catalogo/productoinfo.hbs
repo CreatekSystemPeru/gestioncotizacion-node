@@ -19,7 +19,7 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Codigo">Código <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="Codigo" class="form-control col-md-7 col-xs-12" name="Codigo" value="{{obj.Codigo}}" required="required" maxlength="15" />
+                                    <input type="text" id="codigo" class="form-control col-md-7 col-xs-12" name="codigo" value="{{obj.Codigo}}" required="required" maxlength="15" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -67,7 +67,7 @@
             if (data.ok) {
                 var obj = data.data[0];
                 $("#idProducto").val(obj.IdProducto);
-                $("#Codigo").val(obj.Codigo);
+                $("#codigo").val(obj.Codigo);
                 $("#producto").val(obj.Producto);
             }
         });

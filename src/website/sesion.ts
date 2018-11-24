@@ -56,6 +56,7 @@ sesion.get("/salir", (req: Request, res: Response) => {
     .then(function (response: any) {
         console.log("P sesion: servicio terminado");
         req.session!.sesionActiva = null;
+        req.session!.userSesion = null;
     })
     .catch(function (error: any) {
         console.log("P sesion: servicio terminado error");
