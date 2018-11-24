@@ -87,13 +87,14 @@
         {
           data: null,
           bSortable: false,
-          render: function (o) { 
-            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/clientes/ver/' + o.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
+          render: function (obj) { 
+            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/clientes/ver/' + obj.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
           }
         }
       ],
       pagingType: "numbers",
       language: {
+        search: "Buscar:",
         lengthMenu: "Mostrar _MENU_ registros por página",
         zeroRecords: "La búsqueda no contiene registros.",
         info: "Página _PAGE_ de _PAGES_",
