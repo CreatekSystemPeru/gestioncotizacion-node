@@ -100,6 +100,8 @@
     <script src="/assets/jquery/dist/jquery.min.js"></script>
     <script src="/assets/toastr/toastr.js"></script>
     <script>
+      var terminado = "{{terminado}}";
+
       $(document).on("ready", function() {
         $("#aceptar").on("click", aceptar_click);
         $("#usuario").on("keyup", txt_keyup);
@@ -111,9 +113,21 @@
         
         $("#usuario").val("admin");
         $("#clave").val("12345");
+
+        if (terminado == "1") {
+          //cerrar_sesion();
+        }
       });
 
-      function aceptar_click(){
+      function cerrar_sesion() {
+        var iniciarServicio = $.ajax({ type: "GET", url: "/api/usuario/salir" });
+        iniciarServicio.done(function(data, textStatus, jqXHR){
+        });
+        iniciarServicio.fail(function(jqXHR, textStatus, errorThrown) {
+        });
+      }
+
+      function aceptar_click() {
         if ($("#usuario").val().trim().length == 0 || $("#clave").val().trim().length == 0) {
           toastr.error("El usuario o clave son incorrectos. Intente nuevamente", "", {timeOut: 700});
           return;

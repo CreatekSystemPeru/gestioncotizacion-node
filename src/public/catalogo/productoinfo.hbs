@@ -72,7 +72,7 @@
             }
         });
         svcGetCliente.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener los datos del cliente.");
+            toastr.error("Error al obtener los datos del producto.");
         });
     }
 
@@ -105,7 +105,7 @@
     }
 
     function validarCampos() {
-        if ($('#RUC').val() == '' || $('#RazonSocial').val() == '' || $('#IdGiro').val() == '') {
+        if ($('#producto').val() == '') {
             return true;
         }
         else {
