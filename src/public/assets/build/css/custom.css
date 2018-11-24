@@ -1,15 +1,10 @@
-
-html , body{
-	
- height:100%;
- 
-}
+html, body{
+height:100%;
+ }
  
 .full-width {
-	
  width:100%;
- 
- }
+  }
  
 .full-height{
  height:100%;
@@ -684,7 +679,6 @@ a:focus {
 }
 .top_nav .navbar-right {
     margin: 0;
-    width: 70%;
     float: right
 }
 .top_nav .navbar-right li {
@@ -1332,27 +1326,24 @@ table.jambo_table tbody tr.selected td {
     top: 50%;
     left: 50%;
     width: 250px;
-    height: 30px;
+    height: 50px;
     margin-left: -125px;
     margin-top: -15px;
     padding: 14px 0 2px 0;
     border: 1px solid #ddd;
     text-align: center;
-    color: #999;
+    color: rgb(70, 66, 46);
     font-size: 14px;
-    background-color: white
+    background-color: rgb(231, 223, 175);
 }
 .dataTables_length {
-    width: 40%;
     float: left
 }
 .dataTables_filter {
-    width: 50%;
     float: right;
     text-align: right
 }
 .dataTables_info {
-    width: 60%;
     float: left
 }
 .dataTables_paginate {

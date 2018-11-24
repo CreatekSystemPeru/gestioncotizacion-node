@@ -1,6 +1,7 @@
 {{#extend "css"}}
 <link href="/assets/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <link href="/assets/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+<link href="/assets/buttons.dataTables.min.css" rel="stylesheet">
 {{/extend}}
 
 <div class="right_col" role="main">
@@ -10,7 +11,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Listado de productos</h2>
+            <h2>Listado de Productos</h2>
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
@@ -18,9 +19,8 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th>RUC</th>
-                        <th>Razon Social</th>
-                        <th>Giro</th>
+                        <th>Código</th>
+                        <th>Descripción</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -35,8 +35,11 @@
 </div>
 
 {{#extend "js"}}
+<script src="/assets/jszip.min.js"></script>
 <script src="/assets/jquery.dataTables.min.js"></script>
 <script src="/assets/dataTables.buttons.min.js"></script>
+<script src="/assets/buttons.print.min.js"></script>
+<script src="/assets/buttons.html5.min.js"></script>
 <script src="/assets/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
 <script src="/assets/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
 <script src="/assets/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
@@ -44,11 +47,29 @@
   $(document).ready(function() {
     var table = $('#tblList').DataTable({
       dom: 'Blfrtip',
+      processing: true,
+      serverSide: true,
       ajax: {
-        url: "/api/producto/list?count=100",
+        url: "/api/producto/list",
         type: 'GET'
       },
       buttons: [
+        {
+          extend: 'excel',
+          text: 'Excel',
+          className: "btn btn-default",
+          exportOptions: {
+            modifier: {
+              page: 'current'
+            }
+          }
+        },
+        {
+          extend: 'print',
+          text: 'Imprimir',
+          className: "btn btn-default",
+          autoPrint: true
+        },
         {
           text: "Nuevo",
           className: "btn btn-default",
@@ -58,18 +79,31 @@
         }
       ],
       columns: [
-        { data: 'IdCliente', visible: false },
-        { data: 'RUC' },
-        { data: 'RazonSocial' },
-        { data: 'Giro' },
+        { data: 'IdProducto', visible: false },
+        { data: 'Codigo' },
+        { data: 'Producto' },
         {
           data: null,
           bSortable: false,
           render: function (o) { 
-            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/productos/ver/' + o.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
+            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/productos/ver/' + o.IdProducto + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
           }
         }
-      ]
+      ],
+      pagingType: "numbers",
+      language: {
+        lengthMenu: "Mostrar _MENU_ empresas por página",
+        zeroRecords: "La búsqueda no contiene registros.",
+        info: "Página _PAGE_ de _PAGES_",
+        infoEmpty: "Tabla en blanco",
+        infoFiltered: "(de un total de _MAX_)",
+        paginate:{
+          first: "Primero",
+          last: "Ultimo",
+          previous: "Anterior",
+          next: "Siguiente"
+        }
+      }
     });
   });
 </script>

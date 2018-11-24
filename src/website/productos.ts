@@ -14,7 +14,7 @@ productos.get("/ver/:id(\\d+)", [validar.tieneSesion], (req: Request, res: Respo
     console.log("P producto id: render");
     res.render("catalogo/productoinfo", {
         titulo: "Producto",
-        clienteId: req.params.id
+        productoId: req.params.id
     });
 });
 
