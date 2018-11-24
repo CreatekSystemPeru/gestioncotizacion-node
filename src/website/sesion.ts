@@ -3,15 +3,21 @@ import {Router, Request, Response} from "express";
 const axios = require('axios');
 const sesion = Router();
 
-sesion.get("/iniciar", (req: Request, res: Response) => {
-    if (req.session!.sesionActiva) {
+sesion.get("/iniciar", (req: Request, res: Response) => {    
+    var terminado = req.query.terminado;
+
+    if (terminado == 1) {
+        req.session!.sesionActiva = null;
+    }
+    else if (req.session!.sesionActiva) {
         return res.redirect("/inicio");
     }
 
     console.log("P sesion: render");
     res.render("sesion/iniciar", {
         layout: false,
-        titulo: "Iniciar sesión"
+        titulo: "Iniciar sesión",
+        terminado: terminado
     });
 });
 
@@ -62,7 +68,7 @@ sesion.get("/salir", (req: Request, res: Response) => {
         console.log("P sesion: servicio terminado error");
     })
     .then(function () {
-        res.redirect("/sesion/iniciar");
+        res.redirect("/sesion/iniciar?terminado=1");
     });
 });
 
