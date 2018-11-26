@@ -43,7 +43,8 @@ usuario.post('/usuario/login', (req: Request, res: Response) => {
 usuario.get('/usuario/list', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
     
-    const query = `CALL Usuario_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${req.query.search.value || ''}')`;
+    let search = (req.query.search) ? req.query.search.value : '';
+    const query = `CALL Usuario_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
     MySQL.ejecutarQuery(query, null, (err: any, usuario: any) => {
         if (err) {
             return res.json({

@@ -6,7 +6,8 @@ const producto = Router();
 producto.get('/producto/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
 
-    const query = `CALL Producto_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${req.query.search.value || ''}')`;
+    let search = (req.query.search) ? req.query.search.value : '';
+    const query = `CALL Producto_List(${s_idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
     MySQL.ejecutarQuery(query, null, (err: any, producto: any) => {
         if (err) {
             return res.json({

@@ -24,8 +24,8 @@ clienteSucursal.get('/clientesucursal/list/', [permisos.verificaSesion, permisos
             draw: req.query.draw,
             recordsTotal: clienteSucursal[1][0].TotalFilas,
             recordsFiltered: clienteSucursal[1][0].TotalFiltrado,
-            data: clienteSucursal[0],
-            permiso: clienteSucursal[2]
+            data: clienteSucursal[0]//,
+            //permiso: clienteSucursal[2]
         });
     });
 });
