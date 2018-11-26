@@ -19,9 +19,6 @@ usuario.post('/usuario/login', (req: Request, res: Response) => {
         let errorMessage = usuarioLogin[0][0].ErrorMessage;
         if (errorMessage == '') {
             req.session!.userSesion = {
-                s_idEmpresa: usuarioLogin[0][0].IdEmpresa,
-                s_FlagAdmin: usuarioLogin[0][0].FlagAdmin,
-                s_FlagGlobal: usuarioLogin[0][0].FlagGlobal,
                 s_idUsuario: usuarioLogin[0][0].IdUsuario
             }
 
