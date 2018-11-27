@@ -26,6 +26,9 @@ export default class MySQL {
             conn.cnx.query(query, values, (err, results: Object[], fields) => {
                 if (err) {
                     console.log('Error en query(): ', err.message);
+                    console.log('> Desconectado de Base de datos');
+                    console.log('**************** Fin de la conexión ****************');
+                    conn.cnx.destroy();
                     return callback(err);
                 }
                 
@@ -36,17 +39,6 @@ export default class MySQL {
                 conn.cnx.destroy();
 
                 return callback(null, results);
-
-                // conn.cnx.end((err: mysql.MysqlError) => {
-                //     if (err) {
-                //         console.log('> Error in end(): ', err.message);
-                //         return callback(err);
-                //     }
-
-                //     console.log('> Desconectado de Base de datos');
-                //     console.log('**************** Fin de la conexión ****************');
-                //     return callback(null, results);
-                // });
             });
         });
     }

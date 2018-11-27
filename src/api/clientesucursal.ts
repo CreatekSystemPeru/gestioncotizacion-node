@@ -52,9 +52,9 @@ clienteSucursal.get('/clientesucursal/get/', [ permisos.verificaSesion, permisos
 });
 
 clienteSucursal.post('/clientesucursal/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
-    let {s_idEmpresa,s_idUsuario} = req.session!.userSesion;
-    let {idCliente, RUC, razonSocial, idGiro} = req.body;
-    const query = `CALL ClienteSucursal_InsertUpdate(${s_idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro}, 1)`;
+    let {s_idUsuario} = req.session!.userSesion;
+    let {idEmpresa,idCliente, RUC, razonSocial, idGiro} = req.body;
+    const query = `CALL ClienteSucursal_InsertUpdate(${idEmpresa},${idCliente},'${RUC}','${razonSocial}',${idGiro}, 1,${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({

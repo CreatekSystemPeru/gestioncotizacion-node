@@ -84,24 +84,45 @@ usuario.get('/usuario/get', [ permisos.verificaSesion, permisos.verificaPermiso 
 });
 
 /*Falta agregar los permisos*/
+usuario.post('/usuario/register', (req: Request, res: Response) => {
+    let {idUsuario, apellidoPaterno, apellidoMaterno,
+        nombres, usuario, idPerfil} = req.body;
+
+    const query = `CALL Usuario_InsertUpdate(0,${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
+                                            ${idPerfil},1, 0)`;
+    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
+        if (err) {
+            return res.json({
+                ok: false,
+                message: `#${err.message}`,
+                data: null
+            });
+        }
+
+        let errorMessage = reg[0][0].ErrorMessage;
+        if (!errorMessage.includes('#')) {
+            return res.json({
+                ok: true,
+                message: errorMessage,
+                data: null
+            });    
+        }
+        
+        res.json({
+            ok: false,
+            message: errorMessage,
+            data: null
+        });
+    });
+});
+
 usuario.post('/usuario/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
-    let {s_idEmpresa,s_idUsuario, s_FlagAdmin, s_FlagGlobal} = req.session!.userSesion;
+    let { s_idUsuario } = req.session!.userSesion;
     let {idEmpresa, idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil} = req.body;
-    
-    let flagAdmin: Number = 0;
-    let flagGlobal: Number = 0;
-    if (s_FlagGlobal == 0 && s_FlagAdmin == 1) {
-        idEmpresa = s_idEmpresa;
-        flagAdmin = 0;
-        flagGlobal = 0;
-    } else if (s_FlagGlobal == 1 && s_FlagAdmin == 0) {
-        flagAdmin = 1;
-        flagGlobal = 0;
-    }
 
     const query = `CALL Usuario_InsertUpdate(${idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
-                                            ${idPerfil},1,${flagAdmin},${flagGlobal})`;
+                                            ${idPerfil},1, ${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
@@ -129,7 +150,7 @@ usuario.post('/usuario/reg', [ permisos.verificaSesion, permisos.verificaPermiso
 });
 
 usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: Response) => {
-    let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
+    let {s_idUsuario} = req.session!.userSesion;
 
     const query = `CALL Usuario_Menu_List(${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, usuarioMenu: any) => {

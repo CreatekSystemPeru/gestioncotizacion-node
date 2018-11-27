@@ -24,7 +24,7 @@ empresa.get('/empresa/combo', (req: Request, res: Response) => {
 });
 
 empresa.get('/empresa/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
-    let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
+    let {s_idUsuario} = req.session!.userSesion;
 
     let search = (req.query.search) ? req.query.search.value : '';
     const query = `CALL Empresa_List(${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
@@ -69,11 +69,11 @@ empresa.get('/empresa/get', [permisos.verificaSesion, permisos.verificaPermiso],
 });
 
 empresa.post('/empresa/reg/', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
-    let {s_idUsuario, s_FlagAdmin, s_FlagGlobal} = req.session!.userSesion;
+    let {s_idUsuario} = req.session!.userSesion;
     let { idEmpresa, ruc, empresa, empresaAbrev,
         direccion, telefono1, telefono2, movil1, movil2, email, url } = req.body;
     const query = `CALL Empresa_InsertUpdate(${idEmpresa},'${ruc}','${empresa}','${empresaAbrev}','${direccion}','${telefono1}',
-                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}',1, ${s_idUsuario},${s_FlagAdmin},${s_FlagGlobal})`;
+                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}',1, ${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
