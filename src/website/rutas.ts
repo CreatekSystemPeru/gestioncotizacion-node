@@ -4,6 +4,7 @@ import sesion from "./sesion";
 import empresas from "./empresas";
 import clientes from "./clientes";
 import productos from "./productos";
+import usuarios from "./usuarios";
 
 const rutas = Router();
 
@@ -30,5 +31,6 @@ rutas.use("/sesion", sesion);
 rutas.use("/empresas", empresas);
 rutas.use("/clientes", clientes);
 rutas.use("/productos", productos);
+rutas.use("/usuarios", usuarios);
 
 export default rutas;
