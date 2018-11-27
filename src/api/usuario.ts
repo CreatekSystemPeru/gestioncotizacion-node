@@ -85,11 +85,11 @@ usuario.get('/usuario/get', [ permisos.verificaSesion, permisos.verificaPermiso 
 
 /*Falta agregar los permisos*/
 usuario.post('/usuario/register', (req: Request, res: Response) => {
-    let {idUsuario, apellidoPaterno, apellidoMaterno,
-        nombres, usuario, idPerfil} = req.body;
+    let {ruc, empresa, apellidoPaterno, apellidoMaterno,
+        nombres, usuario} = req.body;
 
-    const query = `CALL Usuario_InsertUpdate(0,${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
-                                            ${idPerfil},1, 0)`;
+    const query = `CALL Usuario_InsertUpdate(0,0,'${ruc}','${empresa}','${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
+                                            1,1,0)`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
@@ -121,7 +121,7 @@ usuario.post('/usuario/reg', [ permisos.verificaSesion, permisos.verificaPermiso
     let {idEmpresa, idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil} = req.body;
 
-    const query = `CALL Usuario_InsertUpdate(${idEmpresa},${idUsuario},'${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
+    const query = `CALL Usuario_InsertUpdate(${idEmpresa},${idUsuario}, '', '', '${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
                                             ${idPerfil},1, ${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
