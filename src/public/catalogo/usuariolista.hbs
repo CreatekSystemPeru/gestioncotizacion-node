@@ -11,7 +11,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Listado de Clientes</h2>
+            <h2>Listado de Usuarios</h2>
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
@@ -51,7 +51,7 @@
       processing: true,
       serverSide: true,
       ajax: {
-        url: "/api/cliente/list",
+        url: "/api/usuario/list",
         type: 'GET'
       },
       buttons: [
@@ -75,7 +75,7 @@
           text: "Nuevo",
           className: "btn btn-default",
           action: function (e, dt, node, config) {
-              window.location.href = "/clientes/ver/0";
+              window.location.href = "/usuarios/ver/0";
           }
         }
       ],

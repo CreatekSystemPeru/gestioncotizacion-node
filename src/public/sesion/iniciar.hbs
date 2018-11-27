@@ -11,7 +11,7 @@
     <link href="/assets/nprogress/nprogress.css" rel="stylesheet" />
     <link href="/assets/animate.css/animate.min.css" rel="stylesheet" />
     <link href="/assets/toastr/toastr.css" rel="stylesheet" />
-    <link href="/assets/build/css/custom.min.css" rel="stylesheet" />
+    <link href="/assets/build/css/custom.css" rel="stylesheet" />
   </head>
   <body class="login">
     <div>
@@ -120,10 +120,10 @@
       });
 
       function cerrar_sesion() {
-        var iniciarServicio = $.ajax({ type: "GET", url: "/api/usuario/salir" });
-        iniciarServicio.done(function(data, textStatus, jqXHR){
+        var svc0 = $.ajax({ type: "GET", url: "/api/usuario/salir" });
+        svc0.done(function(data, textStatus, jqXHR){
         });
-        iniciarServicio.fail(function(jqXHR, textStatus, errorThrown) {
+        svc0.fail(function(jqXHR, textStatus, errorThrown) {
         });
       }
 
@@ -135,26 +135,26 @@
 
         var credenciales = $("#frmlogin").serializeArray();
 
-        var iniciarServicio = $.ajax({ type: "POST", url: "/api/usuario/login", data: credenciales });
-        iniciarServicio.done(function(data, textStatus, jqXHR){
+        var svc0 = $.ajax({ type: "POST", url: "/api/usuario/login", data: credenciales });
+        svc0.done(function(data, textStatus, jqXHR){
           if (data.ok) {
             var activacion = data.data[0];
-            //alert(JSON.stringify(activacion));
-            var iniciarWeb = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
-            iniciarWeb.done(function(data1, textStatus, jqXHR) {
+            console.log(JSON.stringify(activacion));
+            var svc1 = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
+            svc1.done(function(data1, textStatus, jqXHR) {
               if (data1.ok) {
                 toastr.success(data1.message, "", {timeOut: 700});
                 setTimeout(function(){ window.location.href = "/inicio" }, 700);
               }
             });
-            iniciarWeb.fail(function(jqXHR, textStatus, errorThrown) {
+            svc1.fail(function(jqXHR, textStatus, errorThrown) {
               toastr.error(textStatus);
             });
             return;
           }
           toastr.error(data.message);
         });
-        iniciarServicio.fail(function(jqXHR, textStatus, errorThrown) {
+        svc0.fail(function(jqXHR, textStatus, errorThrown) {
           toastr.error(textStatus);
         });
       }
@@ -167,7 +167,7 @@
       }
 
       function leerEmpresas(){
-        var svcEmpresaCombo = $.ajax({type: "GET", url: "/api/empresa/combo"});
+        var svcEmpresaCombo = $.ajax({type: "GET", url: "/api/empresa/list"});
         svcEmpresaCombo.done(function (data, textStatus, jqXHR) {
           $("#idEmpresa option").remove();
           $.each(data.data, function(i, item) {

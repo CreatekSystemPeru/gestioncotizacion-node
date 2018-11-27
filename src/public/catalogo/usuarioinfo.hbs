@@ -1,6 +1,5 @@
 {{#extend "css"}}
 {{/extend}}
-
 <div class="right_col" role="main">
     <div class="clearfix"></div>
     <form id="formInfo">
@@ -8,12 +7,12 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Información de Cliente</h2>
+                        <h2>Información de Usuario</h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
                         <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
-                            <input type="hidden" id="idCliente" name="idCliente" value="{{obj.IdCliente}}" />
+                            <input type="hidden" id="idUsuario" name="idUsuario" value="{{obj.IdUsuario}}" />
                             <input type="hidden" id="IdEmpresa" name="IdEmpresa" value="{{obj.IdEmpresa}}" />
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="RUC">RUC <span class="required">*</span></label>
@@ -31,9 +30,6 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idGiro">Giro <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select id="idGiro" name="idGiro" class="form-control">
-                                        <!--<option value="0">Work hard</option>
-                                        <option value="1">Party hard</option>
-                                        <option value="2">$&#128;&gt;&lt; hard</option>-->
                                     </select>
                                 </div>
                             </div>
@@ -52,7 +48,7 @@
     </form>
 </div>
 <script>
-    var clienteId = "{{clienteId}}";
+    var clienteId = "{{usuarioId}}";
     var empresaId = "{{sesionActiva.IdEmpresa}}";
 </script>
 {{#extend "js"}}
@@ -61,12 +57,12 @@
     $(document).on("ready", function () {
         init_parsley();
 
-        $("#idCliente").val(clienteId);
+        $("#idUsuario").val(clienteId);
         $("#IdEmpresa").val(empresaId);
 
-        leerGiros();
+        //leerGiros();
         if (clienteId > 0) {
-            leerCliente();
+            leerUsuario();
         }
     });
 
@@ -87,19 +83,19 @@
         });
     }
 
-    function leerCliente() {
-        var svcGetCliente = $.ajax({ type: "GET", url: "/api/cliente/get?Id=" + clienteId });
-        svcGetCliente.done(function (data, textStatus, jqXHR) {
+    function leerUsuario() {
+        var svc0 = $.ajax({ type: "GET", url: "/api/usuario/get?Id=" + usuarioId });
+        svc0.done(function (data, textStatus, jqXHR) {
             if (data.ok) {
                 var obj = data.data[0];
-                $("#idCliente").val(obj.IdCliente);
+                $("#idUsuario").val(obj.Idusuario);
                 $("#RUC").val(obj.RUC);
                 $("#razonSocial").val(obj.RazonSocial);
                 $("#idGiro").val(obj.IdGiro);
             }
         });
-        svcGetCliente.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener los datos del cliente.");
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error("Error al obtener los datos del usuario.");
         });
     }
 
@@ -146,10 +142,10 @@
 
         var data = $("#formInfo").serializeArray();
 
-        $.post("/api/cliente/reg", data, function (result) {
+        $.post("/api/usuario/reg", data, function (result) {
             if (result.ok){
                 toastr.success(result.message, '', { timeOut: 700 });
-                setTimeout(function () { window.location.href = "/clientes/listar" }, 700);
+                setTimeout(function () { window.location.href = "/usuarios/listar" }, 700);
             }
             else{
                 toastr.error(result.message);
@@ -158,7 +154,7 @@
     })
 
     $('#cancel').on("click", function () {
-        window.location.href = "/clientes/listar";
+        window.location.href = "/usuarios/listar";
     });
 </script>
 {{/extend}}
