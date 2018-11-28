@@ -13,31 +13,43 @@
                     <div class="x_content">
                         <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
                             <input type="hidden" id="idUsuario" name="idUsuario" value="{{obj.IdUsuario}}" />
-                            <input type="hidden" id="IdEmpresa" name="IdEmpresa" value="{{obj.IdEmpresa}}" />
+                            <input type="hidden" id="IdEmpresa" name="IdEmpresa" value="{{obj.IdEmpresa}}" />                            
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="RUC">RUC <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="usuario">Usuario <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="RUC" class="form-control col-md-7 col-xs-12" name="RUC" value="{{obj.RUC}}" required="required" maxlength="15" />
+                                    <input type="text" id="usuario" name="usuario" class="form-control col-md-7 col-xs-12" value="{{obj.Usuario}}" required="required" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="razonSocial">Razon Social <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idPerfil">Perfil <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="razonSocial" class="form-control col-md-7 col-xs-12" name="razonSocial" value="{{obj.RazonSocial}}" required="required" />
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idGiro">Giro <span class="required">*</span></label>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select id="idGiro" name="idGiro" class="form-control">
+                                    <select id="idPerfil" name="idPerfil" class="form-control">
                                     </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoPaterno">Apellido Paterno <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="apellidoPaterno" name="apellidoPaterno" class="form-control col-md-7 col-xs-12" value="{{obj.ApellidoPaterno}}" required="required" maxlength="50" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="apellidoMaterno">Apellido Materno <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="apellidoMaterno" name="apellidoMaterno" class="form-control col-md-7 col-xs-12" value="{{obj.ApellidoMaterno}}" required="required" maxlength="50" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="nombres">Nombres <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="nombres" name="nombres" class="form-control col-md-7 col-xs-12" value="{{obj.Nombres}}" required="required" />
                                 </div>
                             </div>
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a id="action" class="btn btn-default submit">Grabar</a>
-                                    <a id="cancel" class="btn btn-default submit">Cancelar</a>
+                                    <button id="grabar" class="btn btn-default">Grabar</button>
+                                    <button id="cancelar" class="btn btn-default">Cancelar</button>
                                 </div>
                             </div>
                         </div>
@@ -48,8 +60,7 @@
     </form>
 </div>
 <script>
-    var clienteId = "{{usuarioId}}";
-    var empresaId = "{{sesionActiva.IdEmpresa}}";
+    var usuarioId = "{{usuarioId}}";
 </script>
 {{#extend "js"}}
 <script src="/assets/parsleyjs/dist/parsley.js"></script>
@@ -57,45 +68,61 @@
     $(document).on("ready", function () {
         init_parsley();
 
-        $("#idUsuario").val(clienteId);
-        $("#IdEmpresa").val(empresaId);
+        $("#idUsuario").val(usuarioId);
+        $("#IdEmpresa").val(g_empresaId);
 
-        //leerGiros();
-        if (clienteId > 0) {
+        $("#grabar").on("click", grabar_click);
+        $("#cancelar").on("click", cancelar_click);
+
+        $("#Usuario").trigger("focus");
+
+        leerPerfiles();
+        if (usuarioId > 0) {
             leerUsuario();
         }
     });
 
-    function leerGiros() {
-        var svcGetGiros = $.ajax({ type: "GET", url: "/api/tablamaestra/combo?idTabla=" + "2" });
-        svcGetGiros.done(function (data, textStatus, jqXHR) {
-            if (data.ok) {
-                var obj = data.data[0];
-                //alert(JSON.stringify(data.data));
-                $("#idGiro option").remove();
-                $.each(data.data, function(i, item) {
-                    $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
+    function leerPerfiles() {
+        var svc0 = $.ajax({ 
+            type: "GET", 
+            url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_PERFILES + "&idEmpresa=" + g_empresaId,
+            cache: false
+        });
+        svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok) {
+                var obj = result.data[0];
+                $("#idPerfil option").remove();
+                $.each(result.data, function(i, item) {
+                    $("#idPerfil").append(new Option(item.Descripcion, item.IdColumna));
                 });
             }
         });
-        svcGetGiros.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener los datos del cliente.");
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
         });
     }
 
     function leerUsuario() {
-        var svc0 = $.ajax({ type: "GET", url: "/api/usuario/get?Id=" + usuarioId });
-        svc0.done(function (data, textStatus, jqXHR) {
-            if (data.ok) {
-                var obj = data.data[0];
-                $("#idUsuario").val(obj.Idusuario);
-                $("#RUC").val(obj.RUC);
-                $("#razonSocial").val(obj.RazonSocial);
-                $("#idGiro").val(obj.IdGiro);
+        var svc0 = $.ajax({ 
+            type: "GET", 
+            url: PREFIJO_SERVICIO + "usuario/get?Id=" + usuarioId + "&idEmpresa=" + g_empresaId,
+            cache: false
+        });
+        svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok) {
+                var obj = result.data[0];
+                $("#idUsuario").val(obj.IdUsuario);
+                $("#apellidoPaterno").val(obj.ApellidoPaterno);
+                $("#apellidoMaterno").val(obj.ApellidoMaterno);
+                $("#nombres").val(obj.Nombres);
+                $("#usuario").val(obj.Usuario);
+                $("#idPerfil").val(obj.IdPerfil);
+
+                $("#apellidoPaterno").trigger("focus");
             }
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener los datos del usuario.");
+            toastr.error(ERROR_NO_SERVICIO);
         });
     }
 
@@ -136,25 +163,36 @@
         }
     }
 
-    $("#action").on("click", function () {
+    function grabar_click(event) {
+        event.preventDefault();
         if (validarCampos())
             return;
 
-        var data = $("#formInfo").serializeArray();
+        var formData = $("#formInfo").serializeArray();
 
-        $.post("/api/usuario/reg", data, function (result) {
-            if (result.ok){
-                toastr.success(result.message, '', { timeOut: 700 });
-                setTimeout(function () { window.location.href = "/usuarios/listar" }, 700);
+        var svc0 = $.ajax({
+            type: "POST", 
+            url: PREFIJO_SERVICIO + "usuario/reg",
+            data: formData
+        });
+        svc0.done(function(result, textStatus, jqXHR) {
+            if (result.ok) {
+                toastr.success(result.message, '', { timeOut: tst_Duration });
+                setTimeout(function () { window.location.href = "/usuarios/listar" }, tst_Duration);
             }
             else{
                 toastr.error(result.message);
             }
         });
-    })
+        svc0.fail(function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    }
 
-    $('#cancel').on("click", function () {
+    function cancelar_click(event) {
+        event.preventDefault();
         window.location.href = "/usuarios/listar";
-    });
+    }
 </script>
 {{/extend}}

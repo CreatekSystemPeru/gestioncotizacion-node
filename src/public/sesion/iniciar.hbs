@@ -122,9 +122,12 @@
         });
       }
 
-      function aceptar_click() {
+      function aceptar_click(event) {
+        event.preventDefault();
+        $("#aceptar").attr("disabled", "disabled");
         if ($("#usuario").val().trim().length == 0 || $("#clave").val().trim().length == 0) {
           toastr.error("El usuario o clave son incorrectos. Intente nuevamente", "", {timeOut: 700});
+          $("#aceptar").removeAttr("disabled");
           return;
         }
 
@@ -151,6 +154,9 @@
         });
         svc0.fail(function(jqXHR, textStatus, errorThrown) {
           toastr.error(textStatus);
+        });
+        svc0.always(function(jqXHR, textStatus, errorThrown) {
+          $("#aceptar").removeAttr("disabled");
         });
       }
 

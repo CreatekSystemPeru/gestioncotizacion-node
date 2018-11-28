@@ -51,8 +51,11 @@
       processing: true,
       serverSide: true,
       ajax: {
-        url: PREFIJO_SERVICIO + "cliente/list",
-        type: 'GET'
+        type: 'GET',
+        url: PREFIJO_SERVICIO + "cliente/list?idEmpresa=" + g_empresaId,
+        error: function (xhr, error, thrown) {
+          toastr.success(ERROR_NO_SERVICIO, "", { timeOut: tst_Duration });
+        }
       },
       buttons: [
         {

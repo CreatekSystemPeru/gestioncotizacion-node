@@ -16,6 +16,11 @@ var dt_i18n_es_PE = {
     }
 };
 
+var TM_ESTADOS = "1";
+var TM_GIROS = "2";
+var TM_PERFILES = "3";
+var TM_LOGTABLAS = "4";
+
 var tst_Duration = 700;
 
 // mensajes de error

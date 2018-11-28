@@ -18,11 +18,12 @@
             <table id="tblList" class="table table-striped table-bordered dt-responsive nowrap display" cellspacing="0" style="width:100%">
                 <thead>
                     <tr>
-                        <th></th>
-                        <th>RUC</th>
-                        <th>Razon Social</th>
-                        <th>Giro</th>
-                        <th></th>
+                      <th></th>
+                      <th>Usuario</th>
+                      <th>Persona</th>
+                      <th>Perfil</th>
+                      <th>Estado</th>
+                      <th></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,8 +52,11 @@
       processing: true,
       serverSide: true,
       ajax: {
-        url: PREFIJO_SERVICIO + "usuario/list",
-        type: "GET"
+        type: "GET",
+        url: PREFIJO_SERVICIO + "usuario/list?idEmpresa=" + g_empresaId,
+        error: function (xhr, error, thrown) {
+          toastr.success(ERROR_NO_SERVICIO, "", { timeOut: tst_Duration });
+        }
       },
       buttons: [
         {
@@ -80,15 +84,16 @@
         }
       ],
       columns: [
-        { data: 'IdCliente', visible: false },
-        { data: 'RUC' },
-        { data: 'RazonSocial' },
-        { data: 'Giro' },
+        { data: 'IdUsuario', visible: false },
+        { data: 'Usuario' },
+        { data: 'UsuarioPersona' },
+        { data: 'Perfil' },
+        { data: 'Estado' },
         {
           data: null,
           bSortable: false,
           render: function (obj) { 
-            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/clientes/ver/' + obj.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
+            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/usuarios/ver/' + obj.IdUsuario + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
           }
         }
       ],

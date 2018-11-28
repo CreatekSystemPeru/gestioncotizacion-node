@@ -29,7 +29,7 @@
                      <img src="/assets/images/user.png" alt="Imagen de usuario" class="img-circle profile_img">
                   </div>
                   <div class="profile_info">
-                     <span>Bienvenido, {{sesionActiva.UsuarioPersona}}</span>
+                     <span>Bienvenido, {{sesionActiva.Nombres}}</span>
                   </div>
                </div>
                <br />
@@ -52,7 +52,7 @@
                   <ul class="nav navbar-nav navbar-right">
                      <li class="">
                         <a href="javascript:;" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
-                           <img src="/assets/images/user.png" alt=""> {{sesionActiva.UsuarioPersona}} <span class=" fa fa-angle-down"></span>
+                           <img src="/assets/images/user.png" alt=""> {{sesionActiva.Nombres}} <span class=" fa fa-angle-down"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-usermenu pull-right">
                            <li><a href="/sesion/cambiarempresa"><i class="fa fa-random pull-right"></i> Cambiar empresa</a></li>
@@ -97,24 +97,24 @@
    {{{block "js"}}}
    <script>    
       $(document).on("ready", function() {
-          var svc0 = $.ajax({
-             type: "GET", 
-             url: "/api/usuario/menu",
-             cache: false
+         var svc0 = $.ajax({
+            type: "GET", 
+            url: "/api/usuario/menu",
+            cache: false
          });
-         svc0.done(function (data, textStatus, jqXHR) {
-            if (data.ok){
-               var template = $("#userMenuTemplate").html();
-               var usuarioMenu = data;
-               var htmlMenu = Handlebars.compile(template)(usuarioMenu);
+         svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok){
+               var plantilla = $("#userMenuTemplate").html();
+               var htmlMenu = Handlebars.compile(plantilla)(result);
                $("body #user-menu-list").html(htmlMenu);
+
                init_sidebar();
             }
           });
           svc0.fail(function (jqXHR, textStatus, errorThrown) {
             toastr.error(ERROR_NO_SERVICIO);
           });
-        });
+      });
   </script>
    <script>
       (function ($, sr) {
