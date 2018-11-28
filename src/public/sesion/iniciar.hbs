@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta charset="utf-8">
@@ -22,11 +22,6 @@
           <section class="login_content">
             <form id="frmlogin">
               <h1>Autenticación</h1>
-              <!--<div>
-                <select id="idEmpresa" name="idEmpresa" class="form-control">
-                    <option value="">Cargando...</option>
-                </select>
-              </div>-->
               <div>
                 <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Nombre de Usuario"/>
               </div>
@@ -38,7 +33,6 @@
               </div>
               <div>
                 <a id="aceptar" class="btn btn-default" >Iniciar Sesión</a>
-                {{!-- class="reset_pass" onclick="document.getElementById('frmlogin').submit()"--}}
                 <a href="#">¿Has olvidado los datos de la cuenta?</a>
               </div>
 
@@ -99,6 +93,7 @@
 
     <script src="/assets/jquery/dist/jquery.min.js"></script>
     <script src="/assets/toastr/toastr.js"></script>
+    <script src="/assets/build/js/cotigen.js"></script>
     <script>
       var terminado = "{{terminado}}";
 
@@ -144,7 +139,7 @@
             svc1.done(function(data1, textStatus, jqXHR) {
               if (data1.ok) {
                 toastr.success(data1.message, "", {timeOut: 700});
-                setTimeout(function(){ window.location.href = "/inicio" }, 700);
+                setTimeout(function(){ window.location.href = "/sesion/cambiarempresa" }, 700);
               }
             });
             svc1.fail(function(jqXHR, textStatus, errorThrown) {
@@ -176,7 +171,7 @@
           $("#aceptar").removeAttr("disabled");
         });
         svcEmpresaCombo.fail(function (jqXHR, textStatus, errorThrown) {
-          toastr.error("Error al obtener el listado de empresas.");
+          toastr.error(ERROR_NO_SERVICIO);
         });
       }
     </script>

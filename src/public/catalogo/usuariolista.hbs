@@ -46,13 +46,13 @@
 <script src="/assets/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
 <script>
   $(document).ready(function() {
-    var table = $('#tblList').DataTable({
+    var table = $("#tblList").DataTable({
       dom: 'Blfrtip',
       processing: true,
       serverSide: true,
       ajax: {
-        url: "/api/usuario/list",
-        type: 'GET'
+        url: PREFIJO_SERVICIO + "usuario/list",
+        type: "GET"
       },
       buttons: [
         {
@@ -93,20 +93,7 @@
         }
       ],
       pagingType: "numbers",
-      language: {
-        search: "Buscar:",
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        zeroRecords: "La búsqueda no contiene registros.",
-        info: "Página _PAGE_ de _PAGES_",
-        infoEmpty: "Tabla en blanco",
-        infoFiltered: "(_TOTAL_ registros)",
-        paginate:{
-          first: "Primero",
-          last: "Ultimo",
-          previous: "Anterior",
-          next: "Siguiente"
-        }
-      }
+      language: dt_i18n_es_PE
     });
   });
 </script>

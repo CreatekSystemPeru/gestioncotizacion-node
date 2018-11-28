@@ -56,10 +56,10 @@
       processing: true,
       serverSide: true,
       ajax: {
-        url: "/api/empresa/list",
+        url: PREFIJO_SERVICIO + "empresa/list",
         type: 'GET',
         error: function (xhr, error, thrown) {
-          toastr.success("El servidor está fuera de servicio, intente más tarde", "", {timeOut: 700});
+          toastr.success(ERROR_NO_SERVICIO, "", { timeOut: tst_Duration });
         }
       },
       buttons: [
@@ -106,20 +106,7 @@
         }
       ],
       pagingType: "numbers",
-      language: {
-        search: "Buscar:",
-        lengthMenu: "Mostrar _MENU_ registros por página",
-        zeroRecords: "La búsqueda no contiene registros.",
-        info: "Página _PAGE_ de _PAGES_",
-        infoEmpty: "Tabla en blanco",
-        infoFiltered: "(_TOTAL_ registros)",
-        paginate:{
-          first: "Primero",
-          last: "Ultimo",
-          previous: "Anterior",
-          next: "Siguiente"
-        }
-      }
+      language: dt_i18n_es_PE
     });
   }); 
 </script>

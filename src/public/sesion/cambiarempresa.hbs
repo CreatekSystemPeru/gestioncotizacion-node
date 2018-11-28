@@ -8,15 +8,13 @@
     <title>{{titulo}} - Seleccionar empresa</title>
     <link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="/assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
-    <link href="/assets/nprogress/nprogress.css" rel="stylesheet" />
-    <link href="/assets/animate.css/animate.min.css" rel="stylesheet" />
+    <!--<link href="/assets/nprogress/nprogress.css" rel="stylesheet" />
+    <link href="/assets/animate.css/animate.min.css" rel="stylesheet" />-->
     <link href="/assets/toastr/toastr.css" rel="stylesheet" />
     <link href="/assets/build/css/custom.css" rel="stylesheet" />
   </head>
   <body class="login">
     <div>
-      <a class="hiddenanchor" id="signup"></a>
-      <a class="hiddenanchor" id="signin"></a>
       <div class="login_wrapper">
         <div class="animate form login_form">
           <section class="login_content">
@@ -27,76 +25,66 @@
                     <option value="">Cargando...</option>
                 </select>
               </div>
+              <div>
+                <button id="seleccionar" class="btn btn-default">Seleccionar empresa</button>
+                <button id="cerrarSesion" class="btn btn-default">Cerrar sesión</button>
+              </div>
               <div class="clearfix"></div>
             </form>
           </section>
         </div>
       </div>
     </div>
-
     <script src="/assets/jquery/dist/jquery.min.js"></script>
     <script src="/assets/toastr/toastr.js"></script>
+    <script src="/assets/build/js/cotigen.js"></script>
     <script>
       $(document).on("ready", function() {
-        $("#aceptar").on("click", aceptar_click);
-        $("#usuario").on("keyup", txt_keyup);
-        $("#clave").on("keyup", txt_keyup);
-        //$("#aceptar").attr("disabled", "disabled");
-        //leerEmpresas();
-        $("#usuario").trigger("focus");        
-        $("#usuario").val("admin");
-        $("#clave").val("12345");
+        $("#seleccionar").attr("disabled", "disabled");
+        leerEmpresas();
+        $("#seleccionar").on("click", seleccionar_click);
+        $("#cerrarSesion").on("click", cerrarSesion_click);
       });
 
-      function aceptar_click() {
-        if ($("#usuario").val().trim().length == 0 || $("#clave").val().trim().length == 0) {
-          toastr.error("El usuario o clave son incorrectos. Intente nuevamente", "", {timeOut: 700});
-          return;
-        }
-
-        var credenciales = $("#frmlogin").serializeArray();
-        var iniciarServicio = $.ajax({ type: "POST", url: "/api/usuario/login", data: credenciales });
-        iniciarServicio.done(function(data, textStatus, jqXHR){
-          if (data.ok) {
-            var activacion = data.data[0];
-            alert(JSON.stringify(activacion));
-            var iniciarWeb = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
-            iniciarWeb.done(function(data1, textStatus, jqXHR) {
-              if (data1.ok) {
-                toastr.success(data1.message, "", {timeOut: 700});
-                setTimeout(function(){ window.location.href = "/inicio" }, 700);
-              }
-            });
-            iniciarWeb.fail(function(jqXHR, textStatus, errorThrown) {
-              toastr.error(textStatus);
-            });
-            return;
-          }
-          toastr.error(data.message);
+      function seleccionar_click() {
+        var svc0 = $.ajax({ 
+          type: "POST", 
+          url: "/sesion/cambiarempresa", 
+          data: { 
+            idEmpresa: $("#idEmpresa").val() 
+          } 
         });
-        iniciarServicio.fail(function(jqXHR, textStatus, errorThrown) {
-          toastr.error(textStatus);
+        svc0.done(function(data, textStatus, jqXHR){
+          alert(JSON.stringify(data));
+          if (data.ok) {
+            toastr.success("Cargando entorno para " + $("#idEmpresa").text(), "", {timeOut: 700});
+            setTimeout(function(){ window.location.href = "/inicio" }, 700);
+          }
+          else {
+            toastr.error(ERROR_NO_SERVICIO);
+          }
+        });
+        svc0.fail(function(jqXHR, textStatus, errorThrown) {
+          console.log(textStatus);
+          toastr.error(ERROR_NO_SERVICIO);
         });
       }
 
-      function txt_keyup(event){
-        if (event.keyCode === 13) {
-          event.preventDefault();
-          $("#aceptar").trigger("click");
-        }
+      function cerrarSesion_click(){
+            window.location.href = "/sesion/salir";
       }
 
       function leerEmpresas(){
-        var svc0 = $.ajax({type: "GET", url: "/api/empresa/list"});
+        var svc0 = $.ajax({type: "GET", url: PREFIJO_SERVICIO + "empresa/list?length=100&start=0&draw=1", cache: false });
         svc0.done(function (data, textStatus, jqXHR) {
           $("#idEmpresa option").remove();
           $.each(data.data, function(i, item) {
               $("#idEmpresa").append(new Option(item.EmpresaAbrev, item.IdEmpresa));
           });
-          $("#aceptar").removeAttr("disabled");
+          $("#seleccionar").removeAttr("disabled");
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
-          toastr.error("Error al obtener el listado de empresas.");
+          toastr.error(ERROR_NO_SERVICIO);
         });
       }
     </script>

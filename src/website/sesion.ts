@@ -10,7 +10,7 @@ sesion.get("/iniciar", (req: Request, res: Response) => {
         req.session!.sesionActiva = null;
     }
     else if (req.session!.sesionActiva) {
-        return res.redirect("/inicio");
+        return res.redirect("/cambiarempresa");
     }
 
     console.log("P sesion: render");
@@ -22,23 +22,11 @@ sesion.get("/iniciar", (req: Request, res: Response) => {
 });
 
 sesion.post("/iniciar", (req: Request, res: Response) => {
-    /*axios.post(process.env.SERVICE_URL + "/usuario/login", {
-        usuario: "admin",
-        clave: "12345"
-    })
-    .then(function (response: any) {
-        console.log("S server svc api: servicio ok", response.data);
-    })
-    .catch(function (error: any) {
-        console.log("S server svc api: servicio error", error);
-    })
-    .then(function () {
-    });*/
-
     var svcSesion = req.session!.userSesion;
     console.log("P sesion: conectado");
     if (svcSesion!.s_idUsuario > 0) {        
         req.session!.sesionActiva = req.body;
+        req.session!.sesionActiva.idEmpresa = 0;
 
         res.json({
             ok: true,
@@ -53,6 +41,30 @@ sesion.post("/iniciar", (req: Request, res: Response) => {
             data: null
         });
     }
+});
+
+sesion.get("/cambiarempresa", (req: Request, res: Response) => {
+    console.log("P cambiarempresa: render");
+    req.session!.sesionActiva.idEmpresa = 0;
+
+    res.render("sesion/cambiarempresa", {
+        layout: false,
+        titulo: "Cambiar empresa"
+    });
+});
+
+sesion.post("/cambiarempresa", (req: Request, res: Response) => {
+    console.log("P cambiarempresa: asignacion");
+    var idEmpresa = parseInt(req.body.idEmpresa);
+    console.log("idEmpresa= ",idEmpresa);
+    if (idEmpresa > 0)
+        req.session!.sesionActiva.idEmpresa = idEmpresa
+
+    res.json({
+        ok: (idEmpresa > 0),
+        message: "",
+        data: null
+    });
 });
 
 sesion.get("/salir", (req: Request, res: Response) => {

@@ -26,7 +26,7 @@
                <div class="clearfix"></div>
                <div class="profile clearfix">
                   <div class="profile_pic">
-                     <img src="/assets/images/user.png" alt="..." class="img-circle profile_img">
+                     <img src="/assets/images/user.png" alt="Imagen de usuario" class="img-circle profile_img">
                   </div>
                   <div class="profile_info">
                      <span>Bienvenido, {{sesionActiva.UsuarioPersona}}</span>
@@ -55,6 +55,7 @@
                            <img src="/assets/images/user.png" alt=""> {{sesionActiva.UsuarioPersona}} <span class=" fa fa-angle-down"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-usermenu pull-right">
+                           <li><a href="/sesion/cambiarempresa"><i class="fa fa-random pull-right"></i> Cambiar empresa</a></li>
                            <li><a href="/sesion/salir"><i class="fa fa-sign-out pull-right"></i> Cerrar Sesión</a></li>
                         </ul>
                      </li>
@@ -64,9 +65,7 @@
          </div>
          {{{body}}}
          <footer>
-            <div class="pull-right">
-               Creatividad Tecnologica en Sistemas S.A.C.
-            </div>
+            <div class="pull-right">Creatividad Tecnologica en Sistemas S.A.C.</div>
             <div class="clearfix"></div>
          </footer>
       </div>
@@ -78,7 +77,10 @@
    <script src="/assets/toastr/toastr.js"></script>
    <script src="/assets/malihu-custom-scrollbar-plugin/jquery.mCustomScrollbar.concat.min.js"></script>
    <script src="/assets/handlebars.min.js"></script>
-   
+   <script src="/assets/build/js/cotigen.js"></script>   
+   <script>
+      var g_empresaId = "{{sesionActiva.idEmpresa}}";
+   </script>
    {{{{raw-helper}}}}
    <script id="userMenuTemplate" type="text/x-handlebars-template">
       {{#data}}
@@ -95,8 +97,12 @@
    {{{block "js"}}}
    <script>    
       $(document).on("ready", function() {
-          var cargarMenu = $.ajax({type: "GET", url: "/api/usuario/menu"});
-          cargarMenu.done(function (data, textStatus, jqXHR) {
+          var svc0 = $.ajax({
+             type: "GET", 
+             url: "/api/usuario/menu",
+             cache: false
+         });
+         svc0.done(function (data, textStatus, jqXHR) {
             if (data.ok){
                var template = $("#userMenuTemplate").html();
                var usuarioMenu = data;
@@ -105,8 +111,8 @@
                init_sidebar();
             }
           });
-          cargarMenu.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener el menú de acciones.");
+          svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
           });
         });
   </script>

@@ -14,24 +14,24 @@
                     <div class="x_content">
                         <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
                             <input type="hidden" id="idProducto" name="idProducto" value="{{obj.IdProducto}}" />
-                            <input type="hidden" id="IdEmpresa" name="IdEmpresa" value="{{obj.IdEmpresa}}" />
+                            <input type="hidden" id="idEmpresa" name="idEmpresa" value="{{obj.IdEmpresa}}" />
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Codigo">Código <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="codigo" class="form-control col-md-7 col-xs-12" name="codigo" value="{{obj.Codigo}}" required="required" maxlength="15" />
+                                    <input type="text" id="codigo" name="codigo" class="form-control col-md-7 col-xs-12" value="{{obj.Codigo}}" required="required" maxlength="15" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Producto">Descripción <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="producto" class="form-control col-md-7 col-xs-12" name="producto" value="{{obj.Producto}}" required="required" />
+                                    <input type="text" id="producto" name="producto" class="form-control col-md-7 col-xs-12" value="{{obj.Producto}}" required="required" maxlength="100" />
                                 </div>
                             </div>
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a id="action" class="btn btn-default submit">Grabar</a>
-                                    <a id="cancel" class="btn btn-default submit">Cancelar</a>
+                                    <button id="action" class="btn btn-default submit">Grabar</button>
+                                    <button id="cancel" class="btn btn-default submit">Cancelar</button>
                                 </div>
                             </div>
                         </div>
@@ -43,7 +43,6 @@
 </div>
 <script>
     var productoId = "{{productoId}}";
-    var empresaId = "{{sesionActiva.IdEmpresa}}";
 </script>
 {{#extend "js"}}
 <script src="/assets/parsleyjs/dist/parsley.js"></script>
@@ -52,7 +51,7 @@
         init_parsley();
 
         $("#idProducto").val(productoId);
-        $("#IdEmpresa").val(empresaId);
+        $("#idEmpresa").val(g_empresaId);
 
         if (productoId > 0) {
             leerProducto();
@@ -60,8 +59,12 @@
     });
 
     function leerProducto() {
-        var svcGetCliente = $.ajax({ type: "GET", url: "/api/producto/get?Id=" + productoId });
-        svcGetCliente.done(function (data, textStatus, jqXHR) {
+        var svc0 = $.ajax({
+            type: "GET", 
+            url: PREFIJO_SERVICIO + "producto/get?Id=" + productoId + "&idEmpresa=" + g_empresaId,
+            cache: false
+        });
+        svc0.done(function (data, textStatus, jqXHR) {
             if (data.ok) {
                 var obj = data.data[0];
                 $("#idProducto").val(obj.IdProducto);
@@ -69,8 +72,8 @@
                 $("#producto").val(obj.Producto);
             }
         });
-        svcGetCliente.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener los datos del producto.");
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
         });
     }
 
@@ -117,7 +120,7 @@
 
         var data = $("#formInfo").serializeArray();
 
-        $.post("/api/producto/reg", data, function (result) {
+        $.post("producto/reg", data, function (result) {
             if (result.ok){
                 toastr.success(result.message, '', { timeOut: 700 });
                 setTimeout(function () { window.location.href = "/productos/listar" }, 700);
