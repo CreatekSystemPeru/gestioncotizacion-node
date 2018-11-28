@@ -183,8 +183,6 @@ usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: R
 });
 
 usuario.get('/usuario/delete', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
-    let {s_idEmpresa, s_idUsuario} = req.session!.userSesion;
-
     const query = `CALL Usuario_ActiveDeactive(${req.query.Id || 0})`;
     MySQL.ejecutarQuery(query, null, (err: any, usuarioDelete: any) => {
         if (err) {

@@ -4,7 +4,7 @@ import permisos from '../middlewares/permisos';
 
 const clienteSucursal = Router();
 
-clienteSucursal.get('/clientesucursal/list/', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
+clienteSucursal.get('/clientesucursal/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
 
     let search = (req.query.search) ? req.query.search.value : '';
@@ -30,7 +30,7 @@ clienteSucursal.get('/clientesucursal/list/', [permisos.verificaSesion, permisos
     });
 });
 
-clienteSucursal.get('/clientesucursal/get/', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+clienteSucursal.get('/clientesucursal/get', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     const query = `CALL ClienteSucursal_Get(${req.query.idEmpresa}, ${req.query.Id || 0})`;
     MySQL.ejecutarQuery(query, null, (err: any, clienteGet: any) => {
         if (err) {

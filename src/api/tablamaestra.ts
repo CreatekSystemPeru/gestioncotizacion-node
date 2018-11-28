@@ -5,9 +5,7 @@ import permisos from '../middlewares/permisos';
 const tablaMaestra = Router();
 
 tablaMaestra.get('/tablamaestra/combo', [ permisos.verificaSesion ], (req: Request, res: Response) => {
-    let {s_idEmpresa} = req.session!.userSesion;
-
-    const query = `CALL TablaMaestra_Combo(${s_idEmpresa},${req.query.idTabla})`;
+    const query = `CALL TablaMaestra_Combo(${req.query.idEmpresa},${req.query.idTabla})`;
     MySQL.ejecutarQuery(query, null, (err: any, tablaGet: any) => {
         if (err) {
             return res.json({
