@@ -71,9 +71,9 @@ empresa.get('/empresa/get', [permisos.verificaSesion, permisos.verificaPermiso],
 empresa.post('/empresa/reg/', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
     let { idEmpresa, ruc, empresa, empresaAbrev,
-        direccion, telefono1, telefono2, movil1, movil2, email, url } = req.body;
+        direccion, telefono1, telefono2, movil1, movil2, email, url, rutaLogo } = req.body;
     const query = `CALL Empresa_InsertUpdate(${idEmpresa},'${ruc}','${empresa}','${empresaAbrev}','${direccion}','${telefono1}',
-                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}',1, ${s_idUsuario})`;
+                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}', '${rutaLogo}',1, ${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({

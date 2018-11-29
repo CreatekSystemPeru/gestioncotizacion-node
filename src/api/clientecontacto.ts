@@ -81,7 +81,7 @@ clienteContacto.post('/clientecontacto/reg', [ permisos.verificaSesion, permisos
 
 clienteContacto.get('/clientecontacto/delete', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-
+    
     const query = `CALL ClienteContacto_ActiveDeactive(${req.query.idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, clienteContacto: any) => {
         if (err) {
