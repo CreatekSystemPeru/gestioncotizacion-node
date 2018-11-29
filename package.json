@@ -1,19 +1,19 @@
 {
-  "name": "webapp",
+  "name": "erp-webapp",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "start": "node dist/index",
     "nodemon": "nodemon dist/index",
-    "hbs": "copyfiles --up 1 src/public/*.hbs dist",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "hbs": "copyfiles --up 1 src/public/*.hbs dist",
     "hbspartials": "copyfiles --up 1 src/public/partials/*.hbs dist",
     "hbscatalogo": "copyfiles --up 1 src/public/catalogo/*.hbs dist",
     "hbssesion": "copyfiles --up 1 src/public/sesion/*.hbs dist",
     "build": "tsc && npm run hbs && npm run hbspartials && npm run hbssesion && npm run hbscatalogo"
   },
-  "author": "",
+  "author": "Createk",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.18.0",
