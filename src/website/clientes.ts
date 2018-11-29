@@ -11,9 +11,17 @@ clientes.get(["/", "/listar"], [validar.tieneSesion], (req: Request, res: Respon
 });
 
 clientes.get("/ver/:id(\\d+)", [validar.tieneSesion], (req: Request, res: Response) => {
-    console.log("P cliente id: render");
+    console.log("P cliente ver: render");
     res.render("catalogo/clienteinfo", {
         titulo: "Clientes",
+        clienteId: req.params.id
+    });
+});
+
+clientes.get("/sucursal/:id(\\d+)", [validar.tieneSesion], (req: Request, res: Response) => {
+    console.log("P cliente sucursal: render");
+    res.render("catalogo/clientesucursal", {
+        titulo: "Sucursales de Cliente",
         clienteId: req.params.id
     });
 });

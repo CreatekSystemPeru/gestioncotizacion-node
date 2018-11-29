@@ -126,14 +126,18 @@
         event.preventDefault();
         $("#aceptar").attr("disabled", "disabled");
         if ($("#usuario").val().trim().length == 0 || $("#clave").val().trim().length == 0) {
-          toastr.error("El usuario o clave son incorrectos. Intente nuevamente", "", {timeOut: 700});
+          toastr.error("El usuario o clave son incorrectos. Intente nuevamente", "", { timeOut: tst_Duration });
           $("#aceptar").removeAttr("disabled");
           return;
         }
 
         var credenciales = $("#frmlogin").serializeArray();
 
-        var svc0 = $.ajax({ type: "POST", url: "/api/usuario/login", data: credenciales });
+        var svc0 = $.ajax({ 
+          type: "POST", 
+          url: PREFIJO_SERVICIO + "usuario/login", 
+          data: credenciales 
+        });
         svc0.done(function(data, textStatus, jqXHR){
           if (data.ok) {
             var activacion = data.data[0];
@@ -141,8 +145,8 @@
             var svc1 = $.ajax({ type: "POST", url: "/sesion/iniciar", data: activacion });
             svc1.done(function(data1, textStatus, jqXHR) {
               if (data1.ok) {
-                toastr.success(data1.message, "", {timeOut: 700});
-                setTimeout(function(){ window.location.href = "/sesion/cambiarempresa" }, 700);
+                toastr.success(data1.message, "", { timeOut: tst_Duration });
+                setTimeout(function(){ window.location.href = "/sesion/cambiarempresa" }, tst_Duration);
               }
             });
             svc1.fail(function(jqXHR, textStatus, errorThrown) {
