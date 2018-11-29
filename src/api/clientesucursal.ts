@@ -24,8 +24,8 @@ clienteSucursal.get('/clientesucursal/list', [permisos.verificaSesion, permisos.
             draw: req.query.draw,
             recordsTotal: clienteSucursal[1][0].TotalFilas,
             recordsFiltered: clienteSucursal[1][0].TotalFiltrado,
-            data: clienteSucursal[0]//,
-            //permiso: clienteSucursal[2]
+            data: clienteSucursal[0],
+            permiso: clienteSucursal[2]
         });
     });
 });
@@ -52,8 +52,7 @@ clienteSucursal.get('/clientesucursal/get', [ permisos.verificaSesion, permisos.
 clienteSucursal.post('/clientesucursal/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
     let {idEmpresa, idClienteSucursal, idCliente, sucursal, direccion, idUbigeo, telefono, correo, flagFiscal} = req.body;
-    const query = `CALL ClienteSucursal_InsertUpdate(${idEmpresa},${idClienteSucursal},${idCliente},'${sucursal}','${direccion}','${idUbigeo}',
-                                                    1,'${telefono}','${correo}',${flagFiscal},${s_idUsuario})`;
+    const query = `CALL ClienteSucursal_InsertUpdate(${idEmpresa},${idClienteSucursal},${idCliente},'${sucursal}','${direccion}','${idUbigeo}','${telefono}','${correo}',${flagFiscal},1,${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
