@@ -89,7 +89,7 @@
     </form>
 </div>
 <script>
-    var empresaId="{{empresaId}}";
+    var empresaId = "{{empresaId}}";
 </script>
 {{#extend "js"}}
 <script src="/assets/parsleyjs/dist/parsley.js"></script>
@@ -104,8 +104,12 @@
     });
 
     function leerEmpresa() {
-        var svcEmpresaCombo = $.ajax({ type: "GET", url: "/api/empresa/get?Id=" + empresaId });
-        svcEmpresaCombo.done(function (data, textStatus, jqXHR) {
+        var svc0 = $.ajax({ 
+            type: "GET", 
+            url: PREFIJO_SERVICIO + "empresa/get?Id=" + empresaId,
+            cache: false
+        });
+        svc0.done(function (data, textStatus, jqXHR) {
             //alert(JSON.stringify(data));
             if (data.ok) {
                 var emp = data.data[0];
@@ -122,8 +126,8 @@
                 $("#url").val(emp.URL);
             }
         });
-        svcEmpresaCombo.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener los datos de la empresa.");
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
         });
     }
 
@@ -165,16 +169,17 @@
         }
     }
 
-    $("#grabar").click(function () {
+    $("#grabar").click(function (event) {
+        event.preventDefault();
         if (validarCampos())
             return;
 
         var data = $("#formInfo").serializeArray();
 
-        $.post("/api/empresa/reg", data, function (result) {
+        $.post(PREFIJO_SERVICIO + "empresa/reg", data, function (result) {
             if (result.ok){
-                toastr.success(result.message, '', { timeOut: 700 });
-                setTimeout(function () { window.location.href = "/empresas/listar" }, 700);
+                toastr.success(result.message, '', { timeOut: tst_Duration });
+                setTimeout(function () { window.location.href = "/empresas/listar" }, tst_Duration);
             }
             else{
                 toastr.error(result.message);
@@ -182,7 +187,8 @@
         });
     })
 
-    $('#cancelar').click(function () {
+    $('#cancelar').click(function (event) {
+        event.preventDefault();
         window.location.href = "/empresas/listar";
     });
 </script>

@@ -90,8 +90,9 @@
         {
           data: null,
           bSortable: false,
-          render: function (obj) { 
-            return '<a id="edit" class="btn btn-default submit" title="Editar" href="/clientes/ver/' + obj.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
+          render: function (obj) {
+            return '<a id="verdetalle" class="btn btn-default" href="/clientes/ver/' + obj.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>' + 
+              '<a id="versucursales" class="btn btn-default" href="/clientes/sucursal/' + obj.IdCliente + '">Sucursales</a>'; 
           }
         }
       ],

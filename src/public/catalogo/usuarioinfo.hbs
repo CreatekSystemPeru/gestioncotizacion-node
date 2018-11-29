@@ -13,7 +13,7 @@
                     <div class="x_content">
                         <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
                             <input type="hidden" id="idUsuario" name="idUsuario" value="{{obj.IdUsuario}}" />
-                            <input type="hidden" id="IdEmpresa" name="IdEmpresa" value="{{obj.IdEmpresa}}" />                            
+                            <input type="hidden" id="idEmpresa" name="idEmpresa" value="{{obj.IdEmpresa}}" />                            
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="usuario">Usuario <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -69,7 +69,7 @@
         init_parsley();
 
         $("#idUsuario").val(usuarioId);
-        $("#IdEmpresa").val(g_empresaId);
+        $("#idEmpresa").val(g_empresaId);
 
         $("#grabar").on("click", grabar_click);
         $("#cancelar").on("click", cancelar_click);
@@ -78,6 +78,7 @@
 
         leerPerfiles();
         if (usuarioId > 0) {
+            $("#usuario").attr("readonly", "readonly");
             leerUsuario();
         }
     });
@@ -118,7 +119,7 @@
                 $("#usuario").val(obj.Usuario);
                 $("#idPerfil").val(obj.IdPerfil);
 
-                $("#apellidoPaterno").trigger("focus");
+                $("#usuario").trigger("focus");
             }
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
