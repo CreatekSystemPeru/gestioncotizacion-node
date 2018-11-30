@@ -65,6 +65,7 @@
 
         leerGiros();
         if (clienteId > 0) {
+            $("#RUC").attr("readonly", "readonly");
             leerCliente();
         }
     });
@@ -85,7 +86,7 @@
             }
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener los datos del cliente.");
+            toastr.error(ERROR_NO_SERVICIO);
         });
     }
 
@@ -107,7 +108,7 @@
             }
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error("Error al obtener los datos del cliente.");
+            toastr.error(ERROR_NO_SERVICIO);
         });
     }
 

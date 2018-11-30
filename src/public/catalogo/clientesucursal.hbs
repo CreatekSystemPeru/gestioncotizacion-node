@@ -1,0 +1,114 @@
+{{#extend "css"}}
+<link href="/assets/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/assets/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
+<link href="/assets/buttons.dataTables.min.css" rel="stylesheet">
+{{/extend}}
+
+<div class="right_col" role="main">
+  <div class="">
+    <div class="clearfix"></div>
+    <div class="row">
+      <div class="col-md-12 col-sm-12 col-xs-12">
+        <div class="x_panel">
+          <div class="x_title">
+            <h2>Listado de Sucursales de Clientes</h2>
+            <div class="clearfix"></div>
+          </div>
+          <div class="x_content">
+            <table id="tblList" class="table table-striped table-bordered dt-responsive nowrap display" cellspacing="0" style="width:100%">
+                <thead>
+                    <tr>
+                      <th></th>
+                      <th>Sucursal</th>
+                      <th>Direccion</th>
+                      <th>Ubigeo</th>
+                      <th>Correo</th>
+                      <th>Telefono</th>
+                      <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+    var clienteId = "{{clienteId}}";
+</script>
+{{#extend "js"}}
+<script src="/assets/jszip.min.js"></script>
+<script src="/assets/jquery.dataTables.min.js"></script>
+<script src="/assets/dataTables.buttons.min.js"></script>
+<script src="/assets/buttons.print.min.js"></script>
+<script src="/assets/buttons.html5.min.js"></script>
+<script src="/assets/datatables.net-bs/js/dataTables.bootstrap.min.js"></script>
+<script src="/assets/datatables.net-responsive/js/dataTables.responsive.min.js"></script>
+<script src="/assets/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
+<script>
+  $(document).ready(function() {
+    configurarTabla();
+  });
+
+  function configurarTabla() {
+    var table = $('#tblList').DataTable({
+      dom: 'Blfrtip',
+      processing: true,
+      serverSide: true,
+      ordering: false,
+      ajax: {
+        type: 'GET',
+        url: PREFIJO_SERVICIO + "clientesucursal/list?idEmpresa=" + g_empresaId + "&idCliente=" + clienteId,
+        error: function (xhr, error, thrown) {
+          toastr.success(ERROR_NO_SERVICIO, "", { timeOut: tst_Duration });
+        }
+      },
+      buttons: [
+        {
+          extend: 'excel',
+          text: 'Excel',
+          className: "btn btn-default",
+          exportOptions: {
+            modifier: {
+              page: 'current'
+            }
+          }
+        },
+        {
+          extend: 'print',
+          text: 'Imprimir',
+          className: "btn btn-default",
+          autoPrint: true
+        },
+        {
+          text: "Nuevo",
+          className: "btn btn-default",
+          action: function (e, dt, node, config) {
+              window.location.href = "/clientes/versucursal/0";
+          }
+        }
+      ],
+      columns: [
+        { data: 'IdClienteSucursal', visible: false },
+        { data: 'Sucursal' },
+        { data: 'Direccion' },
+        { data: 'Ubigeo' },
+        { data: 'Correo' },
+        { data: 'Telefono' },
+        {
+          data: null,
+          bSortable: false,
+          render: function (obj) {
+            return '<a id="verdetalle" class="btn btn-default" href="/clientes/versucursal/' + obj.IdClienteSucursal + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
+          }
+        }
+      ],
+      pagingType: "numbers",
+      language: dt_i18n_es_PE
+    });
+  }
+</script>
+{{/extend}}
