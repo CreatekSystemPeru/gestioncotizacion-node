@@ -1,0 +1,208 @@
+{{#extend "css"}}
+{{/extend}}
+<div class="right_col" role="main">
+    <div class="clearfix"></div>
+    <form id="formInfo">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Información de Sucursal de Cliente</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
+                            <input type="hidden" id="idClienteSucursal" name="idClienteSucursal" value="{{obj.IdClienteSucursal}}" />
+                            <input type="hidden" id="idCliente" name="idCliente" value="{{obj.IdCliente}}" />
+                            <input type="hidden" id="idEmpresa" name="idEmpresa" value="{{obj.IdEmpresa}}" />
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Sucursal">Sucursal <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="Sucursal" name="Sucursal" class="form-control col-md-7 col-xs-12" value="{{obj.Sucursal}}" required="required" maxlength="100" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="IdUbigeo">Ubigeo <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="IdUbigeo" name="IdUbigeo" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Direccion">Direccion <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="Direccion" name="Direccion" class="form-control col-md-7 col-xs-12" value="{{obj.Direccion}}" required="required" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="FlagFiscal">Fiscal</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="FlagFiscal" name="FlagFiscal" class="form-control">
+                                        <option value="0">No</option>
+                                        <option value="1">Si</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Correo">Correo</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="Correo" name="Correo" class="form-control col-md-7 col-xs-12" value="{{obj.Correo}}" required="required" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Telefono">Telefono</label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="Telefono" name="Telefono" class="form-control col-md-7 col-xs-12" value="{{obj.Telefono}}" required="required" />
+                                </div>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                    <button id="grabar" class="btn btn-default">Grabar</button>
+                                    <button id="cancelar" class="btn btn-default">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var sucursalClienteId = "{{sucursalClienteId}}";
+</script>
+{{#extend "js"}}
+<script src="/assets/parsleyjs/dist/parsley.js"></script>
+<script>
+    $(document).on("ready", function () {
+        init_parsley();
+
+        $("#idClienteSucursal").val(sucursalClienteId);
+        $("#idEmpresa").val(g_empresaId);
+
+        $("#grabar").on("click", grabar_click);
+        $("#cancelar").on("click", cancelar_click);
+
+        //leerGiros();
+        if (sucursalClienteId > 0) {
+            $("#RUC").attr("readonly", "readonly");
+            leerSucursal();
+        }
+    });
+
+    function leerGiros() {
+        $("#idGiro option").remove();
+        var svc0 = $.ajax({ 
+            type: "GET", 
+            url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_GIROS + "&idEmpresa=" + g_empresaId,
+            cache: false
+        });
+        svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok) {
+                var obj = result.data[0];
+                $.each(result.data, function(i, item) {
+                    $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
+                });
+            }
+        });
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    }
+
+    function leerSucursal() {
+        var svc0 = $.ajax({ 
+            type: "GET", 
+            url: PREFIJO_SERVICIO + "clientesucursal/get?Id=" + sucursalClienteId  + "&idEmpresa=" + g_empresaId,
+            cache: false
+        });
+        svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok) {
+                var obj = result.data[0];
+                $("#IdClienteSucursal").val(obj.IdClienteSucursal);
+                $("#IdCliente").val(obj.IdCliente);
+                $("#IdEmpresa").val(obj.IdEmpresa);
+                $("#Sucursal").val(obj.Sucursal);
+                $("#IdUbigeo").val(obj.IdUbigeo);
+                $("#Direccion").val(obj.Direccion);
+                $("#FlagFiscal").val(obj.FlagFiscal);
+                $("#Correo").val(obj.Correo);
+                $("#Telefono").val(obj.Telefono);
+            }
+        });
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    }
+
+    function init_parsley() {
+        if (typeof (parsley) === 'undefined') { return; }
+
+        var validateFront = function () {
+            if (true === $('#Info').parsley().isValid()) {
+                $('.bs-callout-info').removeClass('hidden');
+                $('.bs-callout-warning').addClass('hidden');
+            } else {
+                $('.bs-callout-info').addClass('hidden');
+                $('.bs-callout-warning').removeClass('hidden');
+            }
+        };
+
+        $/*.listen*/('parsley:field:validate', function () {
+            validateFront();
+        });
+
+        $('#Info .btn').on('click', function () {
+            $('#Info').parsley().validate();
+            validateFront();
+        });
+
+        try {
+            hljs.initHighlightingOnLoad();
+        } catch (err) { }
+
+    }
+
+    function validarCampos() {
+        if ($('#Sucursal').val() == '' || $('#IdUbigeo').val() == '' || $('#Direccion').val() == '') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function grabar_click(event) {
+        event.preventDefault();
+        if (validarCampos())
+            return;
+
+        var formData = $("#formInfo").serializeArray();
+
+        var svc0 = $.ajax({
+            type: "POST", 
+            url: PREFIJO_SERVICIO + "cliente/reg",
+            data: formData
+        });
+        svc0.done(function(result, textStatus, jqXHR) {
+            if (result.ok) {
+                toastr.success(result.message, '', { timeOut: tst_Duration });
+                setTimeout(function () { window.location.href = "/clientes/listar" }, tst_Duration);
+            }
+            else{
+                toastr.error(result.message);
+            }
+        });
+        svc0.fail(function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    }
+
+    function cancelar_click(event) {
+        event.preventDefault();
+        window.location.href = "/clientes/listar";
+    }
+</script>
+{{/extend}}
