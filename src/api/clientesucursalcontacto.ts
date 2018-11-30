@@ -4,7 +4,7 @@ import permisos from '../middlewares/permisos';
 
 const clienteSucursalContacto = Router();
 
-clienteSucursalContacto.get('/clientesucursalcontacto/list', [permisos.verificaSesion], (req: Request, res: Response) => {
+clienteSucursalContacto.get('/clientesucursalcontacto/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
 
     let search = (req.query.search) ? req.query.search.value : '';

@@ -50,9 +50,10 @@ clienteContacto.get('/clientecontacto/get', [ permisos.verificaSesion, permisos.
 
 clienteContacto.post('/clientecontacto/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-    let {idEmpresa, idClienteContacto, apellidoPaterno, apellidoMaterno, nombres,fechaNacimiento,idTipoDocIdentidad,numDocIdentidad,idCargo} = req.body;
+    let {idEmpresa, idClienteContacto, apellidoPaterno, apellidoMaterno, nombres,fechaNacimiento,idTipoDocIdentidad,numDocIdentidad,idCargo,flagRepresentante} = req.body;
     const query = `CALL ClienteContacto_InsertUpdate(${idEmpresa},${idClienteContacto},'${apellidoPaterno}','${apellidoMaterno}',
-                                                    '${nombres}','${fechaNacimiento}',${idTipoDocIdentidad},'${numDocIdentidad}',${idCargo},1,${s_idUsuario})`;
+                                                    '${nombres}','${fechaNacimiento}',${idTipoDocIdentidad},'${numDocIdentidad}',
+                                                    ${idCargo},${flagRepresentante},1,${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
