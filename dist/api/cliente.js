@@ -7,7 +7,7 @@ const express_1 = require("express");
 const mysql_1 = __importDefault(require("../mysql/mysql"));
 const permisos_1 = __importDefault(require("../middlewares/permisos"));
 const cliente = express_1.Router();
-cliente.get('/cliente/list/', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.get('/cliente/list', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     let { s_idUsuario } = req.session.userSesion;
     let search = (req.query.search) ? req.query.search.value : '';
     const query = `CALL Cliente_List(${req.query.idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
@@ -30,7 +30,7 @@ cliente.get('/cliente/list/', [permisos_1.default.verificaSesion, permisos_1.def
         });
     });
 });
-cliente.get('/cliente/get/', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
+cliente.get('/cliente/get', [permisos_1.default.verificaSesion, permisos_1.default.verificaPermiso], (req, res) => {
     const query = `CALL Cliente_Get(${req.query.idEmpresa}, ${req.query.Id || 0})`;
     mysql_1.default.ejecutarQuery(query, null, (err, clienteGet) => {
         if (err) {

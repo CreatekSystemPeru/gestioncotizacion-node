@@ -3,7 +3,7 @@ import MySQL from '../mysql/mysql';
 import permisos from '../middlewares/permisos';
 
 const clienteContacto = Router();
-clienteContacto.get('/clientecontacto/list/', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
+clienteContacto.get('/clientecontacto/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
 
     let search = (req.query.search) ? req.query.search.value : '';
@@ -29,7 +29,7 @@ clienteContacto.get('/clientecontacto/list/', [permisos.verificaSesion, permisos
     });
 });
 
-clienteContacto.get('/clientecontacto/get/', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+clienteContacto.get('/clientecontacto/get', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     const query = `CALL ClienteContacto_Get(${req.query.Id || 0})`;
     MySQL.ejecutarQuery(query, null, (err: any, clienteContactoGet: any) => {
         if (err) {
