@@ -14,6 +14,7 @@
                     <div class="x_content">
                         <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
                             <input type="hidden" id="idEmpresa" name="idEmpresa" value="{{obj.IdEmpresa}}" />
+                            <input type="hidden" id="rutaLogo" name="rutaLogo" value="{{obj.RutaLogo}}" />
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="ruc">RUC<span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
@@ -124,6 +125,7 @@
                 $("#movil2").val(emp.Movil2);
                 $("#email").val(emp.Email);
                 $("#url").val(emp.URL);
+                $("#rutaLogo").val(emp.RutaLogo);
             }
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
@@ -177,7 +179,7 @@
         var data = $("#formInfo").serializeArray();
 
         $.post(PREFIJO_SERVICIO + "empresa/reg", data, function (result) {
-            if (result.ok){
+            if (result.ok) {
                 toastr.success(result.message, '', { timeOut: tst_Duration });
                 setTimeout(function () { window.location.href = "/empresas/listar" }, tst_Duration);
             }

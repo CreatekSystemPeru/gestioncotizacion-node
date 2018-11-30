@@ -37,8 +37,8 @@
                             <div class="ln_solid"></div>
                             <div class="form-group">
                                 <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
-                                    <a id="action" class="btn btn-default submit">Grabar</a>
-                                    <a id="cancel" class="btn btn-default submit">Cancelar</a>
+                                    <button id="grabar" class="btn btn-default">Grabar</button>
+                                    <button id="cancelar" class="btn btn-default">Cancelar</button>
                                 </div>
                             </div>
                         </div>
@@ -60,6 +60,9 @@
         $("#idCliente").val(clienteId);
         $("#idEmpresa").val(g_empresaId);
 
+        $("#grabar").on("click", grabar_click);
+        $("#cancelar").on("click", cancelar_click);
+
         leerGiros();
         if (clienteId > 0) {
             leerCliente();
@@ -67,17 +70,16 @@
     });
 
     function leerGiros() {
+        $("#idGiro option").remove();
         var svc0 = $.ajax({ 
             type: "GET", 
             url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_GIROS + "&idEmpresa=" + g_empresaId,
             cache: false
         });
-        svc0.done(function (data, textStatus, jqXHR) {
-            if (data.ok) {
-                var obj = data.data[0];
-                //alert(JSON.stringify(data.data));
-                $("#idGiro option").remove();
-                $.each(data.data, function(i, item) {
+        svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok) {
+                var obj = result.data[0];
+                $.each(result.data, function(i, item) {
                     $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
                 });
             }
@@ -93,13 +95,15 @@
             url: PREFIJO_SERVICIO + "cliente/get?Id=" + clienteId  + "&idEmpresa=" + g_empresaId,
             cache: false
         });
-        svc0.done(function (data, textStatus, jqXHR) {
-            if (data.ok) {
-                var obj = data.data[0];
+        svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok) {
+                var obj = result.data[0];
                 $("#idCliente").val(obj.IdCliente);
                 $("#RUC").val(obj.RUC);
                 $("#razonSocial").val(obj.RazonSocial);
                 $("#idGiro").val(obj.IdGiro);
+
+                $("#razonSocial").trigger("focus");
             }
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
@@ -144,27 +148,36 @@
         }
     }
 
-    $("#action").on("click", function (event) {
+    function grabar_click(event) {
         event.preventDefault();
         if (validarCampos())
             return;
 
-        var data = $("#formInfo").serializeArray();
+        var formData = $("#formInfo").serializeArray();
 
-        $.post(PREFIJO_SERVICIO + "cliente/reg", data, function (result) {
-            if (result.ok){
+        var svc0 = $.ajax({
+            type: "POST", 
+            url: PREFIJO_SERVICIO + "cliente/reg",
+            data: formData
+        });
+        svc0.done(function(result, textStatus, jqXHR) {
+            if (result.ok) {
                 toastr.success(result.message, '', { timeOut: tst_Duration });
                 setTimeout(function () { window.location.href = "/clientes/listar" }, tst_Duration);
             }
-            else {
+            else{
                 toastr.error(result.message);
             }
         });
-    })
+        svc0.fail(function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    }
 
-    $('#cancel').on("click", function (event) {
+    function cancelar_click(event) {
         event.preventDefault();
         window.location.href = "/clientes/listar";
-    });
+    }
 </script>
 {{/extend}}

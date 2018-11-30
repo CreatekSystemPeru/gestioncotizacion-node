@@ -1,9 +1,9 @@
 // configuracion del sitio
-var PREFIJO_SERVICIO =  "/api/"; //"http://localhost:3000/api/";
+var PREFIJO_SERVICIO =  "/api/"; //"http://localhost:3000/api/"; // relativo al mismo servidor
 
 var dt_i18n_es_PE = {
     search: "Buscar:",
-    lengthMenu: "Mostrar _MENU_ registros por página",
+    lengthMenu: "Mostrar _MENU_ registros",
     zeroRecords: "La búsqueda no contiene registros.",
     info: "Página _PAGE_ de _PAGES_",
     infoEmpty: "Tabla en blanco",
@@ -20,6 +20,8 @@ var TM_ESTADOS = "1";
 var TM_GIROS = "2";
 var TM_PERFILES = "3";
 var TM_LOGTABLAS = "4";
+var TM_TIPODOCIDENT = "5";
+var TM_CONTACTOCARGO = "6";
 
 var tst_Duration = 700;
 
