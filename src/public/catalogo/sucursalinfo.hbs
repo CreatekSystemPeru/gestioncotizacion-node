@@ -22,9 +22,26 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="IdUbigeo">Ubigeo <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="departamento">Departamento <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select id="IdUbigeo" name="IdUbigeo" class="form-control">
+                                    <select id="departamento" name="departamento" class="form-control">
+                                        <option>Cargando...</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="provincia">Provincia <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="provincia" name="provincia" class="form-control">
+                                        <option>-</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="distrito">Distrito <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="distrito" name="distrito" class="form-control">
+                                        <option>-</option>
                                     </select>
                                 </div>
                             </div>
@@ -83,26 +100,69 @@
 
         $("#grabar").on("click", grabar_click);
         $("#cancelar").on("click", cancelar_click);
+        
+        $("#departamento").on("change", departamento_change);
+        $("#provincia").on("change", provincia_change);
+        //$("#distrito").on("change", distrito_click);
 
-        //leerGiros();
+        leerDepartamentos();
         if (sucursalClienteId > 0) {
-            $("#RUC").attr("readonly", "readonly");
             leerSucursal();
         }
     });
 
-    function leerGiros() {
-        $("#idGiro option").remove();
+    function leerDepartamentos() {
+        $("#departamento option").remove();
         var svc0 = $.ajax({ 
             type: "GET", 
-            url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_GIROS + "&idEmpresa=" + g_empresaId,
+            url: PREFIJO_SERVICIO + "ubigeo/departamento",
             cache: false
         });
         svc0.done(function (result, textStatus, jqXHR) {
             if (result.ok) {
                 var obj = result.data[0];
                 $.each(result.data, function(i, item) {
-                    $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
+                    $("#departamento").append(new Option(item.Departamento, item.IdUbigeo));
+                });
+            }
+        });
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    }
+
+    function leerProvincias(iddepartamento) {
+        $("#provincia option").remove();
+        var svc0 = $.ajax({ 
+            type: "GET", 
+            url: PREFIJO_SERVICIO + "ubigeo/provincia?idUbigeo=" + iddepartamento,
+            cache: false
+        });
+        svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok) {
+                var obj = result.data[0];
+                $.each(result.data, function(i, item) {
+                    $("#provincia").append(new Option(item.Provincia, item.IdUbigeo));
+                });
+            }
+        });
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    }
+
+    function leerDdistritos(idprovincia) {
+        $("#distrito option").remove();
+        var svc0 = $.ajax({ 
+            type: "GET", 
+            url: PREFIJO_SERVICIO + "ubigeo/distrito?idUbigeo=" + idprovincia,
+            cache: false
+        });
+        svc0.done(function (result, textStatus, jqXHR) {
+            if (result.ok) {
+                var obj = result.data[0];
+                $.each(result.data, function(i, item) {
+                    $("#distrito").append(new Option(item.Distrito, item.IdUbigeo));
                 });
             }
         });
@@ -124,11 +184,14 @@
                 $("#IdCliente").val(obj.IdCliente);
                 $("#IdEmpresa").val(obj.IdEmpresa);
                 $("#Sucursal").val(obj.Sucursal);
-                $("#IdUbigeo").val(obj.IdUbigeo);
+                //$("#IdUbigeo").val(obj.IdUbigeo);
                 $("#Direccion").val(obj.Direccion);
                 $("#FlagFiscal").val(obj.FlagFiscal);
                 $("#Correo").val(obj.Correo);
                 $("#Telefono").val(obj.Telefono);
+            }
+            else {
+                toastr.error(ERROR_NO_RESULTADO);
             }
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
@@ -165,7 +228,7 @@
     }
 
     function validarCampos() {
-        if ($('#Sucursal').val() == '' || $('#IdUbigeo').val() == '' || $('#Direccion').val() == '') {
+        if ($('#Sucursal').val() == '' || $('#Direccion').val() == '' || $('#departamento').val() == '' || $('#provincia').val() == '' || $('#distrito').val() == '') {
             return true;
         }
         else {

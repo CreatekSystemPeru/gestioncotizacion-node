@@ -26,4 +26,5 @@ var TM_CONTACTOCARGO = "6";
 var tst_Duration = 700;
 
 // mensajes de error
-var ERROR_NO_SERVICIO = "El servicio no está disponible en este momento, intente nuevamente más tarde.";
+var ERROR_NO_SERVICIO = "El servicio no está disponible en este momento.";
+var ERROR_NO_RESULTADO = "No tiene los permisos para realizar esta acción";
