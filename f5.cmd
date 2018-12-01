@@ -1,3 +1,3 @@
-title Build Web App n Service
+title Build Web App and Service
 cls
 npm run-script build && node dist/index.js
