@@ -49,8 +49,8 @@ producto.get('/producto/get', [ permisos.verificaSesion, permisos.verificaPermis
 
 producto.post('/producto/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-    let {idEmpresa, codigo, idProducto, producto} = req.body;
-    const query = `CALL Producto_InsertUpdate(${idEmpresa},${idProducto},'${codigo}','${producto}',1,${s_idUsuario})`;
+    let {idEmpresa, codigo, idProducto, producto, unidadMedida, precioReferencial} = req.body;
+    const query = `CALL Producto_InsertUpdate(${idEmpresa},${idProducto},'${codigo}','${producto}','${unidadMedida}',${precioReferencial},1,${s_idUsuario})`;
     MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
         if (err) {
             return res.json({
