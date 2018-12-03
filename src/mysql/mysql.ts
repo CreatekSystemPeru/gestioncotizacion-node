@@ -11,6 +11,13 @@ export default class MySQL {
             password: '12345678',
             database: 'bdcotizacion'
         });
+        // this.cnx = mysql.createConnection({
+        //     host: 'box1256.bluehost.com',
+        //     port: 3306,
+        //     user: 'ertizaco_erp',
+        //     password: 'erp.2018',
+        //     database: 'ertizaco_bdcotizacion'
+        // });
     }
 
     static conexionDB(query: string, values: any, callback: Function) {
