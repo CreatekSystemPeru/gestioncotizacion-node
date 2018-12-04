@@ -8,9 +8,9 @@
     "nodemon": "nodemon dist/index",
     "test": "echo \"Error: no test specified\" && exit 1",
     "hbs": "copyfiles --up 1 src/public/*.hbs dist",
-    "hbscatalogo": "copyfiles --up 1 src/public/catalogo/*.hbs dist",
-    "hbssesion": "copyfiles --up 1 src/public/sesion/*.hbs dist",
-    "build": "tsc && npm run hbs && npm run hbssesion && npm run hbscatalogo"
+    "hcat": "copyfiles --up 1 src/public/catalogo/*.hbs dist",
+    "hses": "copyfiles --up 1 src/public/sesion/*.hbs dist",
+    "build": "tsc && npm run hbs && npm run hses && npm run hcat"
   },
   "author": "Createk",
   "license": "ISC",

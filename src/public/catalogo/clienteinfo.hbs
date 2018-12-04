@@ -63,11 +63,37 @@
         $("#grabar").on("click", grabar_click);
         $("#cancelar").on("click", cancelar_click);
 
-        leerGiros();
+        /*leerGiros();
         if (clienteId > 0) {
             $("#RUC").attr("readonly", "readonly");
             leerCliente();
-        }
+        }*/
+
+        var svc0 = $.when(
+            $.ajax({ 
+                type: "GET", 
+                url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_GIROS + "&idEmpresa=" + g_empresaId,
+                cache: false
+            }),
+            $.ajax({ 
+                type: "GET", 
+                url: PREFIJO_SERVICIO + "cliente/get?Id=" + clienteId  + "&idEmpresa=" + g_empresaId,
+                cache: false
+            })
+        );
+        svc0.done(function (result, textStatus, jqXHR) {
+            console.log(JSON.stringify(result));
+            console.log(JSON.stringify(textStatus));
+            /*if (result.ok) {
+                var obj = result.data[0];
+                $.each(result.data, function(i, item) {
+                    $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
+                });
+            }*/
+        });
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
+        });
     });
 
     function leerGiros() {
