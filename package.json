@@ -10,7 +10,9 @@
     "hbs": "copyfiles --up 1 src/public/*.hbs dist",
     "hcat": "copyfiles --up 1 src/public/catalogo/*.hbs dist",
     "hses": "copyfiles --up 1 src/public/sesion/*.hbs dist",
-    "build": "tsc && npm run hbs && npm run hses && npm run hcat"
+    "myjs": "copyfiles --up 1 src/public/assets/build/js/cotigen.js dist",
+    "mycss": "copyfiles --up 1 src/public/assets/build/css/cotigen.css dist",
+    "build": "tsc && npm run hbs && npm run hses && npm run hcat && npm run myjs && npm run mycss"
   },
   "author": "Createk",
   "license": "ISC",

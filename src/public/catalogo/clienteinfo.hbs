@@ -81,22 +81,32 @@
                 cache: false
             })
         );
-        svc0.done(function (result, textStatus, jqXHR) {
-            console.log(JSON.stringify(result));
-            console.log(JSON.stringify(textStatus));
-            /*if (result.ok) {
-                var obj = result.data[0];
-                $.each(result.data, function(i, item) {
+        svc0.done(function (giroResult, clienteResult) {
+            console.log(clienteResult[0]);
+            if (giroResult[0].ok) {
+                $("#idGiro option").remove();
+                var obj = giroResult[0].data[0];
+                $.each(giroResult[0].data, function(i, item) {
                     $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
                 });
-            }*/
+            }
+            if (clienteResult[0].ok) {
+                var obj = clienteResult[0].data[0];
+                $("#idCliente").val(obj.IdCliente);
+                $("#RUC").val(obj.RUC);
+                $("#razonSocial").val(obj.RazonSocial);
+                $("#idGiro").val(obj.IdGiro);
+
+                $("#razonSocial").trigger("focus");
+            }
+            console.log("ok");
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
             toastr.error(ERROR_NO_SERVICIO);
         });
     });
 
-    function leerGiros() {
+    /*function leerGiros() {
         $("#idGiro option").remove();
         var svc0 = $.ajax({ 
             type: "GET", 
@@ -136,7 +146,7 @@
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
             toastr.error(ERROR_NO_SERVICIO);
         });
-    }
+    }*/
 
     function init_parsley() {
         if (typeof (parsley) === 'undefined') { return; }

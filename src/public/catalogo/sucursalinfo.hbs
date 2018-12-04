@@ -92,7 +92,6 @@
 {{#extend "js"}}
 <script src="/assets/parsleyjs/dist/parsley.js"></script>
 <script>
-    var inicial = 0;
     $(document).on("ready", function () {
         init_parsley();
 
@@ -101,16 +100,16 @@
 
         $("#grabar").on("click", grabar_click);
         $("#cancelar").on("click", cancelar_click);
-        
-        $("#departamento").on("change", departamento_change);
-        $("#provincia").on("change", provincia_change);
 
         if (sucursalClienteId > 0) {
-            inicial = 1;
             leerSucursal();
         }
-        else {            
+        else {
             leerDepartamentos();
+
+            // activar eventos
+            $("#departamento").on("change", departamento_change);
+            $("#provincia").on("change", provincia_change);
         }
     });
 
@@ -196,31 +195,39 @@
                 $("#correo").val(obj.Correo);
                 $("#telefono").val(obj.Telefono);
 
-                if (obj.IdUbigeo.length == 6){
-                    $.when(
-                        leerDepartamentos(), 
-                        leerProvincias(obj.IdUbigeo.substring(0,2)), 
-                        leerDdistritos(obj.IdUbigeo.substring(0,4))
-                    ).done(function(r1, r2, r3) {
-                        $("#departamento").val(obj.IdUbigeo.substring(0,2)).trigger("chosen:updated");
-                        $("#provincia").val(obj.IdUbigeo.substring(0,4)).trigger("chosen:updated");
-                        //$("#idUbigeo").val(obj.IdUbigeo.substring(0,6)).trigger("chosen:updated");
-                        $("#idUbigeo option[value='"+obj.IdUbigeo.substring(0,6)+"']").attr('selected', 'selected');
-                    });
-                }
-                else {
-                    leerDepartamentos();
-                }
+                $("#departamento option").remove();
+                $("#provincia option").remove();
+                $("#idUbigeo option").remove();
+
+                $("#departamento").append(new Option("Seleccione...", ""));
+                $.each(result.dataDPTO, function(i, item) {
+                    $("#departamento").append(new Option(item.DPTO, item.IdUbigeo));
+                });
+
+                $("#provincia").append(new Option("Seleccione...", ""));
+                $.each(result.dataPROV, function(i, item) {
+                    $("#provincia").append(new Option(item.PROV, item.IdUbigeo));
+                });
+
+                $("#idUbigeo").append(new Option("Seleccione...", ""));
+                $.each(result.dataDIST, function(i, item) {
+                    $("#idUbigeo").append(new Option(item.DIST, item.IdUbigeo));
+                });
+                
+                $("#departamento").val(obj.IdDPTO);
+                $("#provincia").val(obj.IdPROV);
+                $("#idUbigeo").val(obj.IdDIST);
+                
+                // ACTIVAR EVENTOS
+                $("#departamento").on("change", departamento_change);
+                $("#provincia").on("change", provincia_change);
             }
             else {
-                toastr.error(ERROR_NO_RESULTADO);
+                toastr.error(ERROR_NO_SERVICIO);
             }
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
             toastr.error(ERROR_NO_SERVICIO);
-        });
-        svc0.always(function (jqXHR, textStatus, errorThrown) {
-            inicial = 0;
         });
     }
 
@@ -262,15 +269,11 @@
     }
 
     function departamento_change(event) {
-        if (inicial == 1)
-            return;
         var ubi = $("#departamento").val();
         leerProvincias(ubi);
     }
 
     function provincia_change(event) {
-        if (inicial == 1)
-            return;
         var ubi = $("#provincia").val();
         leerDdistritos(ubi);
     }
