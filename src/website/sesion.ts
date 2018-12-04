@@ -57,8 +57,10 @@ sesion.post("/cambiarempresa", (req: Request, res: Response) => {
     console.log("P cambiarempresa: asignacion");
     var idEmpresa = parseInt(req.body.idEmpresa);
     console.log("idEmpresa= ",idEmpresa);
-    if (idEmpresa > 0)
-        req.session!.sesionActiva.idEmpresa = idEmpresa
+    if (idEmpresa > 0) {
+        req.session!.sesionActiva.idEmpresa = idEmpresa;
+        req.session!.sesionActiva.Empresa = req.body.nomEmpresa;
+    }
 
     res.json({
         ok: (idEmpresa > 0),

@@ -46,17 +46,19 @@
 
       function seleccionar_click(event) {
         event.preventDefault();
+
+        var selEmp = $("#idEmpresa option:selected").text();
         var svc0 = $.ajax({ 
           type: "POST", 
           url: "/sesion/cambiarempresa", 
           data: { 
-            idEmpresa: $("#idEmpresa").val()
+            idEmpresa: $("#idEmpresa").val(),
+            nomEmpresa: selEmp
           }
         });
         svc0.done(function(data, textStatus, jqXHR) {
           console.log(JSON.stringify(data));
-          if (data.ok) {
-            var selEmp = $("#idEmpresa option:selected").text();
+          if (data.ok) {            
             toastr.success("Cargando entorno para " + selEmp, "", { timeOut: tst_Duration });
             setTimeout(function(){ window.location.href = "/inicio" }, tst_Duration);
           }

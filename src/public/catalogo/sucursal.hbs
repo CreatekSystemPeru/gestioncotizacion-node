@@ -11,7 +11,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2>Listado de Sucursales de Clientes</h2>
+            <h2 id="titulo">Listado de Sucursales de Clientes</h2>
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
@@ -24,7 +24,7 @@
                       <th>Ubigeo</th>
                       <th>Correo</th>
                       <th>Telefono</th>
-                      <th></th>
+                      <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,7 +51,28 @@
 <script>
   $(document).ready(function() {
     configurarTabla();
+    leerCliente();
   });
+
+  function leerCliente() {
+    var svc0 = $.ajax({ 
+        type: "GET", 
+        url: PREFIJO_SERVICIO + "cliente/get?Id=" + clienteId  + "&idEmpresa=" + g_empresaId,
+        cache: false
+    });
+    svc0.done(function (result, textStatus, jqXHR) {
+      if (result.ok) {
+        var obj = result.data[0];
+        //$("#idCliente").val(obj.IdCliente);
+        //$("#RUC").val(obj.RUC);
+        //$("#razonSocial").val(obj.RazonSocial);
+        $("#titulo").html("Sucursales de <i>" + obj.RazonSocial + "</i>");
+      }
+    });
+    svc0.fail(function (jqXHR, textStatus, errorThrown) {
+      //toastr.error(ERROR_NO_SERVICIO);
+    });
+}
 
   function configurarTabla() {
     var table = $('#tblList').DataTable({

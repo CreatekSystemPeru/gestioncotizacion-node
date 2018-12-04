@@ -16,9 +16,9 @@
                             <input type="hidden" id="idCliente" name="idCliente" value="{{obj.IdCliente}}" />
                             <input type="hidden" id="idEmpresa" name="idEmpresa" value="{{obj.IdEmpresa}}" />
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Sucursal">Sucursal <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="sucursal">Sucursal <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="Sucursal" name="Sucursal" class="form-control col-md-7 col-xs-12" value="{{obj.Sucursal}}" required="required" maxlength="100" />
+                                    <input type="text" id="sucursal" name="sucursal" class="form-control col-md-7 col-xs-12" value="{{obj.Sucursal}}" required="required" maxlength="100" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -33,43 +33,43 @@
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="provincia">Provincia <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
                                     <select id="provincia" name="provincia" class="form-control">
-                                        <option>-</option>
+                                        <option>Seleccione...</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="distrito">Distrito <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idUbigeo">Distrito <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select id="distrito" name="distrito" class="form-control">
-                                        <option>-</option>
+                                    <select id="idUbigeo" name="idUbigeo" class="form-control">
+                                        <option>Seleccione...</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Direccion">Direccion <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="direccion">Direccion <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="Direccion" name="Direccion" class="form-control col-md-7 col-xs-12" value="{{obj.Direccion}}" required="required" />
+                                    <input type="text" id="direccion" name="direccion" class="form-control col-md-7 col-xs-12" value="{{obj.Direccion}}" required="required" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="FlagFiscal">Fiscal</label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="flagFiscal">Fiscal</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select id="FlagFiscal" name="FlagFiscal" class="form-control">
+                                    <select id="flagFiscal" name="flagFiscal" class="form-control">
                                         <option value="0">No</option>
                                         <option value="1">Si</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Correo">Correo</label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="correo">Correo</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="Correo" name="Correo" class="form-control col-md-7 col-xs-12" value="{{obj.Correo}}" required="required" />
+                                    <input type="text" id="correo" name="correo" class="form-control col-md-7 col-xs-12" value="{{obj.Correo}}" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="Telefono">Telefono</label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="telefono">Telefono</label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="Telefono" name="Telefono" class="form-control col-md-7 col-xs-12" value="{{obj.Telefono}}" required="required" />
+                                    <input type="text" id="telefono" name="telefono" class="form-control col-md-7 col-xs-12" value="{{obj.Telefono}}" />
                                 </div>
                             </div>
                             <div class="ln_solid"></div>
@@ -92,6 +92,7 @@
 {{#extend "js"}}
 <script src="/assets/parsleyjs/dist/parsley.js"></script>
 <script>
+    var inicial = 0;
     $(document).on("ready", function () {
         init_parsley();
 
@@ -103,11 +104,13 @@
         
         $("#departamento").on("change", departamento_change);
         $("#provincia").on("change", provincia_change);
-        //$("#distrito").on("change", distrito_click);
 
-        leerDepartamentos();
         if (sucursalClienteId > 0) {
+            inicial = 1;
             leerSucursal();
+        }
+        else {            
+            leerDepartamentos();
         }
     });
 
@@ -121,8 +124,9 @@
         svc0.done(function (result, textStatus, jqXHR) {
             if (result.ok) {
                 var obj = result.data[0];
+                $("#departamento").append(new Option("Seleccione...", ""));
                 $.each(result.data, function(i, item) {
-                    $("#departamento").append(new Option(item.Departamento, item.IdUbigeo));
+                    $("#departamento").append(new Option(item.DPTO, item.IdUbigeo));
                 });
             }
         });
@@ -131,18 +135,19 @@
         });
     }
 
-    function leerProvincias(iddepartamento) {
+    function leerProvincias(dep) {
         $("#provincia option").remove();
         var svc0 = $.ajax({ 
             type: "GET", 
-            url: PREFIJO_SERVICIO + "ubigeo/provincia?idUbigeo=" + iddepartamento,
+            url: PREFIJO_SERVICIO + "ubigeo/provincia?idUbigeo=" + dep,
             cache: false
         });
         svc0.done(function (result, textStatus, jqXHR) {
             if (result.ok) {
                 var obj = result.data[0];
+                $("#provincia").append(new Option("Seleccione...", ""));
                 $.each(result.data, function(i, item) {
-                    $("#provincia").append(new Option(item.Provincia, item.IdUbigeo));
+                    $("#provincia").append(new Option(item.PROV, item.IdUbigeo));
                 });
             }
         });
@@ -151,18 +156,19 @@
         });
     }
 
-    function leerDdistritos(idprovincia) {
-        $("#distrito option").remove();
+    function leerDdistritos(prov) {
+        $("#idUbigeo option").remove();
         var svc0 = $.ajax({ 
             type: "GET", 
-            url: PREFIJO_SERVICIO + "ubigeo/distrito?idUbigeo=" + idprovincia,
+            url: PREFIJO_SERVICIO + "ubigeo/distrito?idUbigeo=" + prov,
             cache: false
         });
         svc0.done(function (result, textStatus, jqXHR) {
             if (result.ok) {
                 var obj = result.data[0];
+                $("#idUbigeo").append(new Option("Seleccione...", ""));
                 $.each(result.data, function(i, item) {
-                    $("#distrito").append(new Option(item.Distrito, item.IdUbigeo));
+                    $("#idUbigeo").append(new Option(item.DIST, item.IdUbigeo));
                 });
             }
         });
@@ -180,15 +186,31 @@
         svc0.done(function (result, textStatus, jqXHR) {
             if (result.ok) {
                 var obj = result.data[0];
-                $("#IdClienteSucursal").val(obj.IdClienteSucursal);
-                $("#IdCliente").val(obj.IdCliente);
-                $("#IdEmpresa").val(obj.IdEmpresa);
-                $("#Sucursal").val(obj.Sucursal);
-                //$("#IdUbigeo").val(obj.IdUbigeo);
-                $("#Direccion").val(obj.Direccion);
+                $("#idClienteSucursal").val(obj.IdClienteSucursal);
+                $("#idCliente").val(obj.IdCliente);
+                $("#idEmpresa").val(obj.IdEmpresa);
+                $("#sucursal").val(obj.Sucursal);
+                //$("#idUbigeo").val(obj.IdUbigeo);
+                $("#direccion").val(obj.Direccion);
                 $("#FlagFiscal").val(obj.FlagFiscal);
-                $("#Correo").val(obj.Correo);
-                $("#Telefono").val(obj.Telefono);
+                $("#correo").val(obj.Correo);
+                $("#telefono").val(obj.Telefono);
+
+                if (obj.IdUbigeo.length == 6){
+                    $.when(
+                        leerDepartamentos(), 
+                        leerProvincias(obj.IdUbigeo.substring(0,2)), 
+                        leerDdistritos(obj.IdUbigeo.substring(0,4))
+                    ).done(function(r1, r2, r3) {
+                        $("#departamento").val(obj.IdUbigeo.substring(0,2)).trigger("chosen:updated");
+                        $("#provincia").val(obj.IdUbigeo.substring(0,4)).trigger("chosen:updated");
+                        //$("#idUbigeo").val(obj.IdUbigeo.substring(0,6)).trigger("chosen:updated");
+                        $("#idUbigeo option[value='"+obj.IdUbigeo.substring(0,6)+"']").attr('selected', 'selected');
+                    });
+                }
+                else {
+                    leerDepartamentos();
+                }
             }
             else {
                 toastr.error(ERROR_NO_RESULTADO);
@@ -196,6 +218,9 @@
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
             toastr.error(ERROR_NO_SERVICIO);
+        });
+        svc0.always(function (jqXHR, textStatus, errorThrown) {
+            inicial = 0;
         });
     }
 
@@ -228,12 +253,26 @@
     }
 
     function validarCampos() {
-        if ($('#Sucursal').val() == '' || $('#Direccion').val() == '' || $('#departamento').val() == '' || $('#provincia').val() == '' || $('#distrito').val() == '') {
+        if ($('#sucursal').val() == '' || $('#direccion').val() == '' || $('#departamento').val() == '' || $('#provincia').val() == '' || $('#idUbigeo').val() == '') {
             return true;
         }
         else {
             return false;
         }
+    }
+
+    function departamento_change(event) {
+        if (inicial == 1)
+            return;
+        var ubi = $("#departamento").val();
+        leerProvincias(ubi);
+    }
+
+    function provincia_change(event) {
+        if (inicial == 1)
+            return;
+        var ubi = $("#provincia").val();
+        leerDdistritos(ubi);
     }
 
     function grabar_click(event) {
@@ -245,13 +284,13 @@
 
         var svc0 = $.ajax({
             type: "POST", 
-            url: PREFIJO_SERVICIO + "cliente/reg",
+            url: PREFIJO_SERVICIO + "clientesucursal/reg",
             data: formData
         });
         svc0.done(function(result, textStatus, jqXHR) {
             if (result.ok) {
                 toastr.success(result.message, '', { timeOut: tst_Duration });
-                setTimeout(function () { window.location.href = "/clientes/listar" }, tst_Duration);
+                setTimeout(function () { window.location.href = "/clientes/sucursal/" + $("#idCliente").val() }, tst_Duration);
             }
             else{
                 toastr.error(result.message);
@@ -265,7 +304,7 @@
 
     function cancelar_click(event) {
         event.preventDefault();
-        window.location.href = "/clientes/listar";
+        window.location.href = "/clientes/sucursal/" + $("#idCliente").val();
     }
 </script>
 {{/extend}}
