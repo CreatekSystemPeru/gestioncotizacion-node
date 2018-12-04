@@ -30,6 +30,27 @@ clienteSucursalContacto.get('/clientesucursalcontacto/list', [permisos.verificaS
     });
 });
 
+clienteSucursalContacto.get('/clientesucursalcontacto/asignar', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
+    let {s_idUsuario} = req.session!.userSesion;
+
+    const query = `CALL ClienteSucursalContacto_Asignar(${req.query.idEmpresa}, ${req.query.idClienteSucursal},${req.query.idClienteContacto}, ${s_idUsuario})`;
+    MySQL.ejecutarQuery(query, null, (err: any, clienteSucursalContactoAsignar: any) => {
+        if (err) {
+            return res.json({
+                ok: false,
+                message: `#${err.message}`,
+                data: null
+            });
+        }
+
+        res.json({
+            ok: true,
+            message: clienteSucursalContactoAsignar[0][0].ErrorMessage,
+            data: null
+        });
+    });
+});
+
 clienteSucursalContacto.get('/clientesucursalcontacto/remove', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
 
