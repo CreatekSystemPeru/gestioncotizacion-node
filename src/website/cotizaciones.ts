@@ -16,7 +16,7 @@ cotizaciones.get("/ver/:id(\\d+)", [validar.tieneSesion], (req: Request, res: Re
     console.log("P cotizacion ver: render");
     res.render("catalogo/cotizacioninfo", {
         titulo: "Cotizaciones",
-        clienteId: req.params.id
+        IdCotizacionCab: req.params.id
     });
 });
 

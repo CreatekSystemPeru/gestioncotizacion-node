@@ -1,0 +1,189 @@
+{{#extend "css"}}
+{{/extend}}
+
+<div class="right_col" role="main">
+    <div class="clearfix"></div>
+    <form id="formInfo">
+        <div class="row">
+            <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                    <div class="x_title">
+                        <h2>Información de Cotización</h2>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="x_content">
+                        <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
+                            <input type="hidden" id="idCotizacionCab" name="idCotizacionCab" value="{{obj.IdCotizacionCab}}" />
+                            <input type="hidden" id="idEmpresa" name="idEmpresa" value="{{obj.IdEmpresa}}" />
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="NroCotizacion">NroCotizacion <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="nroCotizacion" name="nroCotizacion" class="form-control col-md-7 col-xs-12" value="{{obj.NroCotizacion}}" readonly="readonly" required="required" maxlength="15" />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="FechaCotizacion">FechaCotizacion <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <input type="text" id="fechaCotizacion" name="fechaCotizacion" class="form-control col-md-7 col-xs-12" value="{{obj.FechaCotizacion}}" required="required" />
+                                </div>
+                            </div>                            
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="IdCliente">Cliente <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="idCliente" name="idCliente" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="IdMoneda">Moneda <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="idMoneda" name="idMoneda" class="form-control">
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="ln_solid"></div>
+                            <div class="form-group">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
+                                    <button id="grabar" class="btn btn-default">Grabar</button>
+                                    <button id="cancelar" class="btn btn-default">Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    var IdCotizacionCab = "{{IdCotizacionCab}}";
+</script>
+{{#extend "js"}}
+<script src="/assets/parsleyjs/dist/parsley.js"></script>
+<script>
+    $(document).on("ready", function () {
+        init_parsley();
+
+        $("#idCotizacionCab").val(IdCotizacionCab);
+        $("#idEmpresa").val(g_empresaId);
+
+        $("#grabar").on("click", grabar_click);
+        $("#cancelar").on("click", cancelar_click);
+
+        var svc0 = $.when(
+            $.ajax({ 
+                type: "GET", 
+                url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_MONEDA + "&idEmpresa=" + g_empresaId,
+                cache: false
+            }),
+            $.ajax({ 
+                type: "GET", 
+                url: PREFIJO_SERVICIO + "cotizacion/get?Id=" + IdCotizacionCab  + "&idEmpresa=" + g_empresaId,
+                cache: false
+            }),
+            $.ajax({ 
+                type: "GET", 
+                url: PREFIJO_SERVICIO + "cliente/list?length=20&start=0&idEmpresa=" + g_empresaId,
+                cache: false
+            })
+        );
+        svc0.done(function (monedaResult, cotiResult, clienteResult) {
+            if (monedaResult[0].ok) {
+                $("#idMoneda option").remove();
+                var obj = monedaResult[0].data[0];
+                $.each(monedaResult[0].data, function(i, item) {
+                    $("#idMoneda").append(new Option(item.Descripcion, item.IdColumna));
+                });
+            }
+            if (cotiResult[0].ok && IdCotizacionCab > 0) {
+                var obj = cotiResult[0].data[0];
+                $("#idCotizacionCab").val(obj.IdCotizacionCab);
+                $("#nroCotizacion").val(obj.NroCotizacion);
+                $("#fechaCotizacion").val(obj.FechaCotizacion);
+                //$("#idCliente").val(obj.IdGiro);
+                $("#idMoneda").val(obj.IdMoneda);
+            }
+            if (clienteResult[0].ok) {
+                $("#idCliente option").remove();
+                var obj = clienteResult[0].data[0];
+                $.each(clienteResult[0].data, function(i, item) {
+                    $("#idCliente").append(new Option(item.RazonSocial, item.IdCliente));
+                });
+            }
+            console.log("ok");
+        });
+        svc0.fail(function (jqXHR, textStatus, errorThrown) {
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    });
+
+    function init_parsley() {
+        if (typeof (parsley) === 'undefined') { return; }
+
+        var validateFront = function () {
+            if (true === $('#Info').parsley().isValid()) {
+                $('.bs-callout-info').removeClass('hidden');
+                $('.bs-callout-warning').addClass('hidden');
+            } else {
+                $('.bs-callout-info').addClass('hidden');
+                $('.bs-callout-warning').removeClass('hidden');
+            }
+        };
+
+        $/*.listen*/('parsley:field:validate', function () {
+            validateFront();
+        });
+
+        $('#Info .btn').on('click', function () {
+            $('#Info').parsley().validate();
+            validateFront();
+        });
+
+        try {
+            hljs.initHighlightingOnLoad();
+        } catch (err) { }
+
+    }
+
+    function validarCampos() {
+        if ($('#fechaCotizacion').val() == '' || $('#idCliente').val() == '' || $('#idMoneda').val() == '') {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    function grabar_click(event) {
+        event.preventDefault();
+        if (validarCampos())
+            return;
+
+        var formData = $("#formInfo").serializeArray();
+
+        var svc0 = $.ajax({
+            type: "POST", 
+            url: PREFIJO_SERVICIO + "cliente/reg",
+            data: formData
+        });
+        svc0.done(function(result, textStatus, jqXHR) {
+            if (result.ok) {
+                toastr.success(result.message, '', { timeOut: tst_Duration });
+                setTimeout(function () { window.location.href = "/cotizaciones/listar" }, tst_Duration);
+            }
+            else{
+                toastr.error(result.message);
+            }
+        });
+        svc0.fail(function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus);
+            toastr.error(ERROR_NO_SERVICIO);
+        });
+    }
+
+    function cancelar_click(event) {
+        event.preventDefault();
+        window.location.href = "/cotizaciones/listar";
+    }
+</script>
+{{/extend}}

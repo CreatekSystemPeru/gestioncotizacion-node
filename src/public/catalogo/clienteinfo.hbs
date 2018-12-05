@@ -18,13 +18,13 @@
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="RUC">RUC <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="RUC" class="form-control col-md-7 col-xs-12" name="RUC" value="{{obj.RUC}}" required="required" maxlength="15" />
+                                    <input type="text" id="RUC" name="RUC" class="form-control col-md-7 col-xs-12" value="{{obj.RUC}}" required="required" maxlength="15" />
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label class="control-label col-md-3 col-sm-3 col-xs-12" for="razonSocial">Razon Social <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="razonSocial" class="form-control col-md-7 col-xs-12" name="razonSocial" value="{{obj.RazonSocial}}" required="required" />
+                                    <input type="text" id="razonSocial" name="razonSocial" class="form-control col-md-7 col-xs-12" value="{{obj.RazonSocial}}" required="required" />
                                 </div>
                             </div>
                             <div class="form-group">
@@ -63,6 +63,7 @@
         $("#grabar").on("click", grabar_click);
         $("#cancelar").on("click", cancelar_click);
 
+        $("#RUC").trigger("focus");
         /*leerGiros();
         if (clienteId > 0) {
             $("#RUC").attr("readonly", "readonly");
@@ -82,7 +83,6 @@
             })
         );
         svc0.done(function (giroResult, clienteResult) {
-            console.log(clienteResult[0]);
             if (giroResult[0].ok) {
                 $("#idGiro option").remove();
                 var obj = giroResult[0].data[0];
@@ -90,16 +90,16 @@
                     $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
                 });
             }
-            if (clienteResult[0].ok) {
+            if (clienteResult[0].ok && clienteId > 0) {
                 var obj = clienteResult[0].data[0];
                 $("#idCliente").val(obj.IdCliente);
                 $("#RUC").val(obj.RUC);
                 $("#razonSocial").val(obj.RazonSocial);
                 $("#idGiro").val(obj.IdGiro);
 
+                $("#RUC").attr("readonly", "readonly");
                 $("#razonSocial").trigger("focus");
             }
-            console.log("ok");
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
             toastr.error(ERROR_NO_SERVICIO);

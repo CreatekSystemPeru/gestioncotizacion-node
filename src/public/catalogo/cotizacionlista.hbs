@@ -19,9 +19,10 @@
                 <thead>
                     <tr>
                       <th></th>
-                      <th>RUC</th>
-                      <th>Razon Social</th>
-                      <th>Giro</th>
+                      <th>Nro Cotización</th>
+                      <th>Fecha</th>
+                      <th>Total</th>
+                      <th>Estado</th>
                       <th>Acciones</th>
                     </tr>
                 </thead>
@@ -53,7 +54,7 @@
       ordering: false,
       ajax: {
         type: 'GET',
-        url: PREFIJO_SERVICIO + "cliente/list?idEmpresa=" + g_empresaId,
+        url: PREFIJO_SERVICIO + "cotizacion/list?idEmpresa=" + g_empresaId,
         error: function (xhr, error, thrown) {
           toastr.success(ERROR_NO_SERVICIO, "", { timeOut: tst_Duration });
         }
@@ -79,21 +80,21 @@
           text: "Nuevo",
           className: "btn btn-default",
           action: function (e, dt, node, config) {
-              window.location.href = "/clientes/ver/0";
+              window.location.href = "/cotizaciones/ver/0";
           }
         }
       ],
       columns: [
-        { data: 'IdCliente', visible: false },
-        { data: 'RUC' },
-        { data: 'RazonSocial' },
-        { data: 'Giro' },
+        { data: 'IdCotizacionCab', visible: false },
+        { data: 'NroCotizacion' },
+        { data: 'FechaCotizacion' },
+        { data: 'MontoTotal' },
+        { data: 'Estado' },
         {
           data: null,
           bSortable: false,
           render: function (obj) {
-            return '<a id="verdetalle" class="btn btn-default" href="/clientes/ver/' + obj.IdCliente + '"><i class="glyphicon glyphicon-pencil"></i></a>' + 
-              '<a id="versucursales" class="btn btn-default" href="/clientes/sucursal/' + obj.IdCliente + '">Sucursales</a>'; 
+            return '<a id="verdetalle" class="btn btn-default" href="/cotizaciones/ver/' + obj.IdCotizacionCab + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
           }
         }
       ],
