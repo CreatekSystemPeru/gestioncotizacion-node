@@ -5,6 +5,7 @@ import empresas from "./empresas";
 import clientes from "./clientes";
 import productos from "./productos";
 import usuarios from "./usuarios";
+import cotizaciones from "./cotizaciones";
 
 const rutas = Router();
 
@@ -32,5 +33,6 @@ rutas.use("/empresas", empresas);
 rutas.use("/clientes", clientes);
 rutas.use("/productos", productos);
 rutas.use("/usuarios", usuarios);
+rutas.use("/cotizaciones", cotizaciones);
 
 export default rutas;

@@ -1,5 +1,5 @@
 {{#extend "css"}}
-<link href="/assets/dataTables.bootstrap.min.css" rel="stylesheet">
+<link href="/assets/datatables.net-bs/css/dataTables.bootstrap.min.css" rel="stylesheet">
 <link href="/assets/datatables.net-responsive-bs/css/responsive.bootstrap.min.css" rel="stylesheet">
 <link href="/assets/buttons.dataTables.min.css" rel="stylesheet">
 {{/extend}}
@@ -11,7 +11,7 @@
       <div class="col-md-12 col-sm-12 col-xs-12">
         <div class="x_panel">
           <div class="x_title">
-            <h2 id="titulo">Sucursales de ...</h2>
+            <h2>Listado de Cotizaciones</h2>
             <div class="clearfix"></div>
           </div>
           <div class="x_content">
@@ -19,11 +19,10 @@
                 <thead>
                     <tr>
                       <th></th>
-                      <th>Sucursal</th>
-                      <th>Direccion</th>
-                      <th>Ubigeo</th>
-                      <th>Correo</th>
-                      <th>Telefono</th>
+                      <th>Nro Cotización</th>
+                      <th>Fecha</th>
+                      <th>Total</th>
+                      <th>Estado</th>
                       <th>Acciones</th>
                     </tr>
                 </thead>
@@ -36,9 +35,7 @@
     </div>
   </div>
 </div>
-<script>
-  var clienteId = "{{clienteId}}";
-</script>
+
 {{#extend "js"}}
 <script src="/assets/jszip.min.js"></script>
 <script src="/assets/jquery.dataTables.min.js"></script>
@@ -50,29 +47,6 @@
 <script src="/assets/datatables.net-responsive-bs/js/responsive.bootstrap.js"></script>
 <script>
   $(document).ready(function() {
-    configurarTabla();
-    leerCliente();
-  });
-
-  function leerCliente() {
-    var svc0 = $.ajax({ 
-        type: "GET", 
-        url: PREFIJO_SERVICIO + "cliente/get?Id=" + clienteId  + "&idEmpresa=" + g_empresaId,
-        cache: false
-    });
-    svc0.done(function (result, textStatus, jqXHR) {
-      if (result.ok) {
-        var obj = result.data[0];
-        $("#titulo").html("Sucursales de <i>" + obj.RazonSocial + "</i>");
-      }
-    });
-    svc0.fail(function (jqXHR, textStatus, errorThrown) {
-      $("#titulo").html("Sucursales del cliente");
-      toastr.error(ERROR_NO_SERVICIO);
-    });
-}
-
-  function configurarTabla() {
     var table = $('#tblList').DataTable({
       dom: 'Blfrtip',
       processing: true,
@@ -80,7 +54,7 @@
       ordering: false,
       ajax: {
         type: 'GET',
-        url: PREFIJO_SERVICIO + "clientesucursal/list?idEmpresa=" + g_empresaId + "&idCliente=" + clienteId,
+        url: PREFIJO_SERVICIO + "cotizacion/list?idEmpresa=" + g_empresaId,
         error: function (xhr, error, thrown) {
           toastr.success(ERROR_NO_SERVICIO, "", { timeOut: tst_Duration });
         }
@@ -106,28 +80,27 @@
           text: "Nuevo",
           className: "btn btn-default",
           action: function (e, dt, node, config) {
-              window.location.href = "/clientes/versucursal/0";
+              window.location.href = "/cotizaciones/ver/0";
           }
         }
       ],
       columns: [
-        { data: 'IdClienteSucursal', visible: false },
-        { data: 'Sucursal' },
-        { data: 'Direccion' },
-        { data: 'Ubigeo' },
-        { data: 'Correo' },
-        { data: 'Telefono' },
+        { data: 'IdCotizacionCab', visible: false },
+        { data: 'NroCotizacion' },
+        { data: 'FechaCotizacion' },
+        { data: 'MontoTotal' },
+        { data: 'Estado' },
         {
           data: null,
           bSortable: false,
           render: function (obj) {
-            return '<a id="verdetalle" class="btn btn-default" href="/clientes/versucursal/' + obj.IdClienteSucursal + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
+            return '<a id="verdetalle" class="btn btn-default" href="/cotizaciones/ver/' + obj.IdCotizacionCab + '"><i class="glyphicon glyphicon-pencil"></i></a>'; 
           }
         }
       ],
       pagingType: "numbers",
       language: dt_i18n_es_PE
     });
-  }
+  });
 </script>
 {{/extend}}

@@ -4,7 +4,7 @@ var PREFIJO_SERVICIO =  "/api/"; //"http://localhost:3000/api/"; // relativo al 
 var dt_i18n_es_PE = {
     search: "Buscar:",
     lengthMenu: "Mostrar _MENU_ registros",
-    zeroRecords: "La búsqueda no contiene registros.",
+    zeroRecords: "La búsqueda no contiene ningún resultado.",
     info: "Página _PAGE_ de _PAGES_",
     infoEmpty: "Tabla en blanco",
     infoFiltered: "(_TOTAL_ registros)",
@@ -19,9 +19,11 @@ var dt_i18n_es_PE = {
 var TM_ESTADOS = "1";
 var TM_GIROS = "2";
 var TM_PERFILES = "3";
-var TM_LOGTABLAS = "4";
-var TM_TIPODOCIDENT = "5";
-var TM_CONTACTOCARGO = "6";
+var TM_LOG_TABLAS = "4";
+var TM_TIPO_DOC_IDENT = "5";
+var TM_CONTACTO_CARGO = "6"; // no usado
+var TM_MONEDA = "7";
+var TM_CONTACTO_AREA = "8";
 
 var tst_Duration = 700;
 

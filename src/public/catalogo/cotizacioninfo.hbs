@@ -8,29 +8,36 @@
             <div class="col-md-12 col-sm-12 col-xs-12">
                 <div class="x_panel">
                     <div class="x_title">
-                        <h2>Información de Cliente</h2>
+                        <h2>Información de Cotización</h2>
                         <div class="clearfix"></div>
                     </div>
                     <div class="x_content">
                         <div id="Info" data-parsley-validate class="form-horizontal form-label-left">
-                            <input type="hidden" id="idCliente" name="idCliente" value="{{obj.IdCliente}}" />
+                            <input type="hidden" id="idCotizacionCab" name="idCotizacionCab" value="{{obj.IdCotizacionCab}}" />
                             <input type="hidden" id="idEmpresa" name="idEmpresa" value="{{obj.IdEmpresa}}" />
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="RUC">RUC <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="NroCotizacion">NroCotizacion <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="RUC" name="RUC" class="form-control col-md-7 col-xs-12" value="{{obj.RUC}}" required="required" maxlength="15" />
+                                    <input type="text" id="nroCotizacion" name="nroCotizacion" class="form-control col-md-7 col-xs-12" value="{{obj.NroCotizacion}}" readonly="readonly" required="required" maxlength="15" />
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="razonSocial">Razon Social <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="FechaCotizacion">FechaCotizacion <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <input type="text" id="razonSocial" name="razonSocial" class="form-control col-md-7 col-xs-12" value="{{obj.RazonSocial}}" required="required" />
+                                    <input type="text" id="fechaCotizacion" name="fechaCotizacion" class="form-control col-md-7 col-xs-12" value="{{obj.FechaCotizacion}}" required="required" />
+                                </div>
+                            </div>                            
+                            <div class="form-group">
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="IdCliente">Cliente <span class="required">*</span></label>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <select id="idCliente" name="idCliente" class="form-control">
+                                    </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="idGiro">Giro <span class="required">*</span></label>
+                                <label class="control-label col-md-3 col-sm-3 col-xs-12" for="IdMoneda">Moneda <span class="required">*</span></label>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <select id="idGiro" name="idGiro" class="form-control">
+                                    <select id="idMoneda" name="idMoneda" class="form-control">
                                     </select>
                                 </div>
                             </div>
@@ -49,7 +56,7 @@
     </form>
 </div>
 <script>
-    var clienteId = "{{clienteId}}";
+    var IdCotizacionCab = "{{IdCotizacionCab}}";
 </script>
 {{#extend "js"}}
 <script src="/assets/parsleyjs/dist/parsley.js"></script>
@@ -57,96 +64,58 @@
     $(document).on("ready", function () {
         init_parsley();
 
-        $("#idCliente").val(clienteId);
+        $("#idCotizacionCab").val(IdCotizacionCab);
         $("#idEmpresa").val(g_empresaId);
 
         $("#grabar").on("click", grabar_click);
         $("#cancelar").on("click", cancelar_click);
 
-        $("#RUC").trigger("focus");
-        /*leerGiros();
-        if (clienteId > 0) {
-            $("#RUC").attr("readonly", "readonly");
-            leerCliente();
-        }*/
-
         var svc0 = $.when(
             $.ajax({ 
                 type: "GET", 
-                url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_GIROS + "&idEmpresa=" + g_empresaId,
+                url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_MONEDA + "&idEmpresa=" + g_empresaId,
                 cache: false
             }),
             $.ajax({ 
                 type: "GET", 
-                url: PREFIJO_SERVICIO + "cliente/get?Id=" + clienteId  + "&idEmpresa=" + g_empresaId,
+                url: PREFIJO_SERVICIO + "cotizacion/get?Id=" + IdCotizacionCab  + "&idEmpresa=" + g_empresaId,
+                cache: false
+            }),
+            $.ajax({ 
+                type: "GET", 
+                url: PREFIJO_SERVICIO + "cliente/list?length=20&start=0&idEmpresa=" + g_empresaId,
                 cache: false
             })
         );
-        svc0.done(function (giroResult, clienteResult) {
-            if (giroResult[0].ok) {
-                $("#idGiro option").remove();
-                var obj = giroResult[0].data[0];
-                $.each(giroResult[0].data, function(i, item) {
-                    $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
+        svc0.done(function (monedaResult, cotiResult, clienteResult) {
+            if (monedaResult[0].ok) {
+                $("#idMoneda option").remove();
+                var obj = monedaResult[0].data[0];
+                $.each(monedaResult[0].data, function(i, item) {
+                    $("#idMoneda").append(new Option(item.Descripcion, item.IdColumna));
                 });
             }
-            if (clienteResult[0].ok && clienteId > 0) {
-                var obj = clienteResult[0].data[0];
-                $("#idCliente").val(obj.IdCliente);
-                $("#RUC").val(obj.RUC);
-                $("#razonSocial").val(obj.RazonSocial);
-                $("#idGiro").val(obj.IdGiro);
-
-                $("#RUC").attr("readonly", "readonly");
-                $("#razonSocial").trigger("focus");
+            if (cotiResult[0].ok && IdCotizacionCab > 0) {
+                var obj = cotiResult[0].data[0];
+                $("#idCotizacionCab").val(obj.IdCotizacionCab);
+                $("#nroCotizacion").val(obj.NroCotizacion);
+                $("#fechaCotizacion").val(obj.FechaCotizacion);
+                //$("#idCliente").val(obj.IdGiro);
+                $("#idMoneda").val(obj.IdMoneda);
             }
+            if (clienteResult[0].ok) {
+                $("#idCliente option").remove();
+                var obj = clienteResult[0].data[0];
+                $.each(clienteResult[0].data, function(i, item) {
+                    $("#idCliente").append(new Option(item.RazonSocial, item.IdCliente));
+                });
+            }
+            console.log("ok");
         });
         svc0.fail(function (jqXHR, textStatus, errorThrown) {
             toastr.error(ERROR_NO_SERVICIO);
         });
     });
-
-    /*function leerGiros() {
-        $("#idGiro option").remove();
-        var svc0 = $.ajax({ 
-            type: "GET", 
-            url: PREFIJO_SERVICIO + "tablamaestra/combo?idTabla=" + TM_GIROS + "&idEmpresa=" + g_empresaId,
-            cache: false
-        });
-        svc0.done(function (result, textStatus, jqXHR) {
-            if (result.ok) {
-                var obj = result.data[0];
-                $.each(result.data, function(i, item) {
-                    $("#idGiro").append(new Option(item.Descripcion, item.IdColumna));
-                });
-            }
-        });
-        svc0.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error(ERROR_NO_SERVICIO);
-        });
-    }
-
-    function leerCliente() {
-        var svc0 = $.ajax({ 
-            type: "GET", 
-            url: PREFIJO_SERVICIO + "cliente/get?Id=" + clienteId  + "&idEmpresa=" + g_empresaId,
-            cache: false
-        });
-        svc0.done(function (result, textStatus, jqXHR) {
-            if (result.ok) {
-                var obj = result.data[0];
-                $("#idCliente").val(obj.IdCliente);
-                $("#RUC").val(obj.RUC);
-                $("#razonSocial").val(obj.RazonSocial);
-                $("#idGiro").val(obj.IdGiro);
-
-                $("#razonSocial").trigger("focus");
-            }
-        });
-        svc0.fail(function (jqXHR, textStatus, errorThrown) {
-            toastr.error(ERROR_NO_SERVICIO);
-        });
-    }*/
 
     function init_parsley() {
         if (typeof (parsley) === 'undefined') { return; }
@@ -177,7 +146,7 @@
     }
 
     function validarCampos() {
-        if ($('#RUC').val() == '' || $('#razonSocial').val() == '' || $('#idGiro').val() == '') {
+        if ($('#fechaCotizacion').val() == '' || $('#idCliente').val() == '' || $('#idMoneda').val() == '') {
             return true;
         }
         else {
@@ -200,7 +169,7 @@
         svc0.done(function(result, textStatus, jqXHR) {
             if (result.ok) {
                 toastr.success(result.message, '', { timeOut: tst_Duration });
-                setTimeout(function () { window.location.href = "/clientes/listar" }, tst_Duration);
+                setTimeout(function () { window.location.href = "/cotizaciones/listar" }, tst_Duration);
             }
             else{
                 toastr.error(result.message);
@@ -214,7 +183,7 @@
 
     function cancelar_click(event) {
         event.preventDefault();
-        window.location.href = "/clientes/listar";
+        window.location.href = "/cotizaciones/listar";
     }
 </script>
 {{/extend}}
