@@ -78,7 +78,7 @@ cotizacion.get('/cotizacion/get', [ permisos.verificaSesion, permisos.verificaPe
 
 cotizacion.post('/cotizacion/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-    let { idEmpresa, idCotizacionCab, idOrdenCompra, fechaCotizacion, idMoneda, detalleA, detalleB} = req.body;
+    let { idEmpresa, idCotizacionCab, idOrdenCompra, idCliente, fechaCotizacion, idMoneda, detalleA, detalleB} = req.body;
     let detArrayA: any = [];
     detalleA.forEach((i: any) => {
         detArrayA.push([
@@ -130,8 +130,8 @@ cotizacion.post('/cotizacion/reg', [ permisos.verificaSesion, permisos.verificaP
                 });
             }
 
-            let parms = [idEmpresa, idCotizacionCab, idOrdenCompra, fechaCotizacion, idMoneda, s_idUsuario]
-            const query2 = 'CALL Cotizacion_InsertUpdate(?,?,?,?,?,?)';
+            let parms = [idEmpresa, idCotizacionCab, idOrdenCompra, idCliente, fechaCotizacion, idMoneda, s_idUsuario]
+            const query2 = 'CALL Cotizacion_InsertUpdate(?,?,?,?,?,?,?)';
             MySQL.ejecutarQuery(query2, parms, (err: any, reg: any) => {
                 if (err) {
                     return res.json({
