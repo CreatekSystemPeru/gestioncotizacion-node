@@ -7,8 +7,9 @@ clienteContacto.get('/clientecontacto/list', [permisos.verificaSesion, permisos.
     let {s_idUsuario} = req.session!.userSesion;
 
     let search = (req.query.search) ? req.query.search.value : '';
-    const query = `CALL ClienteContacto_List(${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteContacto: any) => {
+    let parms = [req.query.idEstado || 0,s_idUsuario,req.query.start || 0,req.query.length || 0,search];
+    const query = `CALL ClienteContacto_List(?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, clienteContacto: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -30,8 +31,8 @@ clienteContacto.get('/clientecontacto/list', [permisos.verificaSesion, permisos.
 });
 
 clienteContacto.get('/clientecontacto/get', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
-    const query = `CALL ClienteContacto_Get(${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteContactoGet: any) => {
+    const query = `CALL ClienteContacto_Get(?)`;
+    MySQL.ejecutarQuery(query, req.query.Id || 0, (err: any, clienteContactoGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -51,10 +52,10 @@ clienteContacto.get('/clientecontacto/get', [ permisos.verificaSesion, permisos.
 clienteContacto.post('/clientecontacto/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
     let {idEmpresa, idClienteContacto, apellidoPaterno, apellidoMaterno, nombres,fechaNacimiento,idTipoDocIdentidad,numDocIdentidad,idCargo,flagRepresentante} = req.body;
-    const query = `CALL ClienteContacto_InsertUpdate(${idEmpresa},${idClienteContacto},'${apellidoPaterno}','${apellidoMaterno}',
-                                                    '${nombres}','${fechaNacimiento}',${idTipoDocIdentidad},'${numDocIdentidad}',
-                                                    ${idCargo},${flagRepresentante},1,${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
+    let parms = [idEmpresa,idClienteContacto,apellidoPaterno,apellidoMaterno,nombres,fechaNacimiento,idTipoDocIdentidad,numDocIdentidad,
+                idCargo,flagRepresentante,1,s_idUsuario];
+    const query = `CALL ClienteContacto_InsertUpdate(?,?,?,?,?,?,?,?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -82,9 +83,9 @@ clienteContacto.post('/clientecontacto/reg', [ permisos.verificaSesion, permisos
 
 clienteContacto.get('/clientecontacto/delete', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-    
-    const query = `CALL ClienteContacto_ActiveDeactive(${req.query.idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteContacto: any) => {
+    let parms = [req.query.idEmpresa,req.query.Id || 0,s_idUsuario];
+    const query = `CALL ClienteContacto_ActiveDeactive(?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, clienteContacto: any) => {
         if (err) {
             return res.json({
                 ok: false,

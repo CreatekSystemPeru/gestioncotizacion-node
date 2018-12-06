@@ -6,10 +6,11 @@ const clienteSucursalContacto = Router();
 
 clienteSucursalContacto.get('/clientesucursalcontacto/list', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-
+    
     let search = (req.query.search) ? req.query.search.value : '';
-    const query = `CALL ClienteSucursalContacto_List(${req.query.idEmpresa},${req.query.idClienteSucursal},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteSucursalContacto: any) => {
+    let parms = [req.query.idEmpresa,req.query.idClienteSucursal,s_idUsuario,req.query.start || 0,req.query.length || 0,search];
+    const query = `CALL ClienteSucursalContacto_List(?,?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, clienteSucursalContacto: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -32,9 +33,9 @@ clienteSucursalContacto.get('/clientesucursalcontacto/list', [permisos.verificaS
 
 clienteSucursalContacto.get('/clientesucursalcontacto/asignar', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-
-    const query = `CALL ClienteSucursalContacto_Asignar(${req.query.idEmpresa}, ${req.query.idClienteSucursal},${req.query.idClienteContacto}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteSucursalContactoAsignar: any) => {
+    let parms = [req.query.idEmpresa,req.query.idClienteSucursal,req.query.idClienteContacto,s_idUsuario];
+    const query = `CALL ClienteSucursalContacto_Asignar(?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, clienteSucursalContactoAsignar: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -53,9 +54,9 @@ clienteSucursalContacto.get('/clientesucursalcontacto/asignar', [ permisos.verif
 
 clienteSucursalContacto.get('/clientesucursalcontacto/remove', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-
-    const query = `CALL ClienteSucursalContacto_Delete(${req.query.idEmpresa}, ${req.query.idClienteSucursal},${req.query.idClienteContacto}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteSucursalContactoDelete: any) => {
+    let parms = [req.query.idEmpresa,req.query.idClienteSucursal,req.query.idClienteContacto,s_idUsuario];
+    const query = `CALL ClienteSucursalContacto_Delete(?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, clienteSucursalContactoDelete: any) => {
         if (err) {
             return res.json({
                 ok: false,

@@ -45,36 +45,11 @@ cotizacion.get('/cotizacion/get', [ permisos.verificaSesion, permisos.verificaPe
             ok: true,
             message: '',
             data: cotizacionGet[0],
-            dataDet: cotizacionGet[1]
+            dataDet1: cotizacionGet[1],
+            dataDet2: cotizacionGet[2],
         });
     });
 });
-
-// cotizacion.get('/cotizacion/a', (req: Request, res: Response) => {
-//     let json = [{
-//         a: 1,
-//         b: 2
-//     },{
-//         a: 4,
-//         b: 5
-//     }];
-
-//     let detalle: any = [];
-
-//     json.forEach(element => {
-//         detalle.push([
-//             element.a,
-//             element.b
-//         ]);
-//     });
-
-//     console.log(detalle);
-
-//     res.json({
-//         ok: true,
-//         message: ''
-//     });
-// });
 
 cotizacion.post('/cotizacion/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
@@ -130,8 +105,8 @@ cotizacion.post('/cotizacion/reg', [ permisos.verificaSesion, permisos.verificaP
                 });
             }
 
-            let parms = [idEmpresa, idCotizacionCab, idOrdenCompra, idCliente, fechaCotizacion, idMoneda, s_idUsuario]
-            const query2 = 'CALL Cotizacion_InsertUpdate(?,?,?,?,?,?,?)';
+            let parms = [idEmpresa, idCotizacionCab, idOrdenCompra, idCliente, fechaCotizacion, idMoneda, 1,s_idUsuario]
+            const query2 = 'CALL Cotizacion_InsertUpdate(?,?,?,?,?,?,?,?)';
             MySQL.ejecutarQuery(query2, parms, (err: any, reg: any) => {
                 if (err) {
                     return res.json({

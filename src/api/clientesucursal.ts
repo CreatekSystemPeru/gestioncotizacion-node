@@ -8,8 +8,9 @@ clienteSucursal.get('/clientesucursal/list', [permisos.verificaSesion, permisos.
     let {s_idUsuario} = req.session!.userSesion;
 
     let search = (req.query.search) ? req.query.search.value : '';
-    const query = `CALL ClienteSucursal_List(${req.query.idEmpresa}, ${req.query.idCliente || 0}, ${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteSucursal: any) => {
+    let parms = [req.query.idEmpresa,req.query.idCliente || 0,req.query.idEstado || 0,s_idUsuario,req.query.start || 0,req.query.length || 0,search];
+    const query = `CALL ClienteSucursal_List(?,?,?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, clienteSucursal: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -31,8 +32,9 @@ clienteSucursal.get('/clientesucursal/list', [permisos.verificaSesion, permisos.
 });
 
 clienteSucursal.get('/clientesucursal/get', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
-    const query = `CALL ClienteSucursal_Get(${req.query.idEmpresa}, ${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteSucursalGet: any) => {
+    let parms = [req.query.idEmpresa,req.query.Id || 0];
+    const query = `CALL ClienteSucursal_Get(?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, clienteSucursalGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -55,8 +57,9 @@ clienteSucursal.get('/clientesucursal/get', [ permisos.verificaSesion, permisos.
 clienteSucursal.post('/clientesucursal/reg', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
     let {idEmpresa, idClienteSucursal, idCliente, sucursal, direccion, idUbigeo, telefono, correo, flagFiscal} = req.body;
-    const query = `CALL ClienteSucursal_InsertUpdate(${idEmpresa},${idClienteSucursal},${idCliente},'${sucursal}','${direccion}','${idUbigeo}','${telefono}','${correo}',${flagFiscal},1,${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
+    let parms = [idEmpresa,idClienteSucursal,idCliente,sucursal,direccion,idUbigeo,telefono,correo,flagFiscal,1,s_idUsuario];
+    const query = `CALL ClienteSucursal_InsertUpdate(?,?,?,?,?,?,?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -84,9 +87,9 @@ clienteSucursal.post('/clientesucursal/reg', [ permisos.verificaSesion, permisos
 
 clienteSucursal.get('/clientesucursal/delete', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-
-    const query = `CALL ClienteSucursal_ActiveDeactive(${req.query.idEmpresa}, ${req.query.Id || 0}, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, clienteDelete: any) => {
+    let parms = [req.query.idEmpresa,req.query.Id || 0,s_idUsuario];
+    const query = `CALL ClienteSucursal_ActiveDeactive(?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, clienteDelete: any) => {
         if (err) {
             return res.json({
                 ok: false,

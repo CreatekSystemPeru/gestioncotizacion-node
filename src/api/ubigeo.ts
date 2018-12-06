@@ -25,8 +25,8 @@ ubigeo.get('/ubigeo/departamento', [ permisos.verificaSesion ], (req: Request, r
 
 ubigeo.get('/ubigeo/provincia', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     
-    const query = `CALL Ubigeo_Provincia('${req.query.idUbigeo || ''}')`;
-    MySQL.ejecutarQuery(query, null, (err: any, productoGet: any) => {
+    const query = `CALL Ubigeo_Provincia(?)`;
+    MySQL.ejecutarQuery(query, req.query.idUbigeo || '', (err: any, productoGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -45,8 +45,8 @@ ubigeo.get('/ubigeo/provincia', [ permisos.verificaSesion ], (req: Request, res:
 
 ubigeo.get('/ubigeo/distrito', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     
-    const query = `CALL Ubigeo_Distrito('${req.query.idUbigeo || ''}')`;
-    MySQL.ejecutarQuery(query, null, (err: any, productoGet: any) => {
+    const query = `CALL Ubigeo_Distrito(?)`;
+    MySQL.ejecutarQuery(query, req.query.idUbigeo || '', (err: any, productoGet: any) => {
         if (err) {
             return res.json({
                 ok: false,

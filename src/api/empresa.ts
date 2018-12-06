@@ -27,8 +27,9 @@ empresa.get('/empresa/list', [permisos.verificaSesion, permisos.verificaPermiso]
     let {s_idUsuario} = req.session!.userSesion;
 
     let search = (req.query.search) ? req.query.search.value : '';
-    const query = `CALL Empresa_List(${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
-    MySQL.ejecutarQuery(query, null, (err: any, empresa: any) => {
+    let parms = [req.query.idEstado || 0,s_idUsuario,req.query.start || 0,req.query.length || 0,search];
+    const query = `CALL Empresa_List(?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, empresa: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -50,8 +51,8 @@ empresa.get('/empresa/list', [permisos.verificaSesion, permisos.verificaPermiso]
 });
 
 empresa.get('/empresa/get', [permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
-    const query = `CALL Empresa_Get(${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, null, (err: any, empresaGet: any) => {
+    const query = `CALL Empresa_Get(?)`;
+    MySQL.ejecutarQuery(query, req.query.Id || 0, (err: any, empresaGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -72,9 +73,9 @@ empresa.post('/empresa/reg', [permisos.verificaSesion, permisos.verificaPermiso]
     let {s_idUsuario} = req.session!.userSesion;
     let { idEmpresa, ruc, empresa, empresaAbrev,
         direccion, telefono1, telefono2, movil1, movil2, email, url, rutaLogo } = req.body;
-    const query = `CALL Empresa_InsertUpdate(${idEmpresa},'${ruc}','${empresa}','${empresaAbrev}','${direccion}','${telefono1}',
-                                            '${telefono2}','${movil1}','${movil2}','${email}','${url}', '${rutaLogo}',1, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
+    let parms = [idEmpresa,ruc,empresa,empresaAbrev,direccion,telefono1,telefono2,movil1,movil2,email,url,rutaLogo,1,s_idUsuario];
+    const query = `CALL Empresa_InsertUpdate(?,?,?,?,?,?,?,?,?,?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -102,9 +103,9 @@ empresa.post('/empresa/reg', [permisos.verificaSesion, permisos.verificaPermiso]
 
 empresa.get('/empresa/delete', [ permisos.verificaSesion, permisos.verificaPermiso], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
-
-    const query = `CALL Empresa_ActiveDeactive(${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, null, (err: any, empresaDelete: any) => {
+    let parms = [req.query.Id || 0,s_idUsuario];
+    const query = `CALL Empresa_ActiveDeactive(?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, empresaDelete: any) => {
         if (err) {
             return res.json({
                 ok: false,

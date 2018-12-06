@@ -5,9 +5,9 @@ import permisos from '../middlewares/permisos';
 const usuario = Router();
 usuario.post('/usuario/login', (req: Request, res: Response) => {
     let { usuario, clave } = req.body;
-
-    const query = `CALL Usuario_Autentication('${ usuario }', '${ clave }')`;
-    MySQL.ejecutarQuery(query, null, (err: any, usuarioLogin: any) => {
+    let parms = [usuario,clave];
+    const query = `CALL Usuario_Autentication(?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, usuarioLogin: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -41,8 +41,9 @@ usuario.get('/usuario/list', [ permisos.verificaSesion, permisos.verificaPermiso
     let {s_idUsuario} = req.session!.userSesion;
     
     let search = (req.query.search) ? req.query.search.value : '';
-    const query = `CALL Usuario_List(${req.query.idEmpresa},${req.query.idEstado || 0},${s_idUsuario},${req.query.start || 0},${req.query.length || 0}, '${search}')`;
-    MySQL.ejecutarQuery(query, null, (err: any, usuario: any) => {
+    let parms = [req.query.idEmpresa,req.query.idEstado || 0,s_idUsuario,req.query.start || 0,req.query.length || 0,search];
+    const query = `CALL Usuario_List(?,?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, usuario: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -63,8 +64,8 @@ usuario.get('/usuario/list', [ permisos.verificaSesion, permisos.verificaPermiso
 });
 
 usuario.get('/usuario/get', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
-    const query = `CALL Usuario_Get(${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, null, (err: any, empresaGet: any) => {
+    const query = `CALL Usuario_Get(?)`;
+    MySQL.ejecutarQuery(query, req.query.Id || 0, (err: any, empresaGet: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -85,10 +86,9 @@ usuario.get('/usuario/get', [ permisos.verificaSesion, permisos.verificaPermiso 
 usuario.post('/usuario/register', (req: Request, res: Response) => {
     let {ruc, empresa, apellidoPaterno, apellidoMaterno,
         nombres, usuario} = req.body;
-
-    const query = `CALL Usuario_InsertUpdate(0,0,'${ruc}','${empresa}','${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
-                                            1,1,0)`;
-    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
+    let parms = [0,0,ruc,empresa,apellidoPaterno,apellidoMaterno,nombres,usuario,1,1,0];
+    const query = `CALL Usuario_InsertUpdate(?,?,?,?,?,?,?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -118,10 +118,9 @@ usuario.post('/usuario/reg', [ permisos.verificaSesion, permisos.verificaPermiso
     let { s_idUsuario } = req.session!.userSesion;
     let {idEmpresa, idUsuario, apellidoPaterno, apellidoMaterno,
         nombres, usuario, idPerfil} = req.body;
-
-    const query = `CALL Usuario_InsertUpdate(${idEmpresa},${idUsuario}, '', '', '${apellidoPaterno}','${apellidoMaterno}','${nombres}','${usuario}',
-                                            ${idPerfil},1, ${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, reg: any) => {
+    let parms = [idEmpresa,idUsuario,'','',apellidoPaterno,apellidoMaterno,nombres,usuario,idPerfil,1,s_idUsuario];
+    const query = `CALL Usuario_InsertUpdate(?,?,?,?,?,?,?,?,?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, reg: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -150,8 +149,8 @@ usuario.post('/usuario/reg', [ permisos.verificaSesion, permisos.verificaPermiso
 usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: Response) => {
     let {s_idUsuario} = req.session!.userSesion;
 
-    const query = `CALL Usuario_Menu_List(${s_idUsuario})`;
-    MySQL.ejecutarQuery(query, null, (err: any, usuarioMenu: any) => {
+    const query = `CALL Usuario_Menu_List(?)`;
+    MySQL.ejecutarQuery(query, s_idUsuario, (err: any, usuarioMenu: any) => {
         if (err) {
             return res.json({
                 ok: false,
@@ -183,8 +182,10 @@ usuario.get('/usuario/menu/', [ permisos.verificaSesion ], (req: Request, res: R
 });
 
 usuario.get('/usuario/delete', [ permisos.verificaSesion, permisos.verificaPermiso ], (req: Request, res: Response) => {
-    const query = `CALL Usuario_ActiveDeactive(${req.query.Id || 0})`;
-    MySQL.ejecutarQuery(query, null, (err: any, usuarioDelete: any) => {
+    let {s_idUsuario} = req.session!.userSesion;
+    let parms = [req.query.idEmpresa,req.query.Id || 0,s_idUsuario];
+    const query = `CALL Usuario_ActiveDeactive(?,?,?)`;
+    MySQL.ejecutarQuery(query, parms, (err: any, usuarioDelete: any) => {
         if (err) {
             return res.json({
                 ok: false,
