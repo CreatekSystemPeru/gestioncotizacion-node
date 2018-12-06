@@ -3,7 +3,7 @@ import {Router, Request, Response} from "express";
 const axios = require('axios');
 const sesion = Router();
 
-sesion.get("/iniciar", (req: Request, res: Response) => {    
+sesion.get(["/", "/iniciar"], (req: Request, res: Response) => {    
     var terminado = req.query.terminado;
 
     if (terminado == 1) {
@@ -24,7 +24,7 @@ sesion.get("/iniciar", (req: Request, res: Response) => {
 sesion.post("/iniciar", (req: Request, res: Response) => {
     var svcSesion = req.session!.userSesion;
     console.log("P sesion: conectado");
-    if (svcSesion!.s_idUsuario > 0) {        
+    if (svcSesion!.s_idUsuario > 0) {
         req.session!.sesionActiva = req.body;
         req.session!.sesionActiva.idEmpresa = 0;
 
