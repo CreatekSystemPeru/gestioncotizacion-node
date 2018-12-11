@@ -5,19 +5,19 @@ export default class MySQL {
 
     constructor() {
         console.log('> Clase inicializada *');
-        this.cnx = mysql.createConnection({
+        /*this.cnx = mysql.createConnection({
             host: '192.168.1.12',
             user: 'sa',
             password: '12345678',
             database: 'bdcotizacion'
-        });
-        // this.cnx = mysql.createConnection({
-        //     host: 'box1256.bluehost.com',
-        //     port: 3306,
-        //     user: 'ertizaco_erp',
-        //     password: 'erp.2018',
-        //     database: 'ertizaco_bdcotizacion'
-        // });
+        });*/
+     this.cnx = mysql.createConnection({
+             host: 'mi3-wts6.a2hosting.com',
+             port: 3306,
+             user: 'amini_sa',
+             password: 'Createk.2018',
+             database: 'aminias1_bdcotizacion'
+         });
     }
 
     static conexionDB(query: string, values: any, callback: Function) {
