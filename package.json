@@ -27,7 +27,7 @@
     "gentelella": "^1.4.0",
     "hbs": "^4.0.1",
     "mysql": "github:mysqljs/mysql",
-    "npm": "^6.4.1",
+    "npm": "^6.14.6",
     "parsley": "^0.1.0",
     "request": "^2.88.0"
   },
